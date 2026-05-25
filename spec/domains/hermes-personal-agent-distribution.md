@@ -82,9 +82,13 @@ Compose services, and run health checks over SSH.
 - Environment variables are allowed only as a last-mile process interface for
   secrets or third-party tools that require env vars. They are not the durable
   config source of truth and should not become a broad `.env` catalog.
-- If a `.env`-compatible artifact is produced, it must be generated, ignored by
-  git, instance-local, and limited to the smallest provider-required secret
-  bridge. It must not contain ordinary non-secret configuration.
+- The repository should include a committed secret-only `.env.example` that
+  documents the required secret keys, their Phase app/environment/path mapping,
+  and the runtime/provider reason each key exists. It must not contain ordinary
+  non-secret configuration or every optional provider supported by Hermes.
+- If a real `.env`-compatible artifact is produced, it must be generated,
+  ignored by git, instance-local, and limited to the smallest provider-required
+  secret bridge. It must not contain ordinary non-secret configuration.
 - Phase is the preferred secret-management surface. Production/deploy flows
   should fetch secrets from Phase rather than treating committed examples or
   manually edited `.env` files as authoritative.
@@ -186,11 +190,12 @@ git.
 
 Secret names should be documented by Phase app/environment/path and purpose,
 then mapped to the TOML fields or Hermes/provider runtime variables they feed.
-Do not document secrets by dumping a large `.env.example` catalog. Phase-injected
-values may become environment variables at process start when Hermes, Docker
-Compose, Telegram, or an LLM provider requires that interface, but only for the
-minimal names required by those tools. The durable source is Phase rather than a
-committed or manually maintained env file.
+The committed `.env.example` is allowed as a secret inventory and import/bridge
+guide with blank values and comments. Do not use it as a broad config catalog.
+Phase-injected values may become environment variables at process start when
+Hermes, Docker Compose, Telegram, or an LLM provider requires that interface,
+but only for the minimal names required by those tools. The durable source is
+Phase rather than a committed or manually maintained env file.
 
 ### Skills Interface
 
@@ -251,8 +256,9 @@ is considered usable.
 - Do not make hand-managed env vars the durable config model. Env vars are for
   minimal runtime secret injection or provider compatibility only.
 - Do not create a broad committed `.env.example` catalog for every config or
-  optional provider value. Prefer TOML examples for config and Phase path/name
-  docs for secrets.
+  optional provider value. Keep `.env.example` secret-only with blank values,
+  Phase path/name comments, and runtime/provider rationale. Prefer TOML examples
+  for config.
 - Do not commit raw Phase tokens, exported secrets, or per-instance secret
   material.
 - Do not depend on concrete ESXi details in the parent PRD; EMB-276 gathers
