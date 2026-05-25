@@ -7,14 +7,15 @@ assistant distribution. The distribution can be instantiated as separate
 private Hermes agents, initially for Tom Daniel and Sebastian Varela.
 
 The repository owns non-secret, redeployable source material: Hermes profile
-distribution manifests, identity and config templates, optional profile
-variants, portable skills, skill source manifests, cron and MCP templates,
-Docker Compose templates, remote deployment scripts, health checks, and setup
-documentation.
+distribution manifests, identity templates, TOML config schemas and templates,
+optional profile variants, portable skills, skill source manifests, cron and MCP
+templates, Docker Compose templates, remote deployment scripts, health checks,
+and setup documentation.
 
 The repository does not own live instance state. Credentials, private memories,
-sessions, logs, backups, mounted personal files, private machine-specific
-paths, and instantiated per-user Hermes homes stay outside git.
+sessions, logs, backups, mounted personal files, private machine-specific paths,
+instantiated per-user Hermes homes, and Phase authentication material stay
+outside git.
 
 ## Domain Concepts
 
@@ -27,12 +28,25 @@ updated through git, such as manifests, templates, shared skills, optional
 profile variants, scripts, and docs.
 
 **User-owned material**: Runtime-local or private material that must not be
-committed, such as `.env`, credentials, Hermes memories, sessions, logs,
-state databases, backups, mounted personal files, and local paths.
+committed, such as `.env`, credentials, Phase service tokens, Hermes memories,
+sessions, logs, state databases, backups, mounted personal files, and local
+paths.
 
 **Optional profile variant**: A reusable Hermes profile template or
-distribution variant with a documented role, required env vars, enabled tools,
-and privacy boundaries. A variant is not a live profile directory.
+distribution variant with a documented role, config file, required secrets,
+enabled tools, and privacy boundaries. A variant is not a live profile
+directory.
+
+**Typed config file**: A TOML file that is the source of truth for non-secret
+profile, deployment, storage, tool, and scheduling configuration. TOML config is
+validated by a checked-in schema before rendering any Hermes-native YAML,
+Compose file, generated env file, or runtime materialization. Use Zod when the
+implementation is TypeScript/Node; use an equivalent Python schema validator
+such as Pydantic, msgspec, or JSON Schema when the implementation is Python.
+
+**Secret materialization**: The process of fetching per-instance secrets from
+Phase and injecting them only at runtime or deploy time. Phase is the preferred
+secret-management system for production and operator deployments.
 
 **Skills source manifest**: A source-controlled manifest listing approved skill
 sources across repositories. Entries include repo, path, ref, intended
@@ -60,6 +74,16 @@ Compose services, and run health checks over SSH.
   to this repository.
 - Runtime Hermes instances must not silently mutate repo-owned skills,
   profiles, templates, or deployment artifacts as the durable source of truth.
+- Non-secret configuration must live in TOML config files, not as hand-managed
+  environment variables.
+- TOML config files must be validated against a checked-in schema in tests and
+  before deployment scripts materialize runtime files.
+- Environment variables are allowed as a narrow runtime boundary for secrets,
+  third-party tools that require env vars, and generated process injection. They
+  are not the durable config source of truth.
+- Phase is the preferred secret-management surface. Production/deploy flows
+  should fetch secrets from Phase rather than treating committed examples or
+  manually edited `.env` files as authoritative.
 - v1 runs one Docker container per personal-agent instance.
 - Active Hermes gateway containers must not share one Hermes home or one
   persistent data directory.
@@ -92,15 +116,18 @@ Compose services, and run health checks over SSH.
 ### Distribution Interface
 
 The distribution should expose Hermes-compatible profile material such as
-`distribution.yaml`, `SOUL.md`, `config.yaml`, `skills/`, `cron/`, optional
-`mcp.json`, and `.env.example` files. The final layout may include profile
-variant subdirectories if the selected Hermes-compatible installer path
-requires it.
+`distribution.yaml`, `SOUL.md`, generated or templated Hermes `config.yaml`,
+`skills/`, `cron/`, optional `mcp.json`, and non-secret examples. Exo-owned
+configuration should be authored in TOML, validated by schema, and rendered into
+Hermes-native files or process environment only where Hermes or a provider
+requires that shape. The final layout may include profile variant subdirectories
+if the selected Hermes-compatible installer path requires it.
 
 Each variant must document:
 
 - intended role;
-- required and optional env vars;
+- TOML config file and schema;
+- required and optional Phase secret names;
 - enabled safe/core tools;
 - optional external-action tools, if any;
 - privacy boundaries;
@@ -115,6 +142,8 @@ the ESXi guest VM. The operator path should include:
 - prerequisite checks;
 - directory layout creation;
 - rendering or copying non-secret templates;
+- validating TOML config files;
+- fetching or injecting secrets from Phase;
 - profile install or update;
 - skill install or sync;
 - Docker Compose start/restart;
@@ -122,7 +151,39 @@ the ESXi guest VM. The operator path should include:
 - log inspection;
 - backup/restore procedure references.
 
-Secrets and private runtime state are materialized outside git.
+Secrets and private runtime state are materialized outside git. Deployment
+scripts should document the Phase app, environment, and path layout they expect,
+plus whether they use Phase CLI runtime injection, Docker/Compose integration,
+or another Phase-supported materialization path.
+
+### Config Interface
+
+Repo-owned config uses TOML files plus schema validation. The config interface
+should distinguish:
+
+- committed defaults and profile variants;
+- local per-instance TOML overrides that remain outside git;
+- generated Hermes-native `config.yaml` or gateway files;
+- generated env material used only for secrets or provider compatibility;
+- validation commands suitable for CI, local smoke checks, and remote SSH
+  deployment.
+
+The schema should reject unknown or misplaced fields where practical, so config
+drift fails before an agent container starts.
+
+### Secrets Interface
+
+Phase is the preferred secret manager for per-instance secrets. The repository
+may include non-sensitive Phase metadata such as app/environment/path naming
+conventions or a `.phase.json` equivalent only if it contains no secret values.
+Raw secret values, Phase service tokens, and exported secret files stay outside
+git.
+
+Secret names should be documented by purpose and mapped to the TOML fields or
+Hermes/provider runtime variables they feed. Phase-injected values may become
+environment variables at process start when Hermes, Docker Compose, Telegram, or
+an LLM provider requires that interface, but the durable source is Phase rather
+than a committed or manually maintained env file.
 
 ### Skills Interface
 
@@ -167,6 +228,10 @@ is considered usable.
   filesystem mounts.
 - One personal-agent instance starts while another is unhealthy.
 - Telegram tokens are swapped, duplicated, or assigned to the wrong owner.
+- Phase authentication is missing, points at the wrong app/environment/path, or
+  injects a secret for the wrong owner instance.
+- TOML config validates locally but generated Hermes runtime files drift from
+  the checked-in schema contract.
 - General personal files are accidentally mounted read-write.
 - Storage sync is stale, unavailable, or in conflict.
 - The distribution updates while an instance has local user-owned config.
@@ -176,6 +241,10 @@ is considered usable.
 
 - Do not commit credentials, live env files, private memories, sessions, logs,
   state databases, backups, mounted personal files, or private machine paths.
+- Do not make hand-managed env vars the durable config model. Env vars are for
+  runtime secret injection or provider compatibility only.
+- Do not commit raw Phase tokens, exported secrets, or per-instance secret
+  material.
 - Do not depend on concrete ESXi details in the parent PRD; EMB-276 gathers
   and validates those facts as a HITL spike.
 - Do not choose the storage provider in this parent spec; EMB-317 owns that
@@ -194,6 +263,9 @@ is considered usable.
 - Selecting the final cloud filesystem provider in EMB-261.
 - Committing Tom's or Varela's private runtime profile data.
 - Requiring Honcho or another external memory provider for v1.
+- Replacing Hermes internals with a custom runtime config system. The TOML
+  schema governs Exo distribution/deployment config and may render
+  Hermes-native files when needed.
 - Using the old Pi package/adapter acceptance criteria as executable v1 scope.
 
 ## Open Questions About System Behavior
@@ -204,8 +276,11 @@ is considered usable.
 - Which ESXi guest OS, resources, network exposure, and backup/restore details
   will EMB-276 validate?
 - Which optional profile variants should ship first?
-- Which exact env var names should be standardized for per-instance Telegram,
-  model/provider, storage, and optional external-action credentials?
+- Which exact Phase app/environment/path layout and secret names should be
+  standardized for per-instance Telegram, model/provider, storage, and optional
+  external-action credentials?
+- Which TOML schema implementation should be used in this repo: TypeScript/Zod
+  or a Python equivalent?
 - Which implementation choices require target-repo ADRs after spikes resolve?
 
 ## Decision Log Or Links To ADRs
@@ -222,6 +297,11 @@ is considered usable.
   provider/topology selection to EMB-317.
 - 2026-05-25: Treat the skill installer/package-manager choice as a required
   child spike.
+- 2026-05-25: Use TOML files plus schema validation as the durable non-secret
+  config model. Env vars remain a runtime injection/provider compatibility
+  boundary, not the config source of truth.
+- 2026-05-25: Use Phase as the preferred secret-management system for
+  production/operator deployments.
 - 2026-05-25: No ADR yet. Create target-repo ADRs later only when a
   hard-to-reverse or surprising implementation choice is selected.
 
@@ -230,3 +310,4 @@ is considered usable.
 - EMB-261: PRD: Rework Exo as Hermes-based personal executive assistant agent
 - EMB-276: Set up ESXi VM for personal Hermes agents
 - EMB-317: Select privacy-preserving filesystem for personal agents
+- Phase docs: https://docs.phase.dev/
