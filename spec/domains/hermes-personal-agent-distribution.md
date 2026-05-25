@@ -89,6 +89,12 @@ Compose services, and run health checks over SSH.
 - If a real `.env`-compatible artifact is produced, it must be generated,
   ignored by git, instance-local, and limited to the smallest provider-required
   secret bridge. It must not contain ordinary non-secret configuration.
+- Runtime secret ingestion should use Phase injection, Vite's built-in env-file
+  loading where a Vite app surface exists, or Node's built-in DotEnv support
+  where a Node service or CLI needs local `.env` ingestion. Do not add the
+  `dotenv` package by default.
+- Secrets must not use a Vite client-exposed prefix such as `VITE_`. Any
+  `VITE_` variable is public client configuration and must be non-secret.
 - Phase is the preferred secret-management surface. Production/deploy flows
   should fetch secrets from Phase rather than treating committed examples or
   manually edited `.env` files as authoritative.
@@ -196,6 +202,11 @@ Phase-injected values may become environment variables at process start when
 Hermes, Docker Compose, Telegram, or an LLM provider requires that interface,
 but only for the minimal names required by those tools. The durable source is
 Phase rather than a committed or manually maintained env file.
+
+Do not add a repo dependency on the `dotenv` npm package unless an implementation
+spike proves that Vite's built-in env loading, Node's built-in DotEnv support,
+and Phase runtime injection cannot cover a required path. Any such exception
+must be documented with the exact runtime/version gap it solves.
 
 ### Skills Interface
 
