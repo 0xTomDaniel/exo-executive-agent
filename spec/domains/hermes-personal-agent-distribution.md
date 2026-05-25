@@ -28,9 +28,9 @@ updated through git, such as manifests, templates, shared skills, optional
 profile variants, scripts, and docs.
 
 **User-owned material**: Runtime-local or private material that must not be
-committed, such as `.env`, credentials, Phase service tokens, Hermes memories,
-sessions, logs, state databases, backups, mounted personal files, and local
-paths.
+committed, such as credentials, Phase service tokens, generated secret bridge
+files, Hermes memories, sessions, logs, state databases, backups, mounted
+personal files, and local paths.
 
 **Optional profile variant**: A reusable Hermes profile template or
 distribution variant with a documented role, config file, required secrets,
@@ -40,9 +40,10 @@ directory.
 **Typed config file**: A TOML file that is the source of truth for non-secret
 profile, deployment, storage, tool, and scheduling configuration. TOML config is
 validated by a checked-in schema before rendering any Hermes-native YAML,
-Compose file, generated env file, or runtime materialization. Use Zod when the
-implementation is TypeScript/Node; use an equivalent Python schema validator
-such as Pydantic, msgspec, or JSON Schema when the implementation is Python.
+Compose file, minimal runtime secret bridge, or other runtime materialization.
+Use Zod when the implementation is TypeScript/Node; use an equivalent Python
+schema validator such as Pydantic, msgspec, or JSON Schema when the
+implementation is Python.
 
 **Secret materialization**: The process of fetching per-instance secrets from
 Phase and injecting them only at runtime or deploy time. Phase is the preferred
@@ -78,9 +79,12 @@ Compose services, and run health checks over SSH.
   environment variables.
 - TOML config files must be validated against a checked-in schema in tests and
   before deployment scripts materialize runtime files.
-- Environment variables are allowed as a narrow runtime boundary for secrets,
-  third-party tools that require env vars, and generated process injection. They
-  are not the durable config source of truth.
+- Environment variables are allowed only as a last-mile process interface for
+  secrets or third-party tools that require env vars. They are not the durable
+  config source of truth and should not become a broad `.env` catalog.
+- If a `.env`-compatible artifact is produced, it must be generated, ignored by
+  git, instance-local, and limited to the smallest provider-required secret
+  bridge. It must not contain ordinary non-secret configuration.
 - Phase is the preferred secret-management surface. Production/deploy flows
   should fetch secrets from Phase rather than treating committed examples or
   manually edited `.env` files as authoritative.
@@ -164,7 +168,8 @@ should distinguish:
 - committed defaults and profile variants;
 - local per-instance TOML overrides that remain outside git;
 - generated Hermes-native `config.yaml` or gateway files;
-- generated env material used only for secrets or provider compatibility;
+- generated secret bridge material used only for secrets or provider
+  compatibility, with the smallest required set of process env names;
 - validation commands suitable for CI, local smoke checks, and remote SSH
   deployment.
 
@@ -179,11 +184,13 @@ conventions or a `.phase.json` equivalent only if it contains no secret values.
 Raw secret values, Phase service tokens, and exported secret files stay outside
 git.
 
-Secret names should be documented by purpose and mapped to the TOML fields or
-Hermes/provider runtime variables they feed. Phase-injected values may become
-environment variables at process start when Hermes, Docker Compose, Telegram, or
-an LLM provider requires that interface, but the durable source is Phase rather
-than a committed or manually maintained env file.
+Secret names should be documented by Phase app/environment/path and purpose,
+then mapped to the TOML fields or Hermes/provider runtime variables they feed.
+Do not document secrets by dumping a large `.env.example` catalog. Phase-injected
+values may become environment variables at process start when Hermes, Docker
+Compose, Telegram, or an LLM provider requires that interface, but only for the
+minimal names required by those tools. The durable source is Phase rather than a
+committed or manually maintained env file.
 
 ### Skills Interface
 
@@ -242,7 +249,10 @@ is considered usable.
 - Do not commit credentials, live env files, private memories, sessions, logs,
   state databases, backups, mounted personal files, or private machine paths.
 - Do not make hand-managed env vars the durable config model. Env vars are for
-  runtime secret injection or provider compatibility only.
+  minimal runtime secret injection or provider compatibility only.
+- Do not create a broad committed `.env.example` catalog for every config or
+  optional provider value. Prefer TOML examples for config and Phase path/name
+  docs for secrets.
 - Do not commit raw Phase tokens, exported secrets, or per-instance secret
   material.
 - Do not depend on concrete ESXi details in the parent PRD; EMB-276 gathers
