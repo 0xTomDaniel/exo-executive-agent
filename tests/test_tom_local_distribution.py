@@ -6,8 +6,13 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from exo_distribution.config import load_profile_config, schema_summary
-from exo_distribution.render import render_hermes_config
+from exo_distribution.config import (
+    discover_profile_paths,
+    load_profile_config,
+    schema_summary,
+    validate_profile_set,
+)
+from exo_distribution.render import render_compose, render_hermes_config
 from exo_distribution.skills import (
     install_planned_skills,
     load_skills_manifest,
@@ -21,6 +26,8 @@ PROFILE = REPO_ROOT / "profiles/tom-local-dev/profile.toml"
 SCHEMA = REPO_ROOT / "schemas/profile-config.schema.json"
 TEMPLATE = REPO_ROOT / "profiles/tom-local-dev/hermes/config.yaml.template"
 GENERATED = REPO_ROOT / "profiles/tom-local-dev/generated/config.yaml"
+COMPOSE_TEMPLATE = REPO_ROOT / "deploy/compose/hermes-multi-owner.compose.yaml.template"
+COMPOSE_GENERATED = REPO_ROOT / "deploy/compose/generated/hermes-multi-owner.compose.yaml"
 ENV_EXAMPLE = REPO_ROOT / ".env.example"
 SKILLS_MANIFEST = REPO_ROOT / "skills/sources.toml"
 
@@ -31,12 +38,76 @@ class TomLocalDistributionTest(unittest.TestCase):
         config = load_profile_config(PROFILE)
         self.assertEqual(config.profile_id, "tom-local-dev")
 
+    def test_multi_owner_profiles_have_isolated_runtime_boundaries(self) -> None:
+        configs = [
+            load_profile_config(path)
+            for path in discover_profile_paths(REPO_ROOT / "profiles")
+        ]
+        validate_profile_set(configs)
+        by_id = {config.profile_id: config for config in configs}
+        self.assertIn("tom-personal-agent", by_id)
+        self.assertIn("sebastian-personal-agent", by_id)
+        self.assertIn("noah-personal-agent", by_id)
+
+        owner_profiles = [
+            by_id["tom-personal-agent"],
+            by_id["sebastian-personal-agent"],
+            by_id["noah-personal-agent"],
+        ]
+        self.assertEqual(
+            {
+                config.data["profile"]["owner_name"]  # type: ignore[index]
+                for config in owner_profiles
+            },
+            {"Tom Daniel", "Sebastian Varela", "Noah Ranch"},
+        )
+        self.assertEqual(len({config.hermes_home for config in owner_profiles}), 3)
+        self.assertEqual(len({config.telegram_token_path for config in owner_profiles}), 3)
+        self.assertEqual(len({config.log_path for config in owner_profiles}), 3)
+        self.assertEqual(len({config.backup_path for config in owner_profiles}), 3)
+
     def test_rendered_hermes_config_matches_committed_example(self) -> None:
         config = load_profile_config(PROFILE)
         rendered = render_hermes_config(config, TEMPLATE)
         self.assertEqual(rendered, GENERATED.read_text(encoding="utf-8"))
         self.assertIn('token_env: "TELEGRAM_BOT_TOKEN"', rendered)
+        self.assertIn(
+            'token_path: "${EXO_RUNTIME_ROOT}/tom-local-dev/secret-bridge/telegram-bot-token"',
+            rendered,
+        )
         self.assertNotIn("fake-token-not-live", rendered)
+
+    def test_rendered_compose_declares_one_container_per_instance(self) -> None:
+        configs = [
+            load_profile_config(path)
+            for path in discover_profile_paths(REPO_ROOT / "profiles")
+        ]
+        validate_profile_set(configs)
+        rendered = render_compose(
+            [
+                config
+                for config in configs
+                if config.data["profile"]["intended_profile"]  # type: ignore[index]
+                == "installable-template"
+            ],
+            COMPOSE_TEMPLATE,
+        )
+        self.assertEqual(rendered, COMPOSE_GENERATED.read_text(encoding="utf-8"))
+        for profile_id in (
+            "tom-personal-agent",
+            "sebastian-personal-agent",
+            "noah-personal-agent",
+        ):
+            self.assertIn(f"{profile_id}:", rendered)
+            self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/hermes-home", rendered)
+            self.assertIn(
+                f"${{EXO_RUNTIME_ROOT}}/{profile_id}/secret-bridge/telegram-bot-token",
+                rendered,
+            )
+            self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/log-boundary", rendered)
+            self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/backup-boundary", rendered)
+        self.assertEqual(rendered.count("/opt/data/hermes-home"), 3)
+        self.assertNotIn("tom-local-dev:", rendered)
 
     def test_fake_telegram_smoke_replies_only_to_owner(self) -> None:
         config = load_profile_config(PROFILE)
@@ -72,8 +143,26 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertIn("OPENAI_API_KEY=", content)
         for line in content.splitlines():
             self.assertFalse(line.startswith("VITE_"), line)
-            if line.startswith(("TELEGRAM_BOT_TOKEN=", "TELEGRAM_OWNER_ID=", "OPENAI_API_KEY=")):
+            if line and not line.startswith("#") and "=" in line:
                 self.assertTrue(line.endswith("="), line)
+
+    def test_no_private_runtime_state_is_committed(self) -> None:
+        forbidden_parts = {
+            "runtime",
+            "data",
+            "hermes-home",
+            "memories",
+            "sessions",
+            "logs",
+            "backups",
+            "personal-files",
+            ".phase",
+        }
+        for path in REPO_ROOT.rglob("*"):
+            if ".git" in path.parts or ".venv" in path.parts:
+                continue
+            relative_parts = set(path.relative_to(REPO_ROOT).parts)
+            self.assertTrue(relative_parts.isdisjoint(forbidden_parts), path)
 
     def test_skills_manifest_records_pinned_multi_repo_sources(self) -> None:
         manifest = load_skills_manifest(SKILLS_MANIFEST, REPO_ROOT)

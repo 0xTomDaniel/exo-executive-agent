@@ -18,6 +18,64 @@ profiles:
       - files.read_workspace
       - telegram.reply_text
     external_action_tools: []
+    owner_identity: Tom Daniel
+    telegram_token_path: ${EXO_RUNTIME_ROOT}/tom-local-dev/secret-bridge/telegram-bot-token
+    hermes_home: ${EXO_RUNTIME_ROOT}/tom-local-dev/hermes-home
+    logs: ${EXO_RUNTIME_ROOT}/tom-local-dev/log-boundary
+    backups: ${EXO_RUNTIME_ROOT}/tom-local-dev/backup-boundary
+    restart_boundary: exo-hermes-tom-local-dev
+  - id: tom-personal-agent
+    role: Private Telegram-first Hermes executive assistant for Tom Daniel.
+    config: profiles/tom-personal-agent/profile.toml
+    required_phase_path: /tom/personal-agent
+    owner_identity: Tom Daniel
+    telegram_token_path: ${EXO_RUNTIME_ROOT}/tom-personal-agent/secret-bridge/telegram-bot-token
+    hermes_home: ${EXO_RUNTIME_ROOT}/tom-personal-agent/hermes-home
+    logs: ${EXO_RUNTIME_ROOT}/tom-personal-agent/log-boundary
+    backups: ${EXO_RUNTIME_ROOT}/tom-personal-agent/backup-boundary
+    restart_boundary: exo-hermes-tom-personal-agent
+    safe_core_tools:
+      - memory.read
+      - memory.write_markdown
+      - files.read_workspace
+      - telegram.reply_text
+    external_action_tools: []
+  - id: sebastian-personal-agent
+    role: Private Telegram-first Hermes executive assistant for Sebastian Varela.
+    config: profiles/sebastian-personal-agent/profile.toml
+    required_phase_path: /sebastian/personal-agent
+    owner_identity: Sebastian Varela
+    telegram_token_path: ${EXO_RUNTIME_ROOT}/sebastian-personal-agent/secret-bridge/telegram-bot-token
+    hermes_home: ${EXO_RUNTIME_ROOT}/sebastian-personal-agent/hermes-home
+    logs: ${EXO_RUNTIME_ROOT}/sebastian-personal-agent/log-boundary
+    backups: ${EXO_RUNTIME_ROOT}/sebastian-personal-agent/backup-boundary
+    restart_boundary: exo-hermes-sebastian-personal-agent
+    safe_core_tools:
+      - memory.read
+      - memory.write_markdown
+      - files.read_workspace
+      - telegram.reply_text
+    external_action_tools: []
+  - id: noah-personal-agent
+    role: Private Telegram-first Hermes executive assistant for Noah Ranch.
+    config: profiles/noah-personal-agent/profile.toml
+    required_phase_path: /noah/personal-agent
+    owner_identity: Noah Ranch
+    telegram_token_path: ${EXO_RUNTIME_ROOT}/noah-personal-agent/secret-bridge/telegram-bot-token
+    hermes_home: ${EXO_RUNTIME_ROOT}/noah-personal-agent/hermes-home
+    logs: ${EXO_RUNTIME_ROOT}/noah-personal-agent/log-boundary
+    backups: ${EXO_RUNTIME_ROOT}/noah-personal-agent/backup-boundary
+    restart_boundary: exo-hermes-noah-personal-agent
+    safe_core_tools:
+      - memory.read
+      - memory.write_markdown
+      - files.read_workspace
+      - telegram.reply_text
+    external_action_tools: []
+compose:
+  template: deploy/compose/hermes-multi-owner.compose.yaml.template
+  generated_example: deploy/compose/generated/hermes-multi-owner.compose.yaml
+  invariant: one Hermes gateway container and one Hermes home per profile id
 owned_paths:
   distribution:
     - distribution.yaml

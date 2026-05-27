@@ -5,7 +5,7 @@ import re
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal, TypedDict
+from typing import Callable, Literal, TypedDict
 
 
 class ValidationError(ValueError):
@@ -36,6 +36,34 @@ class ProfileConfig:
     def expected_reply(self) -> str:
         return _table(self.data, "smoke")["expected_reply"]
 
+    @property
+    def container_name(self) -> str:
+        return _table(self.data, "container")["name"]
+
+    @property
+    def hermes_home(self) -> str:
+        return _table(self.data, "hermes")["home"]
+
+    @property
+    def log_path(self) -> str:
+        return _table(self.data, "logs")["path"]
+
+    @property
+    def backup_path(self) -> str:
+        return _table(self.data, "backups")["path"]
+
+    @property
+    def telegram_token_path(self) -> str:
+        return _table(self.data, "telegram")["token_path"]
+
+    @property
+    def telegram_owner_secret(self) -> str:
+        return _table(self.data, "telegram")["owner_id_secret"]
+
+    @property
+    def telegram_bot_token_secret(self) -> str:
+        return _table(self.data, "telegram")["bot_token_secret"]
+
 
 REQUIRED_TOP_LEVEL = (
     "profile",
@@ -44,6 +72,9 @@ REQUIRED_TOP_LEVEL = (
     "model",
     "phase",
     "storage",
+    "container",
+    "logs",
+    "backups",
     "tools",
     "smoke",
 )
@@ -58,7 +89,11 @@ FORBIDDEN_RUNTIME_FRAGMENTS = (
     "sessions",
     "logs",
     "backups",
+    ".env",
 )
+PROFILE_MODES = ("local-dev", "template")
+TELEGRAM_MODES = ("fake", "phase")
+MODEL_MODES = ("fake", "phase")
 SAFE_TOOL_PREFIXES = ("memory.", "files.", "telegram.reply_text")
 
 
@@ -75,32 +110,54 @@ def validate_profile_config(config: ProfileConfig) -> None:
     _require_exact_keys(data, REQUIRED_TOP_LEVEL, "root")
 
     profile = _table(data, "profile")
-    _require_exact_keys(profile, ("id", "owner_name", "mode", "timezone"), "profile")
-    _require_non_empty_strings(profile, ("id", "owner_name", "mode", "timezone"), "profile")
+    _require_exact_keys(
+        profile,
+        ("id", "owner_name", "mode", "timezone", "role", "intended_profile"),
+        "profile",
+    )
+    _require_non_empty_strings(
+        profile,
+        ("id", "owner_name", "mode", "timezone", "role", "intended_profile"),
+        "profile",
+    )
+    if profile["mode"] not in PROFILE_MODES:
+        raise ValidationError(f"profile.mode must be one of {PROFILE_MODES}")
 
     hermes = _table(data, "hermes")
     _require_exact_keys(hermes, ("runtime", "home", "workspace", "skills_dir"), "hermes")
     _require_non_empty_strings(hermes, ("runtime", "home", "workspace", "skills_dir"), "hermes")
+    _validate_runtime_path(hermes["home"], "hermes.home")
+    _validate_runtime_path(hermes["workspace"], "hermes.workspace")
     if hermes["skills_dir"] != "/opt/data/skills":
-        raise ValidationError("hermes.skills_dir must install production skills into /opt/data/skills")
+        raise ValidationError(
+            "hermes.skills_dir must install production skills into /opt/data/skills"
+        )
 
     telegram = _table(data, "telegram")
     _require_exact_keys(
         telegram,
-        ("mode", "owner_id_secret", "bot_token_secret", "owner_only", "text_only"),
+        (
+            "mode",
+            "owner_id_secret",
+            "bot_token_secret",
+            "token_path",
+            "owner_only",
+            "text_only",
+        ),
         "telegram",
     )
-    if telegram["mode"] != "fake":
-        raise ValidationError("tom local/dev profile must use fake Telegram mode")
+    if telegram["mode"] not in TELEGRAM_MODES:
+        raise ValidationError(f"telegram.mode must be one of {TELEGRAM_MODES}")
     if telegram["owner_only"] is not True or telegram["text_only"] is not True:
         raise ValidationError("telegram must be owner-only and text-only for v1 local smoke")
     _validate_secret_name(telegram["owner_id_secret"], "telegram.owner_id_secret")
     _validate_secret_name(telegram["bot_token_secret"], "telegram.bot_token_secret")
+    _validate_runtime_path(telegram["token_path"], "telegram.token_path")
 
     model = _table(data, "model")
     _require_exact_keys(model, ("mode", "provider", "api_key_secret"), "model")
-    if model["mode"] != "fake":
-        raise ValidationError("tom local/dev profile must use fake model mode")
+    if model["mode"] not in MODEL_MODES:
+        raise ValidationError(f"model.mode must be one of {MODEL_MODES}")
     _validate_secret_name(model["api_key_secret"], "model.api_key_secret")
 
     phase = _table(data, "phase")
@@ -110,7 +167,11 @@ def validate_profile_config(config: ProfileConfig) -> None:
         raise ValidationError("phase.path must be an absolute Phase path")
 
     storage = _table(data, "storage")
-    _require_exact_keys(storage, ("runtime", "vault", "personal_files"), "storage")
+    _require_exact_keys(
+        storage,
+        ("runtime", "vault", "personal_files", "placeholder_mounts"),
+        "storage",
+    )
     _validate_storage_table(_table(storage, "runtime"), "runtime", required_access=None)
     _validate_storage_table(_table(storage, "vault"), "vault", required_access="read-write")
     _validate_storage_table(
@@ -118,6 +179,27 @@ def validate_profile_config(config: ProfileConfig) -> None:
         "personal_files",
         required_access="read-only",
     )
+    _validate_placeholder_mounts(storage["placeholder_mounts"])
+
+    container = _table(data, "container")
+    _require_exact_keys(container, ("name", "image", "restart_policy"), "container")
+    _require_non_empty_strings(container, ("name", "image", "restart_policy"), "container")
+    if container["restart_policy"] != "unless-stopped":
+        raise ValidationError("container.restart_policy must be unless-stopped")
+
+    logs = _table(data, "logs")
+    _require_exact_keys(logs, ("path", "git_owned"), "logs")
+    _require_non_empty_strings(logs, ("path",), "logs")
+    _validate_runtime_path(logs["path"], "logs.path")
+    if logs["git_owned"] is not False:
+        raise ValidationError("logs.git_owned must be false")
+
+    backups = _table(data, "backups")
+    _require_exact_keys(backups, ("path", "git_owned", "scope"), "backups")
+    _require_non_empty_strings(backups, ("path", "scope"), "backups")
+    _validate_runtime_path(backups["path"], "backups.path")
+    if backups["git_owned"] is not False:
+        raise ValidationError("backups.git_owned must be false")
 
     tools = _table(data, "tools")
     _require_exact_keys(tools, ("safe_core", "external_actions"), "tools")
@@ -138,6 +220,31 @@ def validate_profile_config(config: ProfileConfig) -> None:
         ("telegram_fixture", "phase_fixture", "storage_fixture_root", "expected_reply"),
         "smoke",
     )
+
+
+def validate_profile_set(configs: list[ProfileConfig]) -> None:
+    if not configs:
+        raise ValidationError("at least one profile is required")
+    _require_unique(configs, "profile id", lambda config: config.profile_id)
+    _require_unique(configs, "container name", lambda config: config.container_name)
+    _require_unique(configs, "Hermes home", lambda config: config.hermes_home)
+    _require_unique(configs, "Telegram token path", lambda config: config.telegram_token_path)
+    _require_unique(
+        configs,
+        "Telegram owner secret",
+        lambda config: config.telegram_owner_secret,
+    )
+    _require_unique(
+        configs,
+        "Telegram bot token secret",
+        lambda config: config.telegram_bot_token_secret,
+    )
+    _require_unique(configs, "log path", lambda config: config.log_path)
+    _require_unique(configs, "backup path", lambda config: config.backup_path)
+
+
+def discover_profile_paths(root: Path) -> list[Path]:
+    return sorted(root.glob("*/profile.toml"))
 
 
 def schema_summary(schema_path: Path) -> str:
@@ -165,13 +272,54 @@ def _validate_storage_table(
     if table["git_owned"] is not False:
         raise ValidationError(f"storage.{name}.git_owned must be false")
     path = str(table["path"])
-    if "${EXO_RUNTIME_ROOT}" not in path:
-        raise ValidationError(f"storage.{name}.path must be rooted under EXO_RUNTIME_ROOT")
-    for fragment in FORBIDDEN_RUNTIME_FRAGMENTS:
-        if fragment in path:
-            raise ValidationError(f"storage.{name}.path contains private/runtime fragment {fragment}")
+    _validate_runtime_path(path, f"storage.{name}.path")
     if required_access is not None and table["access"] != required_access:
         raise ValidationError(f"storage.{name}.access must be {required_access}")
+
+
+def _validate_placeholder_mounts(value: object) -> None:
+    if not isinstance(value, list):
+        raise ValidationError("storage.placeholder_mounts must be a list")
+    names: set[str] = set()
+    for index, entry in enumerate(value):
+        if not isinstance(entry, dict):
+            raise ValidationError(f"storage.placeholder_mounts[{index}] must be a table")
+        _require_exact_keys(
+            entry,
+            ("name", "path", "mount_path", "access", "git_owned"),
+            f"storage.placeholder_mounts[{index}]",
+        )
+        _require_non_empty_strings(
+            entry,
+            ("name", "path", "mount_path", "access"),
+            f"storage.placeholder_mounts[{index}]",
+        )
+        name = str(entry["name"])
+        if name in names:
+            raise ValidationError(f"duplicate placeholder mount {name}")
+        names.add(name)
+        _validate_runtime_path(entry["path"], f"storage.placeholder_mounts[{index}].path")
+        mount_path = str(entry["mount_path"])
+        if not mount_path.startswith("/mnt/"):
+            raise ValidationError(
+                f"storage.placeholder_mounts[{index}].mount_path must be under /mnt"
+            )
+        if entry["access"] != "read-only":
+            raise ValidationError(f"storage.placeholder_mounts[{index}].access must be read-only")
+        if entry["git_owned"] is not False:
+            raise ValidationError(
+                f"storage.placeholder_mounts[{index}].git_owned must be false"
+            )
+
+
+def _validate_runtime_path(value: object, field: str) -> None:
+    if not isinstance(value, str) or not value.strip():
+        raise ValidationError(f"{field} must be a non-empty string")
+    if "${EXO_RUNTIME_ROOT}" not in value:
+        raise ValidationError(f"{field} must be rooted under EXO_RUNTIME_ROOT")
+    for fragment in FORBIDDEN_RUNTIME_FRAGMENTS:
+        if fragment in value:
+            raise ValidationError(f"{field} contains private/runtime fragment {fragment}")
 
 
 def _validate_safe_core_tools(value: object) -> None:
@@ -222,3 +370,20 @@ def _require_non_empty_strings(
     for key in keys:
         if not isinstance(data.get(key), str) or not str(data[key]).strip():
             raise ValidationError(f"{label}.{key} must be a non-empty string")
+
+
+def _require_unique(
+    configs: list[ProfileConfig],
+    label: str,
+    get_value: Callable[[ProfileConfig], str],
+) -> None:
+    seen: dict[str, str] = {}
+    for config in configs:
+        value = get_value(config)
+        owner = seen.get(value)
+        if owner is not None:
+            raise ValidationError(
+                "multiple active Hermes profiles share "
+                f"{label} {value}: {owner}, {config.profile_id}"
+            )
+        seen[value] = config.profile_id

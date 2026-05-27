@@ -9,12 +9,19 @@ def render_hermes_config(config: ProfileConfig, template_path: Path) -> str:
     output = template_path.read_text(encoding="utf-8")
     replacements = _flatten(config.data)
     replacements["tools.safe_core_yaml"] = _safe_core_yaml(config)
+    replacements["storage.placeholder_mounts_yaml"] = _placeholder_mounts_yaml(config)
     replacements["tools.external_actions.enabled"] = _yaml_bool(
         bool(config.data["tools"]["external_actions"]["enabled"])  # type: ignore[index]
     )
     for key, value in replacements.items():
         output = output.replace("{{ " + key + " }}", value)
     return output
+
+
+def render_compose(configs: list[ProfileConfig], template_path: Path) -> str:
+    output = template_path.read_text(encoding="utf-8")
+    services = "\n\n".join(_compose_service(config) for config in configs)
+    return output.replace("{{ hermes_services_yaml }}", services)
 
 
 def _flatten(data: object, prefix: str = "") -> dict[str, str]:
@@ -33,6 +40,66 @@ def _flatten(data: object, prefix: str = "") -> dict[str, str]:
 def _safe_core_yaml(config: ProfileConfig) -> str:
     tools = config.data["tools"]["safe_core"]  # type: ignore[index]
     return "\n".join(f'    - "{tool["name"]}"' for tool in tools)  # type: ignore[index]
+
+
+def _placeholder_mounts_yaml(config: ProfileConfig) -> str:
+    mounts = config.data["storage"]["placeholder_mounts"]  # type: ignore[index]
+    if not mounts:
+        return "    []"
+    lines: list[str] = []
+    for mount in mounts:  # type: ignore[assignment]
+        lines.extend(
+            [
+                f'    - name: "{mount["name"]}"',
+                f'      path: "{mount["path"]}"',
+                f'      mount_path: "{mount["mount_path"]}"',
+                f'      access: "{mount["access"]}"',
+            ]
+        )
+    return "\n".join(lines)
+
+
+def _compose_service(config: ProfileConfig) -> str:
+    data = config.data
+    container = data["container"]  # type: ignore[index]
+    hermes = data["hermes"]  # type: ignore[index]
+    telegram = data["telegram"]  # type: ignore[index]
+    model = data["model"]  # type: ignore[index]
+    phase = data["phase"]  # type: ignore[index]
+    storage = data["storage"]  # type: ignore[index]
+    logs = data["logs"]  # type: ignore[index]
+    backups = data["backups"]  # type: ignore[index]
+
+    service_name = str(config.profile_id).replace("_", "-")
+    lines = [
+        f"  {service_name}:",
+        f'    image: "{container["image"]}"',
+        f'    container_name: "{container["name"]}"',
+        f'    restart: "{container["restart_policy"]}"',
+        "    environment:",
+        f'      HERMES_PROFILE_ID: "{config.profile_id}"',
+        f'      HERMES_HOME: "{hermes["home"]}"',
+        f'      HERMES_WORKSPACE: "{hermes["workspace"]}"',
+        f'      TELEGRAM_BOT_TOKEN_FILE: "{telegram["token_path"]}"',
+        f'      TELEGRAM_OWNER_ID_SECRET: "{telegram["owner_id_secret"]}"',
+        f'      MODEL_API_KEY_SECRET: "{model["api_key_secret"]}"',
+        f'      PHASE_APP: "{phase["app"]}"',
+        f'      PHASE_ENVIRONMENT: "{phase["environment"]}"',
+        f'      PHASE_PATH: "{phase["path"]}"',
+        "    volumes:",
+        f'      - "{hermes["home"]}:/opt/data/hermes-home"',
+        f'      - "{hermes["workspace"]}:/workspace"',
+        f'      - "{telegram["token_path"]}:/run/secrets/telegram-bot-token:ro"',
+        f'      - "{storage["vault"]["path"]}:/opt/data/vault"',  # type: ignore[index]
+        (
+            f'      - "{storage["personal_files"]["path"]}:/mnt/personal-files:ro"'
+        ),  # type: ignore[index]
+        f'      - "{logs["path"]}:/var/log/hermes"',
+        f'      - "{backups["path"]}:/opt/backups"',
+    ]
+    for mount in storage["placeholder_mounts"]:  # type: ignore[index]
+        lines.append(f'      - "{mount["path"]}:{mount["mount_path"]}:ro"')
+    return "\n".join(lines)
 
 
 def _yaml_bool(value: bool) -> str:

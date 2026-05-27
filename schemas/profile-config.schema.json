@@ -11,6 +11,9 @@
     "model",
     "phase",
     "storage",
+    "container",
+    "logs",
+    "backups",
     "tools",
     "smoke"
   ],
@@ -18,7 +21,7 @@
     "profile": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "owner_name", "mode", "timezone"]
+      "required": ["id", "owner_name", "mode", "timezone", "role", "intended_profile"]
     },
     "hermes": {
       "type": "object",
@@ -28,7 +31,14 @@
     "telegram": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["mode", "owner_id_secret", "bot_token_secret", "owner_only", "text_only"]
+      "required": [
+        "mode",
+        "owner_id_secret",
+        "bot_token_secret",
+        "token_path",
+        "owner_only",
+        "text_only"
+      ]
     },
     "model": {
       "type": "object",
@@ -43,7 +53,22 @@
     "storage": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["runtime", "vault", "personal_files"]
+      "required": ["runtime", "vault", "personal_files", "placeholder_mounts"]
+    },
+    "container": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "image", "restart_policy"]
+    },
+    "logs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "git_owned"]
+    },
+    "backups": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "git_owned", "scope"]
     },
     "tools": {
       "type": "object",

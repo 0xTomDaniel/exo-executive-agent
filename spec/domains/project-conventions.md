@@ -14,6 +14,10 @@ below apply to repo-owned distribution material and local validation tooling.
   machine-specific paths.
 - Profile directories in this repo are templates or examples, not live Hermes
   homes.
+- Owner template profiles must keep unique profile ids, container names, Hermes
+  homes, Telegram token paths, log paths, and backup paths.
+- Docker/Compose examples are generated distribution material. Host paths they
+  reference remain user-owned/runtime paths under `${EXO_RUNTIME_ROOT}`.
 
 ## Config
 
@@ -21,6 +25,8 @@ below apply to repo-owned distribution material and local validation tooling.
   `uv run python scripts/validate_profile.py`.
 - Hermes-native config output is rendered from TOML and template material with
   `uv run python scripts/render_hermes_config.py`.
+- Multi-owner Compose output is rendered from all committed profiles with
+  `uv run python scripts/render_compose.py`.
 - Unknown or misplaced TOML fields should fail validation before deployment or
   smoke execution.
 
@@ -42,6 +48,8 @@ below apply to repo-owned distribution material and local validation tooling.
 - The default profile enables safe/core tools only.
 - External-action tools require explicit per-instance opt-in, Phase-managed
   secrets, and approval/audit documentation.
+- Active Hermes gateway containers must not share a Hermes home, Telegram token
+  path, log boundary, backup boundary, or restart/container boundary.
 
 ## Skills
 

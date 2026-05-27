@@ -7,7 +7,8 @@ private Hermes instances. It does not own live user runtime state.
 The first runnable slice is `tom-local-dev`: a Tom-oriented local/dev profile
 that validates TOML config, renders a Hermes-native config example, and proves a
 mocked owner-only Telegram text loop without live Telegram, model credentials,
-Phase access, ESXi access, or private storage.
+Phase access, ESXi access, or private storage. The distribution also includes
+installable template profiles for Tom Daniel, Sebastian Varela, and Noah Ranch.
 
 ## Repository Boundary
 
@@ -17,6 +18,9 @@ Distribution-owned paths in git:
 - `SOUL.md`: identity and behavioral direction for Exo;
 - `profiles/tom-local-dev/`: non-secret Tom local/dev profile template,
   fixtures, and rendered Hermes config example;
+- `profiles/*-personal-agent/`: non-secret installable owner template
+  profiles;
+- `deploy/compose/`: Docker Compose templates and generated examples;
 - `schemas/profile-config.schema.json`: checked-in config contract;
 - `exo_distribution/` and `scripts/`: validator, renderer, and smoke tooling;
 - `tests/`: fake/no-credentials regression coverage;
@@ -44,6 +48,18 @@ Render the committed Hermes config example from TOML:
 uv run python scripts/render_hermes_config.py
 ```
 
+Validate every committed profile and cross-profile isolation:
+
+```bash
+uv run python scripts/validate_profile.py --all
+```
+
+Render the multi-owner Compose example:
+
+```bash
+uv run python scripts/render_compose.py
+```
+
 Secrets are Phase-backed and documented only as a blank bridge inventory in
 `.env.example`. The example intentionally contains only required secret keys
 for the local/dev runtime path: Telegram token, Telegram owner id, and model API
@@ -55,6 +71,11 @@ Production/operator runs should prefer Phase injection, such as:
 ```bash
 phase run --app exo-executive-agent --env dev --path /tom/local -- <command>
 ```
+
+Template owner paths are `/tom/personal-agent`,
+`/sebastian/personal-agent`, and `/noah/personal-agent`. Their blank secret
+names are inventoried in `.env.example` for bridge compatibility only; live
+secret values stay in Phase and outside git.
 
 If a local dotenv-compatible bridge is required by a provider, keep it
 generated, instance-local, ignored by git, and limited to the smallest required
@@ -140,6 +161,20 @@ external-action skills remain unapproved by default and require owner approval,
 Phase-managed secrets, and audit notes before a profile targets them. The
 private calendar fixture in `skills/fixtures/private-fallback/` exists only so
 AFK checks can validate private-source metadata without repository credentials.
+
+## Multi-Owner Isolation
+
+Each owner profile declares a distinct Hermes container, Hermes home, Telegram
+token path, log directory, backup directory, and placeholder storage mounts
+under `${EXO_RUNTIME_ROOT}`. The Compose renderer validates this profile set and
+fails before rendering if two active gateways share a Hermes home or another
+restart/runtime boundary.
+
+The generated Compose example declares one service per installable owner
+template. It mounts each Hermes home at `/opt/data/hermes-home`, the owner
+vault at `/opt/data/vault`, personal files read-only at `/mnt/personal-files`,
+and additional placeholder personal mounts read-only. These host paths are
+runtime/operator paths and are ignored by git.
 
 ## Human Review Live Smoke
 

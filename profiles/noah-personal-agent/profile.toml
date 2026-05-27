@@ -1,0 +1,96 @@
+[profile]
+id = "noah-personal-agent"
+owner_name = "Noah Ranch"
+mode = "template"
+timezone = "America/Los_Angeles"
+role = "Private Telegram-first Hermes executive assistant for Noah Ranch."
+intended_profile = "installable-template"
+
+[hermes]
+runtime = "hermes-agent"
+home = "${EXO_RUNTIME_ROOT}/noah-personal-agent/hermes-home"
+workspace = "${EXO_RUNTIME_ROOT}/noah-personal-agent/workspace"
+skills_dir = "/opt/data/skills"
+
+[telegram]
+mode = "phase"
+owner_id_secret = "NOAH_TELEGRAM_OWNER_ID"
+bot_token_secret = "NOAH_TELEGRAM_BOT_TOKEN"
+token_path = "${EXO_RUNTIME_ROOT}/noah-personal-agent/secret-bridge/telegram-bot-token"
+owner_only = true
+text_only = true
+
+[model]
+mode = "phase"
+provider = "openai"
+api_key_secret = "NOAH_OPENAI_API_KEY"
+
+[phase]
+app = "exo-executive-agent"
+environment = "prod"
+path = "/noah/personal-agent"
+
+[storage.runtime]
+kind = "hermes-home"
+path = "${EXO_RUNTIME_ROOT}/noah-personal-agent/hermes-home"
+git_owned = false
+
+[storage.vault]
+kind = "markdown-vault"
+path = "${EXO_RUNTIME_ROOT}/noah-personal-agent/vault"
+access = "read-write"
+git_owned = false
+
+[storage.personal_files]
+kind = "personal-files"
+path = "${EXO_RUNTIME_ROOT}/noah-personal-agent/personal-files"
+access = "read-only"
+git_owned = false
+
+[[storage.placeholder_mounts]]
+name = "personal-documents"
+path = "${EXO_RUNTIME_ROOT}/noah-personal-agent/placeholders/personal-documents"
+mount_path = "/mnt/personal-documents"
+access = "read-only"
+git_owned = false
+
+[container]
+name = "exo-hermes-noah-personal-agent"
+image = "ghcr.io/0xtomdaniel/hermes-agent:stable"
+restart_policy = "unless-stopped"
+
+[logs]
+path = "${EXO_RUNTIME_ROOT}/noah-personal-agent/log-boundary"
+git_owned = false
+
+[backups]
+path = "${EXO_RUNTIME_ROOT}/noah-personal-agent/backup-boundary"
+git_owned = false
+scope = "noah-personal-agent-hermes-home-vault-and-config"
+
+[[tools.safe_core]]
+name = "memory.read"
+reason = "Read owner-approved Hermes memory/context."
+
+[[tools.safe_core]]
+name = "memory.write_markdown"
+reason = "Write only to the agent-owned Markdown vault."
+
+[[tools.safe_core]]
+name = "files.read_workspace"
+reason = "Read distribution workspace and approved read-only mounts."
+
+[[tools.safe_core]]
+name = "telegram.reply_text"
+reason = "Reply to owner-only text messages in the Telegram gateway."
+
+[tools.external_actions]
+enabled = false
+allow = []
+policy = "External-action tools require per-instance opt-in, Phase-managed secrets, and approval/audit documentation."
+
+[smoke]
+telegram_fixture = "profiles/tom-local-dev/fixtures/fake_telegram_owner_text.json"
+phase_fixture = "profiles/tom-local-dev/fixtures/fake_phase_minimal.json"
+storage_fixture_root = "profiles/tom-local-dev/fixtures/storage"
+expected_reply = "Noah personal-agent template is renderable without live runtime state."

@@ -164,6 +164,13 @@ Each variant must document:
 - install/update command;
 - whether it is a template, an installable distribution, or both.
 
+The initial owner template set is `tom-personal-agent`,
+`sebastian-personal-agent`, and `noah-personal-agent`. Each template must use a
+distinct Phase path, Telegram owner/token secret names, Telegram token file
+path, Hermes home, log path, backup path, and container/restart name. The
+`tom-local-dev` profile remains a fake/no-credentials smoke profile and may
+coexist with the installable Tom template as a separate profile id.
+
 ### Deployment Interface
 
 Deployment templates and scripts should support remote SSH operation against
@@ -180,6 +187,13 @@ the ESXi guest VM. The operator path should include:
 - health and status checks;
 - log inspection;
 - backup/restore procedure references.
+
+The multi-owner Compose renderer validates every committed
+`profiles/*/profile.toml` file, renders installable owner templates, and must
+fail before rendering if two active profiles share a Hermes home, Telegram
+token path, log boundary, backup boundary, or container name. Generated Compose
+examples are repo-owned templates only; the referenced host directories and
+secret bridge files stay under `${EXO_RUNTIME_ROOT}` outside git.
 
 Secrets and private runtime state are materialized outside git. Deployment
 scripts should document the Phase app, environment, and path layout they expect,

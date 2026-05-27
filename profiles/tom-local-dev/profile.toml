@@ -3,6 +3,8 @@ id = "tom-local-dev"
 owner_name = "Tom Daniel"
 mode = "local-dev"
 timezone = "Etc/UTC"
+role = "Local/dev validation profile for Tom Daniel using fake Telegram and fake model fixtures."
+intended_profile = "template-and-local-smoke"
 
 [hermes]
 runtime = "hermes-agent"
@@ -14,6 +16,7 @@ skills_dir = "/opt/data/skills"
 mode = "fake"
 owner_id_secret = "TELEGRAM_OWNER_ID"
 bot_token_secret = "TELEGRAM_BOT_TOKEN"
+token_path = "${EXO_RUNTIME_ROOT}/tom-local-dev/secret-bridge/telegram-bot-token"
 owner_only = true
 text_only = true
 
@@ -43,6 +46,27 @@ kind = "personal-files"
 path = "${EXO_RUNTIME_ROOT}/tom-local-dev/personal-files"
 access = "read-only"
 git_owned = false
+
+[[storage.placeholder_mounts]]
+name = "calendar-export"
+path = "${EXO_RUNTIME_ROOT}/tom-local-dev/placeholders/calendar-export"
+mount_path = "/mnt/calendar-export"
+access = "read-only"
+git_owned = false
+
+[container]
+name = "exo-hermes-tom-local-dev"
+image = "ghcr.io/0xtomdaniel/hermes-agent:local-dev"
+restart_policy = "unless-stopped"
+
+[logs]
+path = "${EXO_RUNTIME_ROOT}/tom-local-dev/log-boundary"
+git_owned = false
+
+[backups]
+path = "${EXO_RUNTIME_ROOT}/tom-local-dev/backup-boundary"
+git_owned = false
+scope = "tom-local-dev-hermes-home-vault-and-config"
 
 [[tools.safe_core]]
 name = "memory.read"
