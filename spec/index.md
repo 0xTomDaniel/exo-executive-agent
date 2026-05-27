@@ -11,5 +11,5 @@ operators should read when changing the agent distribution.
   shared Hermes profile-distribution, optional profile variants, multi-repo
   skill installation, one-container-per-agent deployment, remote SSH
   redeployability, TOML config validation, Phase-backed secret materialization,
-  storage-zone contracts, and v1 Telegram/runtime boundaries for Tom and Varela
-  personal agents.
+  storage-zone contracts, and v1 Telegram/runtime boundaries for Tom, Sebastian
+  Varela, and Noah Ranch personal agents.

@@ -4,7 +4,8 @@
 
 `exo-executive-agent` defines a reusable Hermes-based personal executive
 assistant distribution. The distribution can be instantiated as separate
-private Hermes agents, initially for Tom Daniel and Sebastian Varela.
+private Hermes agents, initially for Tom Daniel, Sebastian Varela, and Noah
+Ranch.
 
 The repository owns non-secret, redeployable source material: Hermes profile
 distribution manifests, identity templates, TOML config schemas and templates,
@@ -235,11 +236,11 @@ operator and to the agent where relevant.
 
 ### Telegram Runtime Interface
 
-V1 supports owner-only Telegram text chat for each user instance. Tom and
-Varela should have separate owner identity/token paths. Automated tests use
-fake or mocked Telegram. A manual live Telegram smoke test with a real token
-and owner account is required during Human Review before the deployed runtime
-is considered usable.
+V1 supports owner-only Telegram text chat for each user instance. Tom,
+Sebastian Varela, and Noah Ranch should have separate owner identity/token
+paths. Automated tests use fake or mocked Telegram. A manual live Telegram
+smoke test with a real token and owner account is required during Human Review
+before the deployed runtime is considered usable.
 
 ## Edge Cases
 
@@ -288,7 +289,8 @@ is considered usable.
 - Supporting Telegram voice, media, documents, OCR, PDFs, arbitrary
   attachments, group chats, or multi-user memory boundaries in v1.
 - Selecting the final cloud filesystem provider in EMB-261.
-- Committing Tom's or Varela's private runtime profile data.
+- Committing Tom's, Sebastian Varela's, or Noah Ranch's private runtime profile
+  data.
 - Requiring Honcho or another external memory provider for v1.
 - Replacing Hermes internals with a custom runtime config system. The TOML
   schema governs Exo distribution/deployment config and may render
@@ -314,8 +316,10 @@ is considered usable.
 
 - 2026-05-25: Use Hermes Agent as the v1 runtime and `exo-executive-agent` as
   the shared distribution/setup repo.
-- 2026-05-25: Model Tom and Varela as separate personal-agent instances, not
-  one shared runtime.
+- 2026-05-25: Model Tom and Sebastian Varela as separate personal-agent
+  instances, not one shared runtime.
+- 2026-05-26: Add Noah Ranch as a third initial personal-agent owner, also as a
+  separate personal-agent instance with isolated runtime state.
 - 2026-05-25: Prefer one Docker container and one persistent Hermes data
   directory per personal-agent instance.
 - 2026-05-25: Prefer remote SSH deployment scripts that can run the full
