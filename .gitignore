@@ -1,0 +1,21 @@
+# User-owned/runtime material.
+.env
+.env.*
+!.env.example
+.phase/
+phase-export*
+runtime/
+data/
+hermes-home/
+memories/
+sessions/
+logs/
+backups/
+personal-files/
+
+# Generated local outputs.
+build/
+.pytest_cache/
+__pycache__/
+*.pyc
+.venv/

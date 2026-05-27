@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/0xTomDaniel/exo-executive-agent/schemas/profile-config.schema.json",
+  "title": "Exo Hermes Profile Config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "hermes",
+    "telegram",
+    "model",
+    "phase",
+    "storage",
+    "tools",
+    "smoke"
+  ],
+  "properties": {
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "owner_name", "mode", "timezone"]
+    },
+    "hermes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime", "home", "workspace", "skills_dir"]
+    },
+    "telegram": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "owner_id_secret", "bot_token_secret", "owner_only", "text_only"]
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "provider", "api_key_secret"]
+    },
+    "phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["app", "environment", "path"]
+    },
+    "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime", "vault", "personal_files"]
+    },
+    "tools": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["safe_core", "external_actions"]
+    },
+    "smoke": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "telegram_fixture",
+        "phase_fixture",
+        "storage_fixture_root",
+        "expected_reply"
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+# Rendered from profiles/tom-local-dev/profile.toml.
+# This template intentionally contains no secret values.
+profile:
+  id: "{{ profile.id }}"
+  owner_name: "{{ profile.owner_name }}"
+  mode: "{{ profile.mode }}"
+  timezone: "{{ profile.timezone }}"
+soul: "../../../SOUL.md"
+runtime:
+  home: "{{ hermes.home }}"
+  workspace: "{{ hermes.workspace }}"
+  skills_dir: "{{ hermes.skills_dir }}"
+telegram:
+  mode: "{{ telegram.mode }}"
+  owner_only: {{ telegram.owner_only }}
+  text_only: {{ telegram.text_only }}
+  token_env: "{{ telegram.bot_token_secret }}"
+  owner_id_env: "{{ telegram.owner_id_secret }}"
+model:
+  mode: "{{ model.mode }}"
+  provider: "{{ model.provider }}"
+  api_key_env: "{{ model.api_key_secret }}"
+storage:
+  runtime:
+    path: "{{ storage.runtime.path }}"
+  vault:
+    path: "{{ storage.vault.path }}"
+    access: "{{ storage.vault.access }}"
+  personal_files:
+    path: "{{ storage.personal_files.path }}"
+    access: "{{ storage.personal_files.access }}"
+tools:
+  safe_core:
+{{ tools.safe_core_yaml }}
+  external_actions:
+    enabled: {{ tools.external_actions.enabled }}
