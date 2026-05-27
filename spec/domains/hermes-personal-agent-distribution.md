@@ -66,7 +66,8 @@ area, and broader personal files mounted read-only by default.
 **Remote SSH deployment**: The preferred operator deployment path. Scripts
 should be able to prepare or update the VM, copy or render non-secret
 templates, install or update profiles and skills, start or restart Docker
-Compose services, and run health checks over SSH.
+Compose services, and run health checks over SSH. Live ESXi access is not
+assumed for ordinary Octo implementation or QA work.
 
 ## Rules and Invariants
 
@@ -106,6 +107,12 @@ Compose services, and run health checks over SSH.
   logs, restart boundaries, and backup boundaries.
 - Deployment templates must support redeploying from scratch on a fresh VM,
   not only updating an already-working host.
+- Remote deployment scripts must support dry-run, local, fixture, or mock-target
+  validation so Octo agents can complete code and QA work without direct access
+  to the operator's ESXi VM.
+- Live ESXi deployment validation is a Human Review/HITL activity unless a
+  specific issue explicitly provisions remote access and required secrets for
+  the acting agent.
 - Production skill installation should copy, sync, or install approved skills
   into each instance's `/opt/data/skills`.
 - Hermes `skills.external_dirs` may be used as a dev/operator convenience, but
@@ -170,6 +177,13 @@ Secrets and private runtime state are materialized outside git. Deployment
 scripts should document the Phase app, environment, and path layout they expect,
 plus whether they use Phase CLI runtime injection, Docker/Compose integration,
 or another Phase-supported materialization path.
+
+Implementation and QA agents should be able to verify deployment logic without
+live ESXi access by running schema validation, template rendering, dry-run SSH
+planning, local/container smokes, and mocked or fixture-backed health checks.
+When live ESXi access is not provisioned to agents, the issue should hand off a
+Human Review checklist or operator-run command transcript for final deployment
+evidence instead of blocking all implementation work.
 
 ### Config Interface
 
@@ -281,6 +295,9 @@ before the deployed runtime is considered usable.
   source-of-truth boundary.
 - Do not require real Telegram, model, cloud storage, or ESXi access in
   automated CI.
+- Do not require ordinary Octo implementation or QA agents to have direct access
+  to the operator's ESXi VM unless a specific issue explicitly provisions that
+  access and its secret materialization path.
 - Do not enable external-action tools by default in the shared distribution.
 
 ## Non-Goals
@@ -320,6 +337,9 @@ before the deployed runtime is considered usable.
   instances, not one shared runtime.
 - 2026-05-26: Add Noah Ranch as a third initial personal-agent owner, also as a
   separate personal-agent instance with isolated runtime state.
+- 2026-05-26: Treat live ESXi deployment as Human Review/HITL unless access is
+  explicitly provisioned; Octo agents validate deployment code through dry-run,
+  local, fixture, or mock-target paths by default.
 - 2026-05-25: Prefer one Docker container and one persistent Hermes data
   directory per personal-agent instance.
 - 2026-05-25: Prefer remote SSH deployment scripts that can run the full
