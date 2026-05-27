@@ -50,13 +50,15 @@ implementation is Python.
 Phase and injecting them only at runtime or deploy time. Phase is the preferred
 secret-management system for production and operator deployments.
 
-**Skills source manifest**: A source-controlled manifest listing approved skill
-sources across repositories. Entries include repo, path, ref, intended
-profiles, collision policy, and source-of-truth expectations.
+**Skills source manifest**: `skills/sources.toml`, a source-controlled manifest
+listing approved skill sources across repositories. Entries include repo, path,
+pinned ref, intended profiles, install destination, collision policy,
+sync/update behavior, fallback/operator notes for unavailable private sources,
+promotion policy, and source-of-truth expectations.
 
-**Skill installer/package manager**: The mechanism that installs approved
-skills into each personal-agent instance, preferably into that instance's
-`/opt/data/skills` directory, without treating writable repo-mounted skill
+**Skill installer/package manager**: `scripts/install_skills.py`, the mechanism
+that plans or installs approved skills into each personal-agent instance's
+`/opt/data/skills` directory without treating writable repo-mounted skill
 directories as the production source of truth.
 
 **Three-zone storage model**: The storage contract for each instance:
@@ -118,6 +120,12 @@ assumed for ordinary Octo implementation or QA work.
 - Hermes `skills.external_dirs` may be used as a dev/operator convenience, but
   writable repo-owned external skill directories are not the production
   source-of-truth path.
+- Skill installer sync behavior must be pinned-ref based: install missing
+  approved skills, keep matching installed refs unchanged, replace only the
+  same source id when its pinned manifest ref changes, and fail closed on
+  unmanaged or cross-source collisions.
+- Runtime-created or runtime-edited skills are not durable distribution
+  material until promoted back to git through a reviewed manifest/source update.
 - The default distribution enables only safe/core tools.
 - External-action tools that can send email, book calendar events, spend
   money, trade, post publicly, mutate broad cloud storage, or call sensitive
@@ -225,15 +233,25 @@ must be documented with the exact runtime/version gap it solves.
 
 ### Skills Interface
 
-The repository should include a skills source manifest. A required spike must
-choose the best skill installer/package-manager approach by comparing Hermes
-native skill install/update behavior, agentskills.io/Skills Hub compatibility,
-manifest formats, pinned refs, collision handling, profile-specific installs,
-and promotion of runtime-created skills back to git.
+The repository includes `skills/sources.toml` as the first durable skills source
+manifest. It records local core fixtures, an external core fixture source, and a
+private external-action fallback fixture so no-credential checks can prove
+multi-repo parsing and install/update behavior.
+
+`scripts/install_skills.py` is the first installer/package-manager path. It
+loads the manifest, selects approved entries for a target profile, maps
+manifest destinations under `/opt/data/skills`, and can use `--install-root` for
+fixture checks without writing live runtime paths.
 
 Production instances receive approved skills in their local Hermes skill
 directory. Runtime-local skill edits are not authoritative unless intentionally
 promoted through a git commit.
+
+Collision behavior is fail-closed: duplicate selected names or install
+destinations fail, existing runtime directories without Exo metadata fail, and
+installed metadata from another source fails. Matching source id/repo/path/ref
+is up to date; a changed pinned ref for the same source id/repo/path is replaced
+by the installer.
 
 ### Storage Interface
 
@@ -316,8 +334,6 @@ before the deployed runtime is considered usable.
 
 ## Open Questions About System Behavior
 
-- Which skill installer/package-manager approach should become the durable
-  profile skill installation contract?
 - Which storage provider/topology will EMB-317 select?
 - Which ESXi guest OS, resources, network exposure, and backup/restore details
   will EMB-276 validate?
@@ -348,6 +364,11 @@ before the deployed runtime is considered usable.
   provider/topology selection to EMB-317.
 - 2026-05-25: Treat the skill installer/package-manager choice as a required
   child spike.
+- 2026-05-27: Use `skills/sources.toml` plus `scripts/install_skills.py` as the
+  first durable skills manifest and installer path. Approved profile skills are
+  copied into `/opt/data/skills`, with fixture-backed multi-repo sources,
+  pinned refs, fail-closed collisions, and git promotion for runtime-created
+  skills.
 - 2026-05-25: Use TOML files plus schema validation as the durable non-secret
   config model. Env vars remain a runtime injection/provider compatibility
   boundary, not the config source of truth.

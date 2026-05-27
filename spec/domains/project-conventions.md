@@ -6,8 +6,8 @@ below apply to repo-owned distribution material and local validation tooling.
 ## Paths
 
 - Distribution-owned material lives in git under `distribution.yaml`, `SOUL.md`,
-  `profiles/`, `schemas/`, `exo_distribution/`, `scripts/`, `tests/`, and
-  `spec/`.
+  `profiles/`, `skills/`, `schemas/`, `exo_distribution/`, `scripts/`,
+  `tests/`, and `spec/`.
 - User-owned/runtime material must stay outside git. This includes Hermes
   homes, memories, sessions, logs, backups, state databases, mounted personal
   files, Phase service tokens, generated secret bridge files, and
@@ -42,3 +42,18 @@ below apply to repo-owned distribution material and local validation tooling.
 - The default profile enables safe/core tools only.
 - External-action tools require explicit per-instance opt-in, Phase-managed
   secrets, and approval/audit documentation.
+
+## Skills
+
+- `skills/sources.toml` is the repo-owned source manifest for installable
+  skills. It must record repo, path, pinned ref, target profile, install
+  destination, source-of-truth expectations, collision policy, sync policy, and
+  runtime-promotion policy for each source.
+- Approved profile skills install into `/opt/data/skills` through
+  `uv run python scripts/install_skills.py`; repo-owned writable
+  `skills.external_dirs` must not become the production source of truth.
+- Private or unavailable external sources must have explicit fixture fallback
+  metadata and operator notes so AFK checks can validate behavior without live
+  credentials.
+- Runtime-created or runtime-edited skills must be treated as unmanaged
+  collisions until promoted back to git with a reviewed pinned manifest update.

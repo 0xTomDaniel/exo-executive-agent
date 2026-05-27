@@ -101,6 +101,46 @@ trade, post publicly, mutate broad cloud storage, or call sensitive provider
 APIs are disabled by default. They require explicit per-instance opt-in,
 Phase-managed secrets, and approval/audit documentation.
 
+## Skills Manifest and Installer
+
+Repo-owned skills are declared in `skills/sources.toml`. Each entry records the
+source repository, source path, pinned ref, target profiles, install
+destination, source-of-truth policy, collision policy, sync behavior, and the
+promotion path for runtime-created skills.
+
+Plan the Tom local/dev install set:
+
+```bash
+uv run python scripts/install_skills.py --profile tom-local-dev
+```
+
+Production/operator installs write approved profile skills into the instance
+skills directory rooted at `/opt/data/skills`:
+
+```bash
+uv run python scripts/install_skills.py --profile tom-local-dev --apply
+```
+
+Automated checks can install into a temporary root without live credentials:
+
+```bash
+uv run python scripts/install_skills.py --profile tom-local-dev --install-root /tmp/exo-skills --apply
+```
+
+The installer fails closed when a selected manifest entry collides with another
+selected skill name or destination, or when an existing runtime skill directory
+lacks `.exo-skill-source.json` metadata. Matching pinned refs are left
+unchanged; changed refs for the same source id are replaced. Runtime-created or
+runtime-edited skills are not authoritative until promoted back to git with a
+reviewed manifest update.
+
+`skills.external_dirs` may remain a developer convenience, but writable
+repo-owned skill directories are not the production source of truth. Sensitive
+external-action skills remain unapproved by default and require owner approval,
+Phase-managed secrets, and audit notes before a profile targets them. The
+private calendar fixture in `skills/fixtures/private-fallback/` exists only so
+AFK checks can validate private-source metadata without repository credentials.
+
 ## Human Review Live Smoke
 
 Automated checks do not use live Telegram. Human Review remains responsible for

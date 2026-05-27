@@ -4,6 +4,7 @@ runtime: hermes
 version: 0.1.0
 description: Hermes profile-distribution/setup repository for private personal executive assistant instances.
 soul: SOUL.md
+skills_source_manifest: skills/sources.toml
 profiles:
   - id: tom-local-dev
     role: Tom-oriented local/dev profile with fake Telegram smoke support.

@@ -1,0 +1,60 @@
+manifest_version = 1
+default_install_root = "/opt/data/skills"
+
+[policy]
+source_of_truth = "Repo-owned skill sources and this manifest are the durable source of truth. Runtime-created or runtime-edited skills must be promoted back to git by adding or updating a pinned manifest entry in a PR before they are treated as approved distribution material."
+collision_behavior = "Fail closed when two selected entries target the same skill name or destination, or when an existing runtime skill lacks Exo source metadata."
+sync_behavior = "Install missing skills, keep matching pinned refs unchanged, and replace an installed skill only when the selected manifest entry keeps the same source id with a different pinned ref."
+production_boundary = "Install approved skills into each instance's /opt/data/skills. Do not use writable repo-owned skills.external_dirs as the production source of truth."
+
+[[sources]]
+id = "exo.daily_brief"
+name = "exo-daily-brief"
+kind = "safe_core"
+repo = "github.com/0xTomDaniel/exo-executive-agent"
+path = "skills/fixtures/core/exo-daily-brief"
+ref = "fixture-2026-05-27-core-v1"
+profile_targets = ["tom-local-dev"]
+install_destination = "/opt/data/skills/exo-daily-brief"
+source_of_truth = "git"
+approved = true
+source_access = "repo-fixture"
+collision_policy = "fail"
+sync_policy = "replace-if-ref-changed"
+promotion_policy = "Runtime edits are not authoritative; promote changes by updating this fixture, bumping the pinned ref, and reviewing the git diff."
+
+[[sources]]
+id = "hermes.file_brief"
+name = "hermes-file-brief"
+kind = "safe_core"
+repo = "github.com/hermes-fixtures/core-skills"
+path = "skills/core/file-brief"
+ref = "fixture-2026-05-27-hermes-core-v1"
+profile_targets = ["tom-local-dev"]
+install_destination = "/opt/data/skills/hermes-file-brief"
+source_of_truth = "external-git-with-fixture"
+approved = true
+source_access = "fixture-fallback"
+fallback_fixture = "skills/fixtures/external-core/hermes-file-brief"
+operator_note = "This fixture stands in for a second repo source so AFK checks can prove multi-repo install and update behavior without live external repository credentials."
+collision_policy = "fail"
+sync_policy = "replace-if-ref-changed"
+promotion_policy = "Promote runtime changes by contributing them to the external source repo or replacing this fallback fixture with a reviewed pinned source update."
+
+[[sources]]
+id = "private.calendar_audit"
+name = "private-calendar-audit"
+kind = "external_action"
+repo = "github.com/private/exo-sensitive-skills"
+path = "skills/calendar-audit"
+ref = "fixture-2026-05-27-private-calendar-v1"
+profile_targets = []
+install_destination = "/opt/data/skills/private-calendar-audit"
+source_of_truth = "private-git-with-fallback"
+approved = false
+source_access = "private-git-fallback"
+fallback_fixture = "skills/fixtures/private-fallback/private-calendar-audit"
+operator_note = "Private repository access is not available to ordinary AFK agents. This fallback fixture validates manifest parsing and audit policy only; it is not installed unless a profile explicitly approves the external action."
+collision_policy = "fail"
+sync_policy = "replace-if-ref-changed"
+promotion_policy = "Runtime-created sensitive skills require owner approval, Phase secret review, audit notes, and a pinned private-repo manifest update before install."
