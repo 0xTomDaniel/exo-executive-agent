@@ -61,7 +61,8 @@ state stay outside git.
 
 Profile TOML files own the non-secret Phase metadata:
 
-- Phase app: `exo-executive-agent`
+- Phase app: profile-specific; Tom's first live proof currently uses
+  `Tom's personal agent`
 - Phase environment: profile-specific, currently `prod` for owner templates
 - Phase path: one per personal-agent instance
 - Secret names: profile-specific Telegram bot token, Telegram owner id, and

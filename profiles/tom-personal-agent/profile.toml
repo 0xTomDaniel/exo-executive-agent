@@ -26,7 +26,7 @@ provider = "openai"
 api_key_secret = "TOM_OPENAI_API_KEY"
 
 [phase]
-app = "exo-executive-agent"
+app = "Tom's personal agent"
 environment = "prod"
 path = "/tom/personal-agent"
 
@@ -77,7 +77,7 @@ allowed_write_paths = []
 
 [container]
 name = "exo-hermes-tom-personal-agent"
-image = "ghcr.io/0xtomdaniel/hermes-agent:stable"
+image = "nousresearch/hermes-agent:latest"
 restart_policy = "unless-stopped"
 
 [logs]

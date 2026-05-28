@@ -537,10 +537,14 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertIn("command -v uv", prereq_commands)
         self.assertIn("command -v phase", prereq_commands)
         self.assertIn("command -v rsync", prereq_commands)
+        self.assertIn("nousresearch/hermes-agent:latest", COMPOSE_GENERATED.read_text())
+        self.assertIn('command: "gateway run"', COMPOSE_GENERATED.read_text())
         self.assertGreaterEqual(len(compose_command_list), 6)
         for command in compose_command_list:
             self.assertIn("EXO_RUNTIME_ROOT=/srv/exo/hermes docker compose", command)
         self.assertIn("cd /opt/exo/exo-executive-agent &&", secret_bridge_commands)
+        self.assertIn("--app", secret_bridge_commands)
+        self.assertIn("personal agent", secret_bridge_commands)
         self.assertIn(
             "./deploy/remote/materialize-secret-bridge.sh",
             secret_bridge_commands,
@@ -575,7 +579,10 @@ class TomLocalDistributionTest(unittest.TestCase):
         plan = build_deploy_plan(target, configs)
 
         for bridge in plan["secret_bridges"]:  # type: ignore[index]
-            self.assertEqual(bridge["phase"]["app"], "exo-executive-agent")
+            if bridge["profile_id"] == "tom-personal-agent":
+                self.assertEqual(bridge["phase"]["app"], "Tom's personal agent")
+            else:
+                self.assertEqual(bridge["phase"]["app"], "exo-executive-agent")
             self.assertEqual(bridge["phase"]["environment"], "prod")
             self.assertTrue(bridge["phase"]["path"].startswith("/"))
             self.assertIn("/srv/exo/hermes/", bridge["dotenv_bridge"])
@@ -628,6 +635,30 @@ class TomLocalDistributionTest(unittest.TestCase):
                     "summary": "Vault fixture reports a missing backup marker.",
                 }
             ],
+        )
+
+    def test_remote_deploy_plan_can_select_tom_only_profile(self) -> None:
+        target = load_deploy_target(REMOTE_TARGET)
+        configs = [
+            load_profile_config(path)
+            for path in discover_profile_paths(REPO_ROOT / "profiles")
+        ]
+        validate_profile_set(configs)
+        plan = build_deploy_plan(
+            target,
+            configs,
+            compose_output=Path("deploy/compose/generated/hermes-tom-personal-agent.compose.yaml"),
+            selected_profile_ids=("tom-personal-agent",),
+        )
+        command_text = json.dumps(plan["steps"])
+
+        self.assertEqual(plan["profiles"], ["tom-personal-agent"])  # type: ignore[index]
+        self.assertIn("tom-personal-agent", command_text)
+        self.assertNotIn("noah-personal-agent/secret-bridge", command_text)
+        self.assertNotIn("sebastian-personal-agent/secret-bridge", command_text)
+        self.assertIn(
+            "hermes-tom-personal-agent.compose.yaml",
+            command_text,
         )
 
     def test_remote_deploy_command_outputs_dry_run_json_without_live_access(self) -> None:

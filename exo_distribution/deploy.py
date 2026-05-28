@@ -146,6 +146,7 @@ def build_deploy_plan(
     *,
     mode: PlanMode = "dry-run",
     compose_output: Path = Path("deploy/compose/generated/hermes-multi-owner.compose.yaml"),
+    selected_profile_ids: tuple[str, ...] = (),
 ) -> dict[str, object]:
     installable = [
         config
@@ -157,6 +158,15 @@ def build_deploy_plan(
         raise ValidationError(
             "remote deployment requires at least one installable-template profile"
         )
+    if selected_profile_ids:
+        selected = set(selected_profile_ids)
+        unknown = sorted(selected - {config.profile_id for config in installable})
+        if unknown:
+            raise ValidationError(
+                "selected deploy profiles must be installable-template profiles; "
+                f"unknown={unknown}"
+            )
+        installable = [config for config in installable if config.profile_id in selected]
 
     profile_ids = [config.profile_id for config in installable]
     compose_remote = f"{target.deploy_root}/{compose_output}"
@@ -396,12 +406,14 @@ def _secret_bridge_command(target: DeployTarget, config: ProfileConfig) -> str:
             f"install -d -m 0700 {target.runtime_root}/{config.profile_id}/secret-bridge && "
             f"EXO_RUNTIME_ROOT={target.runtime_root} "
             "phase run "
-            f"--app {phase['app']} --env {phase['environment']} --path {phase['path']} "
+            f"--app {shlex.quote(str(phase['app']))} "
+            f"--env {shlex.quote(str(phase['environment']))} "
+            f"--path {shlex.quote(str(phase['path']))} "
             "-- ./deploy/remote/materialize-secret-bridge.sh "
-            f"{config.profile_id} "
-            f"{telegram['bot_token_secret']} "
-            f"{telegram['owner_id_secret']} "
-            f"{model['api_key_secret']}"
+            f"{shlex.quote(config.profile_id)} "
+            f"{shlex.quote(str(telegram['bot_token_secret']))} "
+            f"{shlex.quote(str(telegram['owner_id_secret']))} "
+            f"{shlex.quote(str(model['api_key_secret']))}"
         ),
     )
 

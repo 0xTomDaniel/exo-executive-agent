@@ -39,6 +39,18 @@ def main() -> int:
         help="Include fixture-backed health/status/log failure reporting.",
     )
     parser.add_argument(
+        "--profile",
+        action="append",
+        default=[],
+        help="Limit the deploy plan to an installable profile id. Repeatable.",
+    )
+    parser.add_argument(
+        "--compose-output",
+        type=Path,
+        default=Path("deploy/compose/generated/hermes-multi-owner.compose.yaml"),
+        help="Rendered compose path that the remote plan should copy/use.",
+    )
+    parser.add_argument(
         "--strict",
         action="store_true",
         help="Exit non-zero when mock-check reports fixture failures.",
@@ -53,6 +65,8 @@ def main() -> int:
             target,
             configs,
             mode="mock-check" if args.mock_check else "dry-run",
+            compose_output=args.compose_output,
+            selected_profile_ids=tuple(args.profile),
         )
     except ValidationError as exc:
         print(json.dumps({"ok": False, "error": str(exc)}, indent=2))

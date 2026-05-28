@@ -3,9 +3,10 @@
 # Runtime homes, token files, logs, backups, and mounts are outside git under EXO_RUNTIME_ROOT.
 services:
   noah-personal-agent:
-    image: "ghcr.io/0xtomdaniel/hermes-agent:stable"
+    image: "nousresearch/hermes-agent:latest"
     container_name: "exo-hermes-noah-personal-agent"
     restart: "unless-stopped"
+    command: "gateway run"
     env_file:
       - "${EXO_RUNTIME_ROOT}/noah-personal-agent/secret-bridge/provider.env"
     environment:
@@ -30,9 +31,10 @@ services:
       - "${EXO_RUNTIME_ROOT}/noah-personal-agent/placeholders/personal-documents:/mnt/personal-documents:ro"
 
   sebastian-personal-agent:
-    image: "ghcr.io/0xtomdaniel/hermes-agent:stable"
+    image: "nousresearch/hermes-agent:latest"
     container_name: "exo-hermes-sebastian-personal-agent"
     restart: "unless-stopped"
+    command: "gateway run"
     env_file:
       - "${EXO_RUNTIME_ROOT}/sebastian-personal-agent/secret-bridge/provider.env"
     environment:
@@ -57,9 +59,10 @@ services:
       - "${EXO_RUNTIME_ROOT}/sebastian-personal-agent/placeholders/personal-documents:/mnt/personal-documents:ro"
 
   tom-personal-agent:
-    image: "ghcr.io/0xtomdaniel/hermes-agent:stable"
+    image: "nousresearch/hermes-agent:latest"
     container_name: "exo-hermes-tom-personal-agent"
     restart: "unless-stopped"
+    command: "gateway run"
     env_file:
       - "${EXO_RUNTIME_ROOT}/tom-personal-agent/secret-bridge/provider.env"
     environment:
@@ -69,7 +72,7 @@ services:
       TELEGRAM_BOT_TOKEN_FILE: "${EXO_RUNTIME_ROOT}/tom-personal-agent/secret-bridge/telegram-bot-token"
       TELEGRAM_OWNER_ID_SECRET: "TOM_TELEGRAM_OWNER_ID"
       MODEL_API_KEY_SECRET: "TOM_OPENAI_API_KEY"
-      PHASE_APP: "exo-executive-agent"
+      PHASE_APP: "Tom's personal agent"
       PHASE_ENVIRONMENT: "prod"
       PHASE_PATH: "/tom/personal-agent"
     volumes:

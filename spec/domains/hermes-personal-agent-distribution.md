@@ -107,12 +107,23 @@ assumed for ordinary Octo implementation or QA work.
   should fetch secrets from Phase rather than treating committed examples or
   manually edited `.env` files as authoritative.
 - v1 runs one Docker container per personal-agent instance.
+- Docker Compose profiles should use the current official Hermes image
+  `nousresearch/hermes-agent:latest` and run the gateway command explicitly,
+  unless a later operator-owned image or pin is approved.
 - Active Hermes gateway containers must not share one Hermes home or one
   persistent data directory.
 - Each instance must have distinct Telegram token/identity paths, runtime data,
   logs, restart boundaries, and backup boundaries.
 - Deployment templates must support redeploying from scratch on a fresh VM,
   not only updating an already-working host.
+- Live deployment tooling must support a shared Exo/Hermes Docker host that can
+  eventually run separate Tom, Sebastian Varela, and Noah Ranch containers,
+  while allowing the first ESXi proof to deploy only Tom's selected profile
+  without requiring Sebastian or Noah secrets, containers, or runtime state.
+- The shared VM must attach to both the operator `VM Network` and the
+  `VM Storage` network. Docker image, container, and volume state must not bloat
+  the small OS disk; configure Docker's data root or equivalent container state
+  storage on the `verticordia`-backed runtime volume.
 - Remote deployment scripts must support dry-run, local, fixture, or mock-target
   validation so Octo agents can complete code and QA work without direct access
   to the operator's ESXi VM.
@@ -213,6 +224,17 @@ scripts should document the Phase app, environment, and path layout they expect,
 plus whether they use Phase CLI runtime injection, Docker/Compose integration,
 or another Phase-supported materialization path.
 
+The EMB-276 VM is a shared Exo/Hermes Docker host, not a Tom-only VM. The first
+live ESXi proof on that host targets `tom-personal-agent` only. The multi-owner
+template remains the repeatable path for Sebastian Varela and Noah Ranch, but
+the live proof must not require their Phase secrets, containers, or runtime
+directories before Tom's instance can be accepted.
+
+Provisioning should keep the Debian OS disk small and place Hermes runtime
+state plus Docker image/container/volume state on `verticordia`-backed storage,
+for example by mounting the runtime volume at `/srv/exo` and setting Docker
+`data-root` below that mount.
+
 Implementation and QA agents should be able to verify deployment logic without
 live ESXi access by running schema validation, template rendering, dry-run SSH
 planning, local/container smokes, and mocked or fixture-backed health checks.
@@ -255,6 +277,9 @@ git.
 
 Secret names should be documented by Phase app/environment/path and purpose,
 then mapped to the TOML fields or Hermes/provider runtime variables they feed.
+The first Tom live proof uses the existing Phase app `Tom's personal agent`,
+Production environment, and `/tom/personal-agent` path unless the operator
+renames or recreates that Phase app before final deployment.
 The committed `.env.example` is allowed as a secret inventory and import/bridge
 guide with blank values and comments. Do not use it as a broad config catalog.
 Phase-injected values may become environment variables at process start when
@@ -388,10 +413,12 @@ before the deployed runtime is considered usable.
 - Which storage provider/topology will EMB-317 select?
 - Which ESXi guest OS, resources, network exposure, and backup/restore details
   will EMB-276 validate?
+- Which command shape should select the live deployment profile for EMB-276:
+  a profile flag, target TOML profile list, or generated Tom-only target file?
 - Which optional profile variants should ship first?
-- Which exact Phase app/environment/path layout and secret names should be
-  standardized for per-instance Telegram, model/provider, storage, and optional
-  external-action credentials?
+- Which exact Phase app/environment/path layout should Sebastian Varela, Noah
+  Ranch, and any renamed Tom production app use for per-instance Telegram,
+  model/provider, storage, and optional external-action credentials?
 - Which TOML schema implementation should be used in this repo: TypeScript/Zod
   or a Python equivalent?
 - Which implementation choices require target-repo ADRs after spikes resolve?
@@ -407,6 +434,22 @@ before the deployed runtime is considered usable.
 - 2026-05-26: Treat live ESXi deployment as Human Review/HITL unless access is
   explicitly provisioned; Octo agents validate deployment code through dry-run,
   local, fixture, or mock-target paths by default.
+- 2026-05-28: EMB-276 provisions a shared Exo/Hermes Docker host for the
+  personal-agent containers. The first live proof on that host is scoped to
+  `tom-personal-agent` only; Sebastian Varela and Noah Ranch stay as documented
+  repeatable follow-on instances and must not be required for the first live
+  proof.
+- 2026-05-28: The shared VM must use both `VM Network` and `VM Storage`, keep
+  the OS disk small, and place Docker state plus Hermes runtime state on
+  `verticordia`-backed storage instead of the boot disk.
+- 2026-05-28: Live ESXi staging found the profile-local GHCR image reference
+  denied and confirmed the official Docker Hub image
+  `nousresearch/hermes-agent:latest` pulls successfully on the VM. Compose
+  should run `gateway run` explicitly for gateway deployments.
+- 2026-05-28: Live Phase inventory showed an existing Production app named
+  `Tom's personal agent`, but no required Tom Telegram/OpenAI secrets at
+  `/tom/personal-agent`; final live start remains blocked on materializing those
+  secret names through Phase without exposing raw values.
 - 2026-05-25: Prefer one Docker container and one persistent Hermes data
   directory per personal-agent instance.
 - 2026-05-25: Prefer remote SSH deployment scripts that can run the full

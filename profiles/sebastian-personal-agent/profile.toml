@@ -77,7 +77,7 @@ allowed_write_paths = []
 
 [container]
 name = "exo-hermes-sebastian-personal-agent"
-image = "ghcr.io/0xtomdaniel/hermes-agent:stable"
+image = "nousresearch/hermes-agent:latest"
 restart_policy = "unless-stopped"
 
 [logs]

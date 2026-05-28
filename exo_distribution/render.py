@@ -81,6 +81,7 @@ def _compose_service(config: ProfileConfig) -> str:
         f'    image: "{container["image"]}"',
         f'    container_name: "{container["name"]}"',
         f'    restart: "{container["restart_policy"]}"',
+        '    command: "gateway run"',
         "    env_file:",
         f'      - "${{EXO_RUNTIME_ROOT}}/{config.profile_id}/secret-bridge/provider.env"',
         "    environment:",
