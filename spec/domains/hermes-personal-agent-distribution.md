@@ -182,6 +182,14 @@ but it must not leak into normal owner-facing self-introductions as the
 assistant's name. Setup must also patch any seeded upstream personality preset
 that names the assistant Hermes.
 
+Existing Hermes conversations may keep old identity context even after
+`SOUL.md` or profile material is updated. Deployment and Human Review must
+reset or delete a profile session only as an explicit operator action, using the
+owner-visible `/reset` or `/new` Telegram command when possible, or
+`hermes sessions delete --yes <session-id>` for approved recovery. Scripts
+must not silently wipe sessions during ordinary redeploys because sessions are
+user-owned runtime state.
+
 Each variant must document:
 
 - intended role;

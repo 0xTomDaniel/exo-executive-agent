@@ -65,6 +65,10 @@ operator should capture a transcript or compact evidence bundle with:
    config, not from hand-maintained ordinary `.env` config.
 3. A real owner chat message and the assistant's text reply, confirming the
    assistant identifies as Exo and does not present Hermes as its name.
+   If `SOUL.md`, role text, or seeded personality config changed after the
+   conversation already existed, first send `/reset` or `/new` in Telegram, or
+   record the explicit operator-approved `hermes sessions delete` action used
+   to clear that profile's test session.
 4. A non-owner or wrong-chat attempt showing no assistant reply.
 5. Morning/evening check-in delivery to the owner chat only, or the exact
    disabled setting if the profile has proactive delivery disabled.

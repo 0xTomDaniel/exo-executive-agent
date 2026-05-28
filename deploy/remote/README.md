@@ -126,6 +126,13 @@ For a fresh VM or update, the operator flow is:
 8. Run Compose pull and `up -d --remove-orphans`.
 9. Inspect status, health, and logs.
 
+When an update changes `SOUL.md`, profile role text, or a seeded personality
+preset for an already-used profile, reset the owner conversation before
+re-running the identity smoke. Prefer the owner-visible `/reset` or `/new`
+Telegram command; alternatively, use `hermes sessions delete --yes <session-id>`
+only with explicit operator approval. Deployment must not silently delete
+Hermes sessions because they are user-owned runtime state.
+
 To redeploy after a distribution update, repeat the same plan. Compose restart
 boundaries are per service/container, so one profile can be restarted without
 sharing active Hermes home state with another.

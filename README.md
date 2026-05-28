@@ -255,6 +255,11 @@ confirm that the assistant identifies as Exo, configured check-ins and
 health/status pings appear only in the owner chat, and no group, non-owner, or
 external-action delivery occurs.
 
+After identity or persona updates on an already-used profile, clear the test
+conversation before re-running that smoke. Prefer `/reset` or `/new` in
+Telegram; use `hermes sessions delete --yes <session-id>` only as an explicit
+operator-approved recovery action. Deployment does not silently delete sessions.
+
 Use [docs/human-review-checklist.md](docs/human-review-checklist.md) for the
 required EMB-261 parent readiness summary, accepted child-slice evidence,
 manual Telegram transcript requirements, backup/restore evidence, and the

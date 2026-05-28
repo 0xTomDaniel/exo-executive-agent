@@ -345,6 +345,21 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertIn("EMB-276 owns live ESXi VM provisioning and deployment proof", content)
         self.assertIn("EMB-317 owns storage provider/topology selection and live mount proof", content)
         self.assertIn("Ordinary CI, Agent Review, and Agent QA must not require real Telegram", content)
+        self.assertIn("send `/reset` or `/new` in Telegram", content)
+        self.assertIn("explicit operator-approved `hermes sessions delete`", content)
+
+    def test_identity_updates_require_explicit_session_reset_guidance(self) -> None:
+        readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+        remote_readme = (REPO_ROOT / "deploy/remote/README.md").read_text(encoding="utf-8")
+        spec = (REPO_ROOT / "spec/domains/hermes-personal-agent-distribution.md").read_text(
+            encoding="utf-8"
+        )
+
+        for content in (readme, remote_readme, spec):
+            self.assertIn("/reset", content)
+            self.assertIn("/new", content)
+            self.assertIn("hermes sessions delete", content)
+            self.assertIn("not silently", content)
 
     def test_no_private_runtime_state_is_committed(self) -> None:
         forbidden_parts = {
