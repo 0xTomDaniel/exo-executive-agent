@@ -118,7 +118,9 @@ For a fresh VM or update, the operator flow is:
 3. Validate profiles and render templates locally.
 4. Copy distribution material to the deploy root with the plan's rsync command.
 5. Create runtime directories and install/update profile TOML into each
-   profile config boundary.
+   profile config boundary, and install the repo-owned `SOUL.md` into the
+   profile's Hermes home so the user-facing assistant identity is Exo rather
+   than the underlying Hermes runtime.
 6. Materialize Phase secret bridges.
 7. Install or sync approved skills for each profile.
 8. Run Compose pull and `up -d --remove-orphans`.

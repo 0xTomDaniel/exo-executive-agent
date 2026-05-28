@@ -63,7 +63,8 @@ operator should capture a transcript or compact evidence bundle with:
    bridge location, with secret values redacted.
 2. Confirmation that the bot starts from validated TOML and rendered Hermes
    config, not from hand-maintained ordinary `.env` config.
-3. A real owner chat message and the assistant's text reply.
+3. A real owner chat message and the assistant's text reply, confirming the
+   assistant identifies as Exo and does not present Hermes as its name.
 4. A non-owner or wrong-chat attempt showing no assistant reply.
 5. Morning/evening check-in delivery to the owner chat only, or the exact
    disabled setting if the profile has proactive delivery disabled.

@@ -3,7 +3,7 @@ id = "noah-personal-agent"
 owner_name = "Noah Ranch"
 mode = "template"
 timezone = "America/Los_Angeles"
-role = "Private Telegram-first Hermes executive assistant for Noah Ranch."
+role = "Private Telegram-first Exo executive assistant for Noah Ranch, powered by Hermes."
 intended_profile = "installable-template"
 
 [hermes]

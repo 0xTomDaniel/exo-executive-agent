@@ -175,6 +175,13 @@ Hermes-native files or process environment only where Hermes or a provider
 requires that shape. The final layout may include profile variant subdirectories
 if the selected Hermes-compatible installer path requires it.
 
+`SOUL.md` is the authoritative user-facing identity prompt. Deployment must
+install it into each profile's Hermes home so Telegram replies identify the
+assistant as Exo. Hermes may appear in infrastructure, status, and runtime docs,
+but it must not leak into normal owner-facing self-introductions as the
+assistant's name. Setup must also patch any seeded upstream personality preset
+that names the assistant Hermes.
+
 Each variant must document:
 
 - intended role;
@@ -359,7 +366,8 @@ V1 supports owner-only Telegram text chat for each user instance. Tom,
 Sebastian Varela, and Noah Ranch should have separate owner identity/token
 paths. Automated tests use fake or mocked Telegram. A manual live Telegram
 smoke test with a real token and owner account is required during Human Review
-before the deployed runtime is considered usable.
+before the deployed runtime is considered usable. The smoke reply must confirm
+the assistant identifies as Exo rather than Hermes.
 
 ## Edge Cases
 

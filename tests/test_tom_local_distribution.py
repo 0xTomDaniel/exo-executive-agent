@@ -39,6 +39,7 @@ ENV_EXAMPLE = REPO_ROOT / ".env.example"
 SKILLS_MANIFEST = REPO_ROOT / "skills/sources.toml"
 REMOTE_TARGET = REPO_ROOT / "deploy/remote/mock-target.toml"
 HUMAN_REVIEW_CHECKLIST = REPO_ROOT / "docs/human-review-checklist.md"
+SOUL = REPO_ROOT / "SOUL.md"
 
 
 class TomLocalDistributionTest(unittest.TestCase):
@@ -70,10 +71,20 @@ class TomLocalDistributionTest(unittest.TestCase):
             },
             {"Tom Daniel", "Sebastian Varela", "Noah Ranch"},
         )
+        for config in owner_profiles:
+            role = config.data["profile"]["role"]  # type: ignore[index]
+            self.assertIn("Exo executive assistant", role)
+            self.assertNotIn("Hermes executive assistant", role)
         self.assertEqual(len({config.hermes_home for config in owner_profiles}), 3)
         self.assertEqual(len({config.telegram_token_path for config in owner_profiles}), 3)
         self.assertEqual(len({config.log_path for config in owner_profiles}), 3)
         self.assertEqual(len({config.backup_path for config in owner_profiles}), 3)
+
+    def test_soul_pins_exo_as_user_facing_identity(self) -> None:
+        content = SOUL.read_text(encoding="utf-8")
+        self.assertIn("Your name is Exo.", content)
+        self.assertIn("Hermes is the runtime and infrastructure layer", content)
+        self.assertIn("Do not say \"I am Hermes\"", content)
 
     def test_rendered_hermes_config_matches_committed_example(self) -> None:
         config = load_profile_config(PROFILE)
@@ -544,6 +555,11 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertIn("scripts/render_compose.py", command_text)
         self.assertIn("scripts/install_skills.py", command_text)
         self.assertIn("docker compose", command_text)
+        self.assertIn("/SOUL.md", command_text)
+        self.assertIn("/hermes-home/SOUL.md", command_text)
+        self.assertIn("sudo install -o 10000 -g 10000 -m 0640", command_text)
+        self.assertIn("Captain Exo", command_text)
+        self.assertIn("They call me Exo", command_text)
         self.assertIn("command -v uv", prereq_commands)
         self.assertIn("command -v phase", prereq_commands)
         self.assertIn("command -v rsync", prereq_commands)

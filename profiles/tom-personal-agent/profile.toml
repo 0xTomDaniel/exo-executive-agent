@@ -3,7 +3,7 @@ id = "tom-personal-agent"
 owner_name = "Tom Daniel"
 mode = "template"
 timezone = "America/Los_Angeles"
-role = "Private Telegram-first Hermes executive assistant for Tom Daniel."
+role = "Private Telegram-first Exo executive assistant for Tom Daniel, powered by Hermes."
 intended_profile = "installable-template"
 
 [hermes]

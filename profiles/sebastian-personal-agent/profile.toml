@@ -3,7 +3,7 @@ id = "sebastian-personal-agent"
 owner_name = "Sebastian Varela"
 mode = "template"
 timezone = "America/Los_Angeles"
-role = "Private Telegram-first Hermes executive assistant for Sebastian Varela."
+role = "Private Telegram-first Exo executive assistant for Sebastian Varela, powered by Hermes."
 intended_profile = "installable-template"
 
 [hermes]

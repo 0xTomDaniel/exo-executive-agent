@@ -50,7 +50,7 @@ profiles:
     backups: ${EXO_RUNTIME_ROOT}/tom-local-dev/backup-boundary
     restart_boundary: exo-hermes-tom-local-dev
   - id: tom-personal-agent
-    role: Private Telegram-first Hermes executive assistant for Tom Daniel.
+    role: Private Telegram-first Exo executive assistant for Tom Daniel, powered by Hermes.
     config: profiles/tom-personal-agent/profile.toml
     required_phase_path: /tom/personal-agent
     owner_identity: Tom Daniel
@@ -66,7 +66,7 @@ profiles:
       - telegram.reply_text
     external_action_tools: []
   - id: sebastian-personal-agent
-    role: Private Telegram-first Hermes executive assistant for Sebastian Varela.
+    role: Private Telegram-first Exo executive assistant for Sebastian Varela, powered by Hermes.
     config: profiles/sebastian-personal-agent/profile.toml
     required_phase_path: /sebastian/personal-agent
     owner_identity: Sebastian Varela
@@ -82,7 +82,7 @@ profiles:
       - telegram.reply_text
     external_action_tools: []
   - id: noah-personal-agent
-    role: Private Telegram-first Hermes executive assistant for Noah Ranch.
+    role: Private Telegram-first Exo executive assistant for Noah Ranch, powered by Hermes.
     config: profiles/noah-personal-agent/profile.toml
     required_phase_path: /noah/personal-agent
     owner_identity: Noah Ranch

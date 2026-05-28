@@ -226,15 +226,7 @@ def build_deploy_plan(
             "name": "install-or-update-profile-material",
             "kind": "remote",
             "commands": [
-                _ssh(
-                    target,
-                    (
-                        f"install -d -m 0750 {target.runtime_root}/{config.profile_id}/config && "
-                        "install -m 0640 "
-                        f"{target.deploy_root}/profiles/{config.profile_id}/profile.toml "
-                        f"{target.runtime_root}/{config.profile_id}/config/profile.toml"
-                    ),
-                )
+                _ssh(target, _profile_material_command(target, config))
                 for config in installable
             ],
         },
@@ -363,6 +355,35 @@ def _render_compose_command(
     if compose_output != Path("deploy/compose/generated/hermes-multi-owner.compose.yaml"):
         args.append(f"--output {shlex.quote(str(compose_output))}")
     return " ".join(args)
+
+
+def _profile_material_command(target: DeployTarget, config: ProfileConfig) -> str:
+    profile_root = f"{target.runtime_root}/{config.profile_id}"
+    profile_config_src = f"{target.deploy_root}/profiles/{config.profile_id}/profile.toml"
+    profile_config_dest = f"{profile_root}/config/profile.toml"
+    soul_src = f"{target.deploy_root}/SOUL.md"
+    soul_dest = f"{profile_root}/hermes-home/SOUL.md"
+    config_yaml = f"{profile_root}/hermes-home/config.yaml"
+    config_patch = "\n".join(
+        [
+            "from pathlib import Path",
+            "import sys",
+            "path = Path(sys.argv[1])",
+            "text = path.read_text(encoding='utf-8')",
+            "text = text.replace('Captain Hermes', 'Captain Exo')",
+            "text = text.replace('They call me Hermes', 'They call me Exo')",
+            "path.write_text(text, encoding='utf-8')",
+        ]
+    )
+    return (
+        f"install -d -m 0750 {shlex.quote(profile_root + '/config')} && "
+        f"install -m 0640 {shlex.quote(profile_config_src)} {shlex.quote(profile_config_dest)} && "
+        f"sudo install -d -o 10000 -g 10000 -m 0700 {shlex.quote(profile_root + '/hermes-home')} && "
+        f"sudo install -o 10000 -g 10000 -m 0640 {shlex.quote(soul_src)} {shlex.quote(soul_dest)} && "
+        f"if [ -f {shlex.quote(config_yaml)} ]; then "
+        f"sudo python3 -c {shlex.quote(config_patch)} {shlex.quote(config_yaml)}; "
+        "fi"
+    )
 
 
 def load_mock_health(fixture_path: str) -> dict[str, object]:

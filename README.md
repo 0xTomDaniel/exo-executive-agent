@@ -251,8 +251,9 @@ proof; unresolved provider details must stay placeholders here.
 Automated checks do not use live Telegram. Human Review remains responsible for
 one manual live Telegram smoke with a real bot token and owner account before a
 deployed personal-agent runtime is considered usable. That manual smoke should
-confirm that configured check-ins and health/status pings appear only in the
-owner chat and that no group, non-owner, or external-action delivery occurs.
+confirm that the assistant identifies as Exo, configured check-ins and
+health/status pings appear only in the owner chat, and no group, non-owner, or
+external-action delivery occurs.
 
 Use [docs/human-review-checklist.md](docs/human-review-checklist.md) for the
 required EMB-261 parent readiness summary, accepted child-slice evidence,
