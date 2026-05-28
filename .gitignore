@@ -4,6 +4,8 @@
 !.env.example
 .phase/
 phase-export*
+secret-bridge/
+provider.env
 runtime/
 data/
 hermes-home/

@@ -90,6 +90,7 @@ def _compose_service(config: ProfileConfig) -> str:
         f'      - "{hermes["home"]}:/opt/data/hermes-home"',
         f'      - "{hermes["workspace"]}:/workspace"',
         f'      - "{telegram["token_path"]}:/run/secrets/telegram-bot-token:ro"',
+        f'      - "${{EXO_RUNTIME_ROOT}}/{config.profile_id}/skills:/opt/data/skills"',
         f'      - "{storage["vault"]["path"]}:/opt/data/vault"',  # type: ignore[index]
         (
             f'      - "{storage["personal_files"]["path"]}:/mnt/personal-files:ro"'

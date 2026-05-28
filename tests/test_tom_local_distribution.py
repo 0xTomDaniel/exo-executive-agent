@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import subprocess
 import sys
 import tempfile
@@ -14,6 +15,7 @@ from exo_distribution.config import (
     schema_summary,
     validate_profile_set,
 )
+from exo_distribution.deploy import build_deploy_plan, load_deploy_target
 from exo_distribution.proactive import run_fake_proactive_smoke
 from exo_distribution.render import render_compose, render_hermes_config
 from exo_distribution.skills import (
@@ -33,6 +35,7 @@ COMPOSE_TEMPLATE = REPO_ROOT / "deploy/compose/hermes-multi-owner.compose.yaml.t
 COMPOSE_GENERATED = REPO_ROOT / "deploy/compose/generated/hermes-multi-owner.compose.yaml"
 ENV_EXAMPLE = REPO_ROOT / ".env.example"
 SKILLS_MANIFEST = REPO_ROOT / "skills/sources.toml"
+REMOTE_TARGET = REPO_ROOT / "deploy/remote/mock-target.toml"
 
 
 class TomLocalDistributionTest(unittest.TestCase):
@@ -107,9 +110,11 @@ class TomLocalDistributionTest(unittest.TestCase):
                 f"${{EXO_RUNTIME_ROOT}}/{profile_id}/secret-bridge/telegram-bot-token",
                 rendered,
             )
+            self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/skills:/opt/data/skills", rendered)
             self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/log-boundary", rendered)
             self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/backup-boundary", rendered)
         self.assertEqual(rendered.count("/opt/data/hermes-home"), 3)
+        self.assertEqual(rendered.count("/opt/data/skills"), 3)
         self.assertNotIn("tom-local-dev:", rendered)
 
     def test_fake_telegram_smoke_replies_only_to_owner(self) -> None:
@@ -352,6 +357,111 @@ class TomLocalDistributionTest(unittest.TestCase):
                 '"runtime_destination": "/opt/data/skills/exo-daily-brief"',
                 result.stdout,
             )
+
+    def test_remote_deploy_plan_covers_mock_ssh_workflow(self) -> None:
+        target = load_deploy_target(REMOTE_TARGET)
+        configs = [
+            load_profile_config(path)
+            for path in discover_profile_paths(REPO_ROOT / "profiles")
+        ]
+        validate_profile_set(configs)
+        plan = build_deploy_plan(target, configs)
+        step_names = [step["name"] for step in plan["steps"]]  # type: ignore[index]
+
+        self.assertEqual(plan["profiles"], [  # type: ignore[index]
+            "noah-personal-agent",
+            "sebastian-personal-agent",
+            "tom-personal-agent",
+        ])
+        self.assertEqual(
+            step_names,
+            [
+                "prerequisite-checks",
+                "validate-toml-configs",
+                "render-compose-and-profile-templates",
+                "copy-distribution-material",
+                "create-instance-runtime-boundaries",
+                "install-or-update-profile-material",
+                "materialize-phase-secret-bridges",
+                "install-or-sync-profile-skills",
+                "compose-start-or-restart",
+                "health-checks",
+                "status-and-log-inspection",
+                "backup-restore-and-redeploy-reference",
+            ],
+        )
+        command_text = json.dumps(plan["steps"])
+        self.assertIn("scripts/validate_profile.py --all", command_text)
+        self.assertIn("scripts/render_compose.py", command_text)
+        self.assertIn("scripts/install_skills.py", command_text)
+        self.assertIn("docker compose", command_text)
+        self.assertIn("logs --tail 100", command_text)
+        self.assertIn("restart", command_text)
+        self.assertIn(
+            "Live ESXi execution is Human Review/HITL",
+            plan["live_esxi_boundary"],  # type: ignore[index]
+        )
+
+    def test_remote_deploy_secret_bridge_plan_is_non_secret_and_instance_local(self) -> None:
+        target = load_deploy_target(REMOTE_TARGET)
+        configs = [
+            load_profile_config(path)
+            for path in discover_profile_paths(REPO_ROOT / "profiles")
+        ]
+        plan = build_deploy_plan(target, configs)
+
+        for bridge in plan["secret_bridges"]:  # type: ignore[index]
+            self.assertEqual(bridge["phase"]["app"], "exo-executive-agent")
+            self.assertEqual(bridge["phase"]["environment"], "prod")
+            self.assertTrue(bridge["phase"]["path"].startswith("/"))
+            self.assertIn("/srv/exo/hermes/", bridge["dotenv_bridge"])
+            self.assertTrue(bridge["dotenv_bridge"].endswith("/secret-bridge/provider.env"))
+            self.assertEqual(len(bridge["dotenv_keys"]), 2)
+            for secret_name in bridge["secret_names"]:
+                self.assertTrue(secret_name.endswith(("_TOKEN", "_OWNER_ID", "_API_KEY")))
+                self.assertNotIn("fake-token-not-live", secret_name)
+
+    def test_remote_deploy_mock_check_reports_fixture_failures(self) -> None:
+        target = load_deploy_target(REMOTE_TARGET)
+        configs = [
+            load_profile_config(path)
+            for path in discover_profile_paths(REPO_ROOT / "profiles")
+        ]
+        plan = build_deploy_plan(target, configs, mode="mock-check")
+        mock_health = plan["mock_health"]  # type: ignore[index]
+
+        self.assertFalse(mock_health["ok"])  # type: ignore[index]
+        self.assertEqual(mock_health["problem_count"], 4)  # type: ignore[index]
+        self.assertEqual(
+            mock_health["failures"],  # type: ignore[index]
+            [
+                {
+                    "category": "storage_safety",
+                    "severity": "critical",
+                    "summary": "Vault fixture reports a missing backup marker.",
+                }
+            ],
+        )
+
+    def test_remote_deploy_command_outputs_dry_run_json_without_live_access(self) -> None:
+        result = subprocess.run(
+            [
+                sys.executable,
+                "scripts/remote_deploy.py",
+                "--config",
+                "deploy/remote/mock-target.toml",
+                "--mock-check",
+            ],
+            cwd=REPO_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        payload = json.loads(result.stdout)
+
+        self.assertEqual(payload["target"]["host"], "mock-exo-vm.local")
+        self.assertEqual(payload["mode"], "mock-check")
+        self.assertFalse(payload["mock_health"]["ok"])
 
 
 if __name__ == "__main__":

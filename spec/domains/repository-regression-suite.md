@@ -10,6 +10,8 @@ uv run python scripts/validate_profile.py --all
 uv run python scripts/render_hermes_config.py
 uv run python scripts/install_skills.py --profile tom-local-dev
 uv run python scripts/render_compose.py
+uv run python scripts/remote_deploy.py --config deploy/remote/mock-target.toml
+uv run python scripts/remote_deploy.py --config deploy/remote/mock-target.toml --mock-check
 uv run python scripts/smoke_tom_local.py
 uv run python -m unittest discover -s tests
 ```
@@ -26,7 +28,14 @@ Expected coverage:
   fallback sources;
 - the rendered Compose example declares one Hermes container per profile and
   rejects shared Hermes homes, Telegram token paths, logs, backups, and restart
-  boundaries;
+  boundaries, with one profile-local skills mount per container;
+- the remote deploy dry-run validates mock target TOML, profiles, render/copy
+  plans, profile install/update commands, Phase secret bridge metadata, skills
+  install/sync, Compose lifecycle, health/status/log commands, backup/redeploy
+  references, and HITL live-ESXi boundaries without opening SSH or using live
+  secrets;
+- the mock deploy health path reports fixture failures without requiring real
+  Phase, Telegram, model, cloud storage, or ESXi access;
 - fake Phase fixtures provide only minimal required secret bridge names;
 - fake Telegram smoke replies to the owner-only text interaction and ignores a
   non-owner message;

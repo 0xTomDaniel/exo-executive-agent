@@ -18,6 +18,9 @@ below apply to repo-owned distribution material and local validation tooling.
   homes, Telegram token paths, log paths, and backup paths.
 - Docker/Compose examples are generated distribution material. Host paths they
   reference remain user-owned/runtime paths under `${EXO_RUNTIME_ROOT}`.
+- Remote deployment templates live under `deploy/remote/`. Committed targets
+  are non-secret mock/dry-run templates only; live VM host facts, generated
+  secret bridges, Phase service tokens, and runtime state stay outside git.
 
 ## Config
 
@@ -27,6 +30,8 @@ below apply to repo-owned distribution material and local validation tooling.
   `uv run python scripts/render_hermes_config.py`.
 - Multi-owner Compose output is rendered from all committed profiles with
   `uv run python scripts/render_compose.py`.
+- Remote deploy plans validate profiles and render a mock SSH workflow with
+  `uv run python scripts/remote_deploy.py --config deploy/remote/mock-target.toml`.
 - Minimal proactive behavior is configured only in TOML under `[proactive]`.
   It targets the same profile id, uses the `telegram-owner-text` surface, and
   validates with fake/local health providers for automated checks.
@@ -43,6 +48,9 @@ below apply to repo-owned distribution material and local validation tooling.
 - Prefer Phase injection and native runtime env ingestion. Do not add `dotenv`
   by default.
 - Do not use `VITE_` prefixes for secrets.
+- Any generated dotenv-compatible provider bridge must be instance-local under
+  `${EXO_RUNTIME_ROOT}/<profile>/secret-bridge/`, ignored by git, and limited to
+  the smallest provider-required secret names.
 
 ## Runtime Defaults
 
@@ -56,6 +64,9 @@ below apply to repo-owned distribution material and local validation tooling.
   proactive external actions are out of scope.
 - Active Hermes gateway containers must not share a Hermes home, Telegram token
   path, log boundary, backup boundary, or restart/container boundary.
+- Remote deploy validation uses dry-run or mock-target paths. Live ESXi
+  execution remains Human Review/HITL unless a later issue grants access and
+  secrets.
 
 ## Skills
 
