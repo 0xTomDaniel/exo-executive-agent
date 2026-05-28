@@ -109,6 +109,10 @@ class TomLocalDistributionTest(unittest.TestCase):
             self.assertIn(f"{profile_id}:", rendered)
             self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/hermes-home", rendered)
             self.assertIn(
+                f'    env_file:\n      - "${{EXO_RUNTIME_ROOT}}/{profile_id}/secret-bridge/provider.env"',
+                rendered,
+            )
+            self.assertIn(
                 f"${{EXO_RUNTIME_ROOT}}/{profile_id}/secret-bridge/telegram-bot-token",
                 rendered,
             )
@@ -502,6 +506,9 @@ class TomLocalDistributionTest(unittest.TestCase):
         secret_bridge_commands = "\n".join(
             steps_by_name["materialize-phase-secret-bridges"]["commands"]  # type: ignore[index]
         )
+        copy_commands = "\n".join(
+            steps_by_name["copy-distribution-material"]["commands"]  # type: ignore[index]
+        )
         self.assertIn("scripts/validate_profile.py --all", command_text)
         self.assertIn("scripts/render_compose.py", command_text)
         self.assertIn("scripts/install_skills.py", command_text)
@@ -516,6 +523,20 @@ class TomLocalDistributionTest(unittest.TestCase):
             "./deploy/remote/materialize-secret-bridge.sh",
             secret_bridge_commands,
         )
+        for excluded_path in (
+            ".phase",
+            "phase-export*",
+            "secret-bridge",
+            "provider.env",
+            "hermes-home",
+            "logs",
+            "backups",
+            "personal-files",
+            "memories",
+            "sessions",
+        ):
+            self.assertIn(excluded_path, copy_commands)
+        self.assertGreaterEqual(copy_commands.count("--exclude"), 15)
         self.assertIn("logs --tail 100", command_text)
         self.assertIn("restart", command_text)
         self.assertIn(
@@ -541,6 +562,29 @@ class TomLocalDistributionTest(unittest.TestCase):
             for secret_name in bridge["secret_names"]:
                 self.assertTrue(secret_name.endswith(("_TOKEN", "_OWNER_ID", "_API_KEY")))
                 self.assertNotIn("fake-token-not-live", secret_name)
+
+    def test_secret_bridge_materializer_fails_without_phase_values(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            result = subprocess.run(
+                [
+                    "sh",
+                    "deploy/remote/materialize-secret-bridge.sh",
+                    "tom-personal-agent",
+                    "TOM_TELEGRAM_BOT_TOKEN",
+                    "TOM_TELEGRAM_OWNER_ID",
+                    "TOM_MODEL_API_KEY",
+                ],
+                cwd=REPO_ROOT,
+                env={"EXO_RUNTIME_ROOT": tmp},
+                capture_output=True,
+                text=True,
+            )
+
+            bridge_dir = Path(tmp) / "tom-personal-agent" / "secret-bridge"
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("missing required Phase-injected secrets", result.stderr)
+            self.assertFalse((bridge_dir / "telegram-bot-token").exists())
+            self.assertFalse((bridge_dir / "provider.env").exists())
 
     def test_remote_deploy_mock_check_reports_fixture_failures(self) -> None:
         target = load_deploy_target(REMOTE_TARGET)

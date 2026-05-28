@@ -12,6 +12,24 @@ from exo_distribution.config import ProfileConfig, ValidationError
 
 PlanMode = Literal["dry-run", "mock-check"]
 
+RUNTIME_RSYNC_EXCLUDES = (
+    ".git",
+    ".venv",
+    ".env*",
+    ".phase",
+    "phase-export*",
+    "runtime",
+    "data",
+    "secret-bridge",
+    "provider.env",
+    "hermes-home",
+    "memories",
+    "sessions",
+    "logs",
+    "backups",
+    "personal-files",
+)
+
 
 @dataclass(frozen=True)
 class DeployTarget:
@@ -180,8 +198,7 @@ def build_deploy_plan(
                 (
                     "rsync -az --delete "
                     f"-e {shlex.quote(_rsync_ssh(target))} "
-                    "--exclude .git --exclude .venv --exclude runtime "
-                    "--exclude data --exclude '.env*' ./ "
+                    f"{_rsync_exclude_args()} ./ "
                     f"{target.ssh_destination}:{target.deploy_root}/"
                 ),
             ],
@@ -429,6 +446,13 @@ def _rsync_ssh(target: DeployTarget) -> str:
         f"ssh -p {target.port} "
         f"-o ConnectTimeout={target.connect_timeout_seconds} "
         f"-o StrictHostKeyChecking={target.strict_host_key_checking}"
+    )
+
+
+def _rsync_exclude_args() -> str:
+    return " ".join(
+        f"--exclude {shlex.quote(pattern)}"
+        for pattern in RUNTIME_RSYNC_EXCLUDES
     )
 
 

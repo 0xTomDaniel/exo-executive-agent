@@ -6,6 +6,8 @@ services:
     image: "ghcr.io/0xtomdaniel/hermes-agent:stable"
     container_name: "exo-hermes-noah-personal-agent"
     restart: "unless-stopped"
+    env_file:
+      - "${EXO_RUNTIME_ROOT}/noah-personal-agent/secret-bridge/provider.env"
     environment:
       HERMES_PROFILE_ID: "noah-personal-agent"
       HERMES_HOME: "${EXO_RUNTIME_ROOT}/noah-personal-agent/hermes-home"
@@ -31,6 +33,8 @@ services:
     image: "ghcr.io/0xtomdaniel/hermes-agent:stable"
     container_name: "exo-hermes-sebastian-personal-agent"
     restart: "unless-stopped"
+    env_file:
+      - "${EXO_RUNTIME_ROOT}/sebastian-personal-agent/secret-bridge/provider.env"
     environment:
       HERMES_PROFILE_ID: "sebastian-personal-agent"
       HERMES_HOME: "${EXO_RUNTIME_ROOT}/sebastian-personal-agent/hermes-home"
@@ -56,6 +60,8 @@ services:
     image: "ghcr.io/0xtomdaniel/hermes-agent:stable"
     container_name: "exo-hermes-tom-personal-agent"
     restart: "unless-stopped"
+    env_file:
+      - "${EXO_RUNTIME_ROOT}/tom-personal-agent/secret-bridge/provider.env"
     environment:
       HERMES_PROFILE_ID: "tom-personal-agent"
       HERMES_HOME: "${EXO_RUNTIME_ROOT}/tom-personal-agent/hermes-home"

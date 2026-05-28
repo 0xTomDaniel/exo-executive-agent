@@ -33,7 +33,8 @@ The plan covers:
   and runtime root;
 - TOML profile validation through `scripts/validate_profile.py --all`;
 - Hermes config and Compose rendering;
-- copying distribution-owned material with runtime and env exclusions;
+- copying distribution-owned material with secret, runtime, Phase export, log,
+  backup, session, memory, and personal-file exclusions;
 - per-profile runtime directory creation;
 - profile TOML install/update into each instance config boundary;
 - Phase-backed secret bridge materialization;
@@ -75,10 +76,12 @@ bridge files under
 - `provider.env`, a smallest-available dotenv-compatible bridge containing only
   the profile's owner id and model key when a provider requires env ingestion.
 
-Generated bridges are ignored runtime artifacts. Local ingestion should use
-Phase runtime injection, Vite built-in env loading for Vite surfaces, or Node
-built-in DotEnv support for Node services/CLIs. Do not add broad committed env
-catalogs or raw secret values.
+The materializer fails closed if Phase does not inject every required secret
+name for the profile. Generated bridges are ignored runtime artifacts. Compose
+connects `provider.env` through the profile-local `env_file`; other local
+ingestion should use Phase runtime injection, Vite built-in env loading for
+Vite surfaces, or Node built-in DotEnv support for Node services/CLIs. Do not
+add broad committed env catalogs or raw secret values.
 
 ## Instance Boundaries
 

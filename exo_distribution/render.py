@@ -81,6 +81,8 @@ def _compose_service(config: ProfileConfig) -> str:
         f'    image: "{container["image"]}"',
         f'    container_name: "{container["name"]}"',
         f'    restart: "{container["restart_policy"]}"',
+        "    env_file:",
+        f'      - "${{EXO_RUNTIME_ROOT}}/{config.profile_id}/secret-bridge/provider.env"',
         "    environment:",
         f'      HERMES_PROFILE_ID: "{config.profile_id}"',
         f'      HERMES_HOME: "{hermes["home"]}"',

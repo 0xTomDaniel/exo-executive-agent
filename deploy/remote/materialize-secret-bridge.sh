@@ -18,18 +18,31 @@ bot_token="$(printenv "${bot_token_name}" || true)"
 owner_id="$(printenv "${owner_id_name}" || true)"
 model_api_key="$(printenv "${model_api_key_name}" || true)"
 
-if [ -n "${bot_token}" ]; then
-  printf '%s' "${bot_token}" > "${bridge_dir}/telegram-bot-token"
+missing=""
+if [ -z "${bot_token}" ]; then
+  missing="${missing} ${bot_token_name}"
+fi
+if [ -z "${owner_id}" ]; then
+  missing="${missing} ${owner_id_name}"
+fi
+if [ -z "${model_api_key}" ]; then
+  missing="${missing} ${model_api_key_name}"
 fi
 
+if [ -n "${missing}" ]; then
+  printf '%s\n' "missing required Phase-injected secrets:${missing}" >&2
+  exit 1
+fi
+
+printf '%s' "${bot_token}" > "${bridge_dir}/telegram-bot-token"
+
 provider_env="${bridge_dir}/provider.env"
-: > "${provider_env}"
-if [ -n "${owner_id}" ]; then
-  printf '%s=%s\n' "${owner_id_name}" "${owner_id}" >> "${provider_env}"
-fi
-if [ -n "${model_api_key}" ]; then
-  printf '%s=%s\n' "${model_api_key_name}" "${model_api_key}" >> "${provider_env}"
-fi
+provider_env_tmp="${provider_env}.$$"
+trap 'rm -f "${provider_env_tmp}"' EXIT HUP INT TERM
+: > "${provider_env_tmp}"
+printf '%s=%s\n' "${owner_id_name}" "${owner_id}" >> "${provider_env_tmp}"
+printf '%s=%s\n' "${model_api_key_name}" "${model_api_key}" >> "${provider_env_tmp}"
+mv "${provider_env_tmp}" "${provider_env}"
 
 chmod 0600 "${bridge_dir}/telegram-bot-token" 2>/dev/null || true
 chmod 0600 "${provider_env}"

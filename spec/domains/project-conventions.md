@@ -55,6 +55,9 @@ below apply to repo-owned distribution material and local validation tooling.
 - Any generated dotenv-compatible provider bridge must be instance-local under
   `${EXO_RUNTIME_ROOT}/<profile>/secret-bridge/`, ignored by git, and limited to
   the smallest provider-required secret names.
+- Generated provider bridges must fail closed when Phase does not inject every
+  required per-profile secret, and Compose services that need the bridge must
+  reference the profile-local `provider.env` with `env_file`.
 
 ## Runtime Defaults
 
@@ -80,6 +83,9 @@ below apply to repo-owned distribution material and local validation tooling.
 - Remote deploy Compose commands must set `EXO_RUNTIME_ROOT` to the target
   runtime root, and Phase secret bridge materialization must run from the
   copied deploy root or an absolute deploy-root script path.
+- Remote deploy copy plans must exclude ignored secret/runtime artifacts,
+  including `.phase/`, Phase exports, generated secret bridges, Hermes homes,
+  memories, sessions, logs, backups, and personal files.
 
 ## Skills
 

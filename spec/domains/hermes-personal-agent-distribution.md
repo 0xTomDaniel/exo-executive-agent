@@ -204,6 +204,9 @@ fail before rendering if two active profiles share a Hermes home, Telegram
 token path, log boundary, backup boundary, or container name. Generated Compose
 examples are repo-owned templates only; the referenced host directories and
 secret bridge files stay under `${EXO_RUNTIME_ROOT}` outside git.
+When a provider requires dotenv-compatible secret ingestion, the generated
+Compose service references only that profile's
+`${EXO_RUNTIME_ROOT}/<profile>/secret-bridge/provider.env` with `env_file`.
 
 Secrets and private runtime state are materialized outside git. Deployment
 scripts should document the Phase app, environment, and path layout they expect,
@@ -258,6 +261,8 @@ Phase-injected values may become environment variables at process start when
 Hermes, Docker Compose, Telegram, or an LLM provider requires that interface,
 but only for the minimal names required by those tools. The durable source is
 Phase rather than a committed or manually maintained env file.
+Secret bridge materialization must fail before writing runtime bridge files if
+Phase does not inject all per-profile required secret variables.
 
 Do not add a repo dependency on the `dotenv` npm package unless an implementation
 spike proves that Vite's built-in env loading, Node's built-in DotEnv support,
