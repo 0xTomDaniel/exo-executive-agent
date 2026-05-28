@@ -480,10 +480,42 @@ class TomLocalDistributionTest(unittest.TestCase):
             ],
         )
         command_text = json.dumps(plan["steps"])
+        steps_by_name = {
+            step["name"]: step
+            for step in plan["steps"]  # type: ignore[index]
+        }
+        prereq_commands = "\n".join(
+            steps_by_name["prerequisite-checks"]["commands"]  # type: ignore[index]
+        )
+        compose_command_list = [
+            command
+            for step_name in (
+                "compose-start-or-restart",
+                "health-checks",
+                "status-and-log-inspection",
+                "backup-restore-and-redeploy-reference",
+            )
+            for command in steps_by_name[step_name]["commands"]  # type: ignore[index]
+            if "docker compose" in command
+        ]
+        compose_commands = "\n".join(compose_command_list)
+        secret_bridge_commands = "\n".join(
+            steps_by_name["materialize-phase-secret-bridges"]["commands"]  # type: ignore[index]
+        )
         self.assertIn("scripts/validate_profile.py --all", command_text)
         self.assertIn("scripts/render_compose.py", command_text)
         self.assertIn("scripts/install_skills.py", command_text)
         self.assertIn("docker compose", command_text)
+        self.assertIn("command -v uv", prereq_commands)
+        self.assertIn("command -v phase", prereq_commands)
+        self.assertGreaterEqual(len(compose_command_list), 6)
+        for command in compose_command_list:
+            self.assertIn("EXO_RUNTIME_ROOT=/srv/exo/hermes docker compose", command)
+        self.assertIn("cd /opt/exo/exo-executive-agent &&", secret_bridge_commands)
+        self.assertIn(
+            "./deploy/remote/materialize-secret-bridge.sh",
+            secret_bridge_commands,
+        )
         self.assertIn("logs --tail 100", command_text)
         self.assertIn("restart", command_text)
         self.assertIn(

@@ -34,8 +34,9 @@ Expected coverage:
 - the remote deploy dry-run validates mock target TOML, profiles, render/copy
   plans, profile install/update commands, Phase secret bridge metadata, skills
   install/sync, Compose lifecycle, health/status/log commands, backup/redeploy
-  references, and HITL live-ESXi boundaries without opening SSH or using live
-  secrets;
+  references, remote uv/Phase prerequisites, `EXO_RUNTIME_ROOT` Compose
+  command exports, deploy-root Phase bridge execution, and HITL live-ESXi
+  boundaries without opening SSH or using live secrets;
 - the mock deploy health path reports fixture failures without requiring real
   Phase, Telegram, model, cloud storage, or ESXi access;
 - storage contract fixtures declare runtime, Markdown vault, personal-files,

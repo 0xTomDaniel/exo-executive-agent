@@ -29,7 +29,8 @@ storage-safety problem so failure reporting stays covered without live services.
 
 The plan covers:
 
-- prerequisite checks for Docker, Compose, Python, deploy root, and runtime root;
+- prerequisite checks for Docker, Compose, Python, uv, Phase CLI, deploy root,
+  and runtime root;
 - TOML profile validation through `scripts/validate_profile.py --all`;
 - Hermes config and Compose rendering;
 - copying distribution-owned material with runtime and env exclusions;
@@ -65,8 +66,9 @@ Profile TOML files own the non-secret Phase metadata:
 - Secret names: profile-specific Telegram bot token, Telegram owner id, and
   model provider key names
 
-The dry-run plan calls `deploy/remote/materialize-secret-bridge.sh` under
-`phase run`. That script writes only instance-local bridge files under
+The dry-run plan runs `deploy/remote/materialize-secret-bridge.sh` from the
+copied deploy root under `phase run`. That script writes only instance-local
+bridge files under
 `${EXO_RUNTIME_ROOT}/<profile>/secret-bridge/`:
 
 - `telegram-bot-token`, for providers that require a token file;

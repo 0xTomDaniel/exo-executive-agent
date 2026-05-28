@@ -143,7 +143,7 @@ def build_deploy_plan(
     profile_ids = [config.profile_id for config in installable]
     compose_remote = f"{target.deploy_root}/{compose_output}"
     ssh_prefix = _ssh_prefix(target)
-    compose = f"docker compose -p {target.compose_project} -f {compose_remote}"
+    compose = _compose_prefix(target, compose_remote)
 
     steps: list[dict[str, object]] = [
         {
@@ -153,6 +153,8 @@ def build_deploy_plan(
                 _ssh(target, "command -v docker"),
                 _ssh(target, "docker compose version"),
                 _ssh(target, "command -v python3"),
+                _ssh(target, "command -v uv"),
+                _ssh(target, "command -v phase"),
                 _ssh(target, f"mkdir -p {target.deploy_root} {target.runtime_root}"),
                 _ssh(target, f"test -w {target.deploy_root} && test -w {target.runtime_root}"),
             ],
@@ -371,6 +373,7 @@ def _secret_bridge_command(target: DeployTarget, config: ProfileConfig) -> str:
     return _ssh(
         target,
         (
+            f"cd {target.deploy_root} && "
             f"EXO_RUNTIME_ROOT={target.runtime_root} "
             f"install -d -m 0700 {target.runtime_root}/{config.profile_id}/secret-bridge && "
             f"EXO_RUNTIME_ROOT={target.runtime_root} "
@@ -382,6 +385,13 @@ def _secret_bridge_command(target: DeployTarget, config: ProfileConfig) -> str:
             f"{telegram['owner_id_secret']} "
             f"{model['api_key_secret']}"
         ),
+    )
+
+
+def _compose_prefix(target: DeployTarget, compose_remote: str) -> str:
+    return (
+        f"EXO_RUNTIME_ROOT={target.runtime_root} "
+        f"docker compose -p {target.compose_project} -f {compose_remote}"
     )
 
 
