@@ -35,6 +35,10 @@ below apply to repo-owned distribution material and local validation tooling.
 - Minimal proactive behavior is configured only in TOML under `[proactive]`.
   It targets the same profile id, uses the `telegram-owner-text` surface, and
   validates with fake/local health providers for automated checks.
+- Storage contracts are configured only in TOML under `[storage]`. Each
+  profile must declare runtime, vault, and personal-file zones with host path
+  placeholders, container paths, access mode, permissions, backup/recovery
+  expectations, and explicit allowed write paths.
 - Unknown or misplaced TOML fields should fail validation before deployment or
   smoke execution.
 
@@ -62,6 +66,10 @@ below apply to repo-owned distribution material and local validation tooling.
 - Proactive v1 may emit only owner-chat Telegram text check-ins and
   health/status pings. Broad follow-up campaigns, complex scheduling, and
   proactive external actions are out of scope.
+- Hermes built-in memory/session/context state plus agent-owned Markdown
+  vault/files are the v1 durable memory baseline. Personal files and provider
+  exports are read-only by default; live provider/topology proof remains
+  outside this repo slice with EMB-317.
 - Active Hermes gateway containers must not share a Hermes home, Telegram token
   path, log boundary, backup boundary, or restart/container boundary.
 - Remote deploy validation uses dry-run or mock-target paths. Live ESXi

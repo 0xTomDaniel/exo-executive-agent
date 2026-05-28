@@ -33,12 +33,30 @@ phase:
 storage:
   runtime:
     path: "{{ storage.runtime.path }}"
+    container_path: "{{ storage.runtime.container_path }}"
+    access: "{{ storage.runtime.access }}"
+    permissions: "{{ storage.runtime.permissions }}"
+    backup: "{{ storage.runtime.backup }}"
+    recovery: "{{ storage.runtime.recovery }}"
+    allowed_write_paths:
+      - "{{ storage.runtime.container_path }}"
   vault:
     path: "{{ storage.vault.path }}"
+    container_path: "{{ storage.vault.container_path }}"
     access: "{{ storage.vault.access }}"
+    permissions: "{{ storage.vault.permissions }}"
+    backup: "{{ storage.vault.backup }}"
+    recovery: "{{ storage.vault.recovery }}"
+    allowed_write_paths:
+      - "{{ storage.vault.container_path }}"
   personal_files:
     path: "{{ storage.personal_files.path }}"
+    container_path: "{{ storage.personal_files.container_path }}"
     access: "{{ storage.personal_files.access }}"
+    permissions: "{{ storage.personal_files.permissions }}"
+    backup: "{{ storage.personal_files.backup }}"
+    recovery: "{{ storage.personal_files.recovery }}"
+    allowed_write_paths: []
   placeholder_mounts:
 {{ storage.placeholder_mounts_yaml }}
 logs:

@@ -94,6 +94,7 @@
         "telegram_fixture",
         "phase_fixture",
         "storage_fixture_root",
+        "storage_sync_fixture",
         "expected_reply"
       ]
     }

@@ -96,6 +96,12 @@ Run the regression suite:
 uv run python -m unittest discover -s tests
 ```
 
+Inspect the fake/local storage contract evidence:
+
+```bash
+uv run python scripts/check_storage_contract.py
+```
+
 The smoke uses:
 
 - fake Telegram updates from
@@ -105,6 +111,8 @@ The smoke uses:
 - fake proactive health/status problems from
   `profiles/tom-local-dev/fixtures/fake_health_status_problems.json`;
 - local storage fixtures under `profiles/tom-local-dev/fixtures/storage`;
+- fake storage sync-health states from
+  `profiles/tom-local-dev/fixtures/storage/sync-health.json`;
 - fake model mode, with no live provider calls.
 
 The expected behavior is one reply to the owner chat and no reply to a
@@ -197,6 +205,28 @@ template. It mounts each Hermes home at `/opt/data/hermes-home`, the owner
 vault at `/opt/data/vault`, personal files read-only at `/mnt/personal-files`,
 and additional placeholder personal mounts read-only. These host paths are
 runtime/operator paths and are ignored by git.
+
+## Storage Contract
+
+Each profile declares the three EMB-261 storage zones in TOML:
+
+- per-user Hermes runtime state mounted read-write at `/opt/data/hermes-home`;
+- agent-owned Markdown memory/vault mounted read-write at `/opt/data/vault`;
+- broader personal files mounted read-only at `/mnt/personal-files`.
+
+Every storage declaration records a host path placeholder under
+`${EXO_RUNTIME_ROOT}`, a container path, read-only/read-write mode, permission
+expectation, backup expectation, recovery expectation, and explicit allowed
+write paths. The only default write paths are `/opt/data/hermes-home` for
+Hermes memory/session/context state and `/opt/data/vault` for agent-owned
+Markdown memory. Personal files and placeholder provider exports declare no
+write paths.
+
+`scripts/check_storage_contract.py` uses fake/local fixtures to report storage
+mount declarations and the four sync-health states: `healthy`, `stale`,
+`errored`, and `unavailable`. This repository slice does not choose the live
+provider or topology. EMB-317 owns provider/topology choice and live mount
+proof; unresolved provider details must stay placeholders here.
 
 ## Human Review Live Smoke
 

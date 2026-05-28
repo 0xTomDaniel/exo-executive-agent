@@ -24,6 +24,7 @@ from exo_distribution.skills import (
     plan_skill_install,
 )
 from exo_distribution.smoke import run_fake_telegram_smoke
+from exo_distribution.storage import read_fake_sync_health, storage_mount_declarations
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -112,10 +113,61 @@ class TomLocalDistributionTest(unittest.TestCase):
             )
             self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/skills:/opt/data/skills", rendered)
             self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/log-boundary", rendered)
-            self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/backup-boundary", rendered)
+        self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/backup-boundary", rendered)
         self.assertEqual(rendered.count("/opt/data/hermes-home"), 3)
         self.assertEqual(rendered.count("/opt/data/skills"), 3)
+        self.assertEqual(rendered.count(":/opt/data/hermes-home:rw"), 3)
+        self.assertEqual(rendered.count(":/opt/data/vault:rw"), 3)
+        self.assertEqual(rendered.count(":/mnt/personal-files:ro"), 3)
         self.assertNotIn("tom-local-dev:", rendered)
+
+    def test_storage_contract_declares_zones_and_write_boundaries(self) -> None:
+        config = load_profile_config(PROFILE)
+        mounts = storage_mount_declarations(config)
+        by_zone = {mount.zone: mount for mount in mounts}
+
+        self.assertEqual(
+            set(by_zone),
+            {"runtime", "vault", "personal_files", "placeholder:calendar-export"},
+        )
+        self.assertEqual(by_zone["runtime"].container_path, "/opt/data/hermes-home")
+        self.assertEqual(by_zone["runtime"].access, "read-write")
+        self.assertEqual(by_zone["runtime"].allowed_write_paths, ("/opt/data/hermes-home",))
+        self.assertEqual(by_zone["vault"].kind, "markdown-vault")
+        self.assertEqual(by_zone["vault"].allowed_write_paths, ("/opt/data/vault",))
+        self.assertEqual(by_zone["personal_files"].access, "read-only")
+        self.assertEqual(by_zone["personal_files"].allowed_write_paths, ())
+        self.assertEqual(by_zone["placeholder:calendar-export"].allowed_write_paths, ())
+        for mount in mounts:
+            self.assertIn("${EXO_RUNTIME_ROOT}", mount.host_path)
+            self.assertTrue(mount.permissions)
+            self.assertTrue(mount.backup)
+            self.assertTrue(mount.recovery)
+
+    def test_fake_storage_sync_health_covers_all_placeholder_states(self) -> None:
+        config = load_profile_config(PROFILE)
+        health = read_fake_sync_health(config, REPO_ROOT)
+
+        self.assertEqual(
+            {state.status for state in health},
+            {"healthy", "stale", "errored", "unavailable"},
+        )
+        self.assertEqual(
+            {state.zone for state in health},
+            {"runtime", "vault", "personal_files", "placeholder:calendar-export"},
+        )
+
+    def test_storage_contract_command_uses_fake_local_fixture(self) -> None:
+        result = subprocess.run(
+            [sys.executable, "scripts/check_storage_contract.py"],
+            cwd=REPO_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertIn('"profile": "tom-local-dev"', result.stdout)
+        self.assertIn('"zone": "runtime"', result.stdout)
+        self.assertIn('"status": "unavailable"', result.stdout)
 
     def test_fake_telegram_smoke_replies_only_to_owner(self) -> None:
         config = load_profile_config(PROFILE)

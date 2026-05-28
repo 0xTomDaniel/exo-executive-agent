@@ -65,6 +65,10 @@ directories as the production source of truth.
 per-user Hermes runtime state, agent-owned writable Markdown memory/vault
 area, and broader personal files mounted read-only by default.
 
+**Sync-health state**: The storage status vocabulary exposed to the owner or
+operator. V1 recognizes `healthy`, `stale`, `errored`, and `unavailable`
+without requiring a live storage provider during automated checks.
+
 **Remote SSH deployment**: The preferred operator deployment path. Scripts
 should be able to prepare or update the VM, copy or render non-secret
 templates, install or update profiles and skills, start or restart Docker
@@ -285,15 +289,28 @@ by the installer.
 ### Storage Interface
 
 The parent PRD defines the storage contract; EMB-317 chooses the provider and
-topology. Each instance should declare mounts for:
+topology and owns live mount proof. This repository slice must not invent
+unresolved provider details. Each instance declares mounts for:
 
 - per-user Hermes runtime state;
 - agent-owned writable Markdown memory/vault area;
 - general personal files mounted read-only by default.
 
-Any write access to broader personal files must be narrowed to explicit folders
-or workflows. Sync health and backup/recovery behavior must be visible to the
-operator and to the agent where relevant.
+Each TOML declaration records the host path placeholder under
+`${EXO_RUNTIME_ROOT}`, container path, read-only/read-write flag, permissions
+expectation, backup expectation, recovery expectation, and explicit
+`allowed_write_paths`. The default writable paths are narrow:
+`/opt/data/hermes-home` for Hermes built-in memory/session/context state and
+`/opt/data/vault` for agent-owned Markdown memory and vault files. Broader
+personal files and provider-export placeholders default to read-only and have
+no allowed write paths.
+
+Hermes built-in memory/session/context behavior plus Markdown vault/files are
+the v1 durable memory baseline. External memory providers are optional future
+or per-instance adapters and do not block this contract. Sync health must
+distinguish `healthy`, `stale`, `errored`, and `unavailable` through fake/local
+fixtures so automated checks can validate behavior without cloud storage,
+Phase access, or live mounts.
 
 ### Telegram Runtime Interface
 

@@ -33,26 +33,47 @@ path = "/sebastian/personal-agent"
 [storage.runtime]
 kind = "hermes-home"
 path = "${EXO_RUNTIME_ROOT}/sebastian-personal-agent/hermes-home"
+container_path = "/opt/data/hermes-home"
+access = "read-write"
 git_owned = false
+permissions = "0700 owner-only runtime state; not mounted into other owner containers"
+backup = "included in per-profile backup boundary with sessions, context, and Hermes state"
+recovery = "restore from the same profile backup boundary before starting this container"
+allowed_write_paths = ["/opt/data/hermes-home"]
 
 [storage.vault]
 kind = "markdown-vault"
 path = "${EXO_RUNTIME_ROOT}/sebastian-personal-agent/vault"
+container_path = "/opt/data/vault"
 access = "read-write"
 git_owned = false
+permissions = "0700 owner-only agent writable Markdown memory and vault files"
+backup = "included in per-profile backup boundary as durable Markdown memory"
+recovery = "restore vault alongside Hermes home; git remains distribution source, not memory source"
+allowed_write_paths = ["/opt/data/vault"]
 
 [storage.personal_files]
 kind = "personal-files"
 path = "${EXO_RUNTIME_ROOT}/sebastian-personal-agent/personal-files"
+container_path = "/mnt/personal-files"
 access = "read-only"
 git_owned = false
+permissions = "read-only by default; owner controls host permissions"
+backup = "operator-owned source files are not backed up by the agent backup boundary"
+recovery = "remount or resync from the operator-owned personal files provider"
+allowed_write_paths = []
 
 [[storage.placeholder_mounts]]
 name = "personal-documents"
+kind = "personal-files-placeholder"
 path = "${EXO_RUNTIME_ROOT}/sebastian-personal-agent/placeholders/personal-documents"
 mount_path = "/mnt/personal-documents"
 access = "read-only"
 git_owned = false
+permissions = "read-only placeholder for broader personal files"
+backup = "not backed up by the agent; provider/topology remains EMB-317 scope"
+recovery = "remount from the provider selected and proven outside this repo slice"
+allowed_write_paths = []
 
 [container]
 name = "exo-hermes-sebastian-personal-agent"
@@ -110,4 +131,5 @@ fixture = "profiles/tom-local-dev/fixtures/fake_health_status_problems.json"
 telegram_fixture = "profiles/tom-local-dev/fixtures/fake_telegram_owner_text.json"
 phase_fixture = "profiles/tom-local-dev/fixtures/fake_phase_minimal.json"
 storage_fixture_root = "profiles/tom-local-dev/fixtures/storage"
+storage_sync_fixture = "profiles/tom-local-dev/fixtures/storage/sync-health.json"
 expected_reply = "Sebastian personal-agent template is renderable without live runtime state."

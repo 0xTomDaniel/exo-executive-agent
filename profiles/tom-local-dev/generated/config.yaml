@@ -33,17 +33,40 @@ phase:
 storage:
   runtime:
     path: "${EXO_RUNTIME_ROOT}/tom-local-dev/hermes-home"
+    container_path: "/opt/data/hermes-home"
+    access: "read-write"
+    permissions: "0700 owner-only runtime state; not mounted into other owner containers"
+    backup: "included in per-profile backup boundary with sessions, context, and Hermes state"
+    recovery: "restore from the same profile backup boundary before starting this container"
+    allowed_write_paths:
+      - "/opt/data/hermes-home"
   vault:
     path: "${EXO_RUNTIME_ROOT}/tom-local-dev/vault"
+    container_path: "/opt/data/vault"
     access: "read-write"
+    permissions: "0700 owner-only agent writable Markdown memory and vault files"
+    backup: "included in per-profile backup boundary as durable Markdown memory"
+    recovery: "restore vault alongside Hermes home; git remains distribution source, not memory source"
+    allowed_write_paths:
+      - "/opt/data/vault"
   personal_files:
     path: "${EXO_RUNTIME_ROOT}/tom-local-dev/personal-files"
+    container_path: "/mnt/personal-files"
     access: "read-only"
+    permissions: "read-only by default; owner controls host permissions"
+    backup: "operator-owned source files are not backed up by the agent backup boundary"
+    recovery: "remount or resync from the operator-owned personal files provider"
+    allowed_write_paths: []
   placeholder_mounts:
     - name: "calendar-export"
+      kind: "provider-export"
       path: "${EXO_RUNTIME_ROOT}/tom-local-dev/placeholders/calendar-export"
       mount_path: "/mnt/calendar-export"
       access: "read-only"
+      permissions: "read-only fixture mount for exported calendar data"
+      backup: "not backed up by the agent; regenerate from provider export"
+      recovery: "replace fixture/export from the provider selected outside this slice"
+      allowed_write_paths: []
 logs:
   path: "${EXO_RUNTIME_ROOT}/tom-local-dev/log-boundary"
 backups:

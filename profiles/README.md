@@ -43,6 +43,13 @@ delivery, and controls morning/evening check-ins plus fake/local health pings.
 Automated validation uses local fixtures only; live Telegram health ping smoke
 is a Human Review activity.
 
+Each profile declares the storage contract under `[storage]`: Hermes runtime
+state, Markdown vault memory, and broader personal files. Storage entries use
+`${EXO_RUNTIME_ROOT}` host path placeholders, fixed container paths, explicit
+read-only/read-write modes, permissions, backup/recovery notes, and allowed
+write paths. Runtime state and the Markdown vault are writable; broader
+personal files and provider placeholders remain read-only by default.
+
 External-action tools remain disabled until a specific owner instance opts in
 with Phase-managed secrets and approval/audit documentation.
 

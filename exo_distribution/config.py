@@ -53,6 +53,15 @@ class ProfileConfig:
         return _table(self.data, "backups")["path"]
 
     @property
+    def storage_zones(self) -> dict[str, dict[str, object]]:
+        storage = _table(self.data, "storage")
+        return {
+            "runtime": _table(storage, "runtime"),
+            "vault": _table(storage, "vault"),
+            "personal_files": _table(storage, "personal_files"),
+        }
+
+    @property
     def telegram_token_path(self) -> str:
         return _table(self.data, "telegram")["token_path"]
 
@@ -173,7 +182,7 @@ def validate_profile_config(config: ProfileConfig) -> None:
         ("runtime", "vault", "personal_files", "placeholder_mounts"),
         "storage",
     )
-    _validate_storage_table(_table(storage, "runtime"), "runtime", required_access=None)
+    _validate_storage_table(_table(storage, "runtime"), "runtime", required_access="read-write")
     _validate_storage_table(_table(storage, "vault"), "vault", required_access="read-write")
     _validate_storage_table(
         _table(storage, "personal_files"),
@@ -227,12 +236,24 @@ def validate_profile_config(config: ProfileConfig) -> None:
     smoke = _table(data, "smoke")
     _require_exact_keys(
         smoke,
-        ("telegram_fixture", "phase_fixture", "storage_fixture_root", "expected_reply"),
+        (
+            "telegram_fixture",
+            "phase_fixture",
+            "storage_fixture_root",
+            "storage_sync_fixture",
+            "expected_reply",
+        ),
         "smoke",
     )
     _require_non_empty_strings(
         smoke,
-        ("telegram_fixture", "phase_fixture", "storage_fixture_root", "expected_reply"),
+        (
+            "telegram_fixture",
+            "phase_fixture",
+            "storage_fixture_root",
+            "storage_sync_fixture",
+            "expected_reply",
+        ),
         "smoke",
     )
 
@@ -274,22 +295,47 @@ def schema_summary(schema_path: Path) -> str:
 def _validate_storage_table(
     table: dict[str, object],
     name: Literal["runtime", "vault", "personal_files"],
-    required_access: str | None,
+    required_access: str,
 ) -> None:
-    required = ("kind", "path", "git_owned") if required_access is None else (
+    required = (
         "kind",
         "path",
+        "container_path",
         "access",
         "git_owned",
+        "permissions",
+        "backup",
+        "recovery",
+        "allowed_write_paths",
     )
     _require_exact_keys(table, required, f"storage.{name}")
-    _require_non_empty_strings(table, ("kind", "path"), f"storage.{name}")
+    _require_non_empty_strings(
+        table,
+        ("kind", "path", "container_path", "access", "permissions", "backup", "recovery"),
+        f"storage.{name}",
+    )
     if table["git_owned"] is not False:
         raise ValidationError(f"storage.{name}.git_owned must be false")
     path = str(table["path"])
     _validate_runtime_path(path, f"storage.{name}.path")
-    if required_access is not None and table["access"] != required_access:
+    container_path = str(table["container_path"])
+    if not container_path.startswith("/"):
+        raise ValidationError(f"storage.{name}.container_path must be absolute")
+    if table["access"] != required_access:
         raise ValidationError(f"storage.{name}.access must be {required_access}")
+    expected_writes = [] if required_access == "read-only" else [container_path]
+    _validate_write_paths(
+        table["allowed_write_paths"],
+        expected=expected_writes,
+        label=f"storage.{name}.allowed_write_paths",
+    )
+
+
+def _validate_write_paths(value: object, expected: list[str], label: str) -> None:
+    if not isinstance(value, list) or not all(isinstance(path, str) for path in value):
+        raise ValidationError(f"{label} must be a list of strings")
+    if value != expected:
+        raise ValidationError(f"{label} must be {expected}")
 
 
 def _validate_placeholder_mounts(value: object) -> None:
@@ -301,12 +347,32 @@ def _validate_placeholder_mounts(value: object) -> None:
             raise ValidationError(f"storage.placeholder_mounts[{index}] must be a table")
         _require_exact_keys(
             entry,
-            ("name", "path", "mount_path", "access", "git_owned"),
+            (
+                "name",
+                "kind",
+                "path",
+                "mount_path",
+                "access",
+                "git_owned",
+                "permissions",
+                "backup",
+                "recovery",
+                "allowed_write_paths",
+            ),
             f"storage.placeholder_mounts[{index}]",
         )
         _require_non_empty_strings(
             entry,
-            ("name", "path", "mount_path", "access"),
+            (
+                "name",
+                "kind",
+                "path",
+                "mount_path",
+                "access",
+                "permissions",
+                "backup",
+                "recovery",
+            ),
             f"storage.placeholder_mounts[{index}]",
         )
         name = str(entry["name"])
@@ -325,6 +391,11 @@ def _validate_placeholder_mounts(value: object) -> None:
             raise ValidationError(
                 f"storage.placeholder_mounts[{index}].git_owned must be false"
             )
+        _validate_write_paths(
+            entry["allowed_write_paths"],
+            expected=[],
+            label=f"storage.placeholder_mounts[{index}].allowed_write_paths",
+        )
 
 
 def _validate_runtime_path(value: object, field: str) -> None:

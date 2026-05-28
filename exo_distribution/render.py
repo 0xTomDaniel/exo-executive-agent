@@ -51,9 +51,14 @@ def _placeholder_mounts_yaml(config: ProfileConfig) -> str:
         lines.extend(
             [
                 f'    - name: "{mount["name"]}"',
+                f'      kind: "{mount["kind"]}"',
                 f'      path: "{mount["path"]}"',
                 f'      mount_path: "{mount["mount_path"]}"',
                 f'      access: "{mount["access"]}"',
+                f'      permissions: "{mount["permissions"]}"',
+                f'      backup: "{mount["backup"]}"',
+                f'      recovery: "{mount["recovery"]}"',
+                "      allowed_write_paths: []",
             ]
         )
     return "\n".join(lines)
@@ -87,19 +92,25 @@ def _compose_service(config: ProfileConfig) -> str:
         f'      PHASE_ENVIRONMENT: "{phase["environment"]}"',
         f'      PHASE_PATH: "{phase["path"]}"',
         "    volumes:",
-        f'      - "{hermes["home"]}:/opt/data/hermes-home"',
+        (
+            f'      - "{hermes["home"]}:{storage["runtime"]["container_path"]}:rw"'
+        ),  # type: ignore[index]
         f'      - "{hermes["workspace"]}:/workspace"',
         f'      - "{telegram["token_path"]}:/run/secrets/telegram-bot-token:ro"',
         f'      - "${{EXO_RUNTIME_ROOT}}/{config.profile_id}/skills:/opt/data/skills"',
-        f'      - "{storage["vault"]["path"]}:/opt/data/vault"',  # type: ignore[index]
         (
-            f'      - "{storage["personal_files"]["path"]}:/mnt/personal-files:ro"'
+            f'      - "{storage["vault"]["path"]}:{storage["vault"]["container_path"]}:rw"'
+        ),  # type: ignore[index]
+        (
+            f'      - "{storage["personal_files"]["path"]}:'
+            f'{storage["personal_files"]["container_path"]}:ro"'
         ),  # type: ignore[index]
         f'      - "{logs["path"]}:/var/log/hermes"',
         f'      - "{backups["path"]}:/opt/backups"',
     ]
     for mount in storage["placeholder_mounts"]:  # type: ignore[index]
-        lines.append(f'      - "{mount["path"]}:{mount["mount_path"]}:ro"')
+        mode = "ro" if mount["access"] == "read-only" else "rw"
+        lines.append(f'      - "{mount["path"]}:{mount["mount_path"]}:{mode}"')
     return "\n".join(lines)
 
 
