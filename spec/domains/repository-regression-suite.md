@@ -52,6 +52,9 @@ Expected coverage:
 - fake proactive smoke plans only owner-chat Telegram text deliveries for
   configured morning/evening check-ins and fake service, sync, storage safety,
   and deployment health/status problems;
+- the Human Review checklist records accepted EMB-261 child slices, the
+  no-child-owned-PR boundary for EMB-451, the manual live Telegram evidence,
+  and the EMB-276/EMB-317 HITL exclusions;
 - no live Telegram, model provider, Phase service, ESXi host, or private storage
   access is required.
 - committed files do not include private runtime homes, logs, backups, sessions,

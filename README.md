@@ -21,6 +21,7 @@ Distribution-owned paths in git:
 - `profiles/*-personal-agent/`: non-secret installable owner template
   profiles;
 - `deploy/compose/`: Docker Compose templates and generated examples;
+- `docs/`: operator checklists and parent PRD readiness evidence;
 - `schemas/profile-config.schema.json`: checked-in config contract;
 - `exo_distribution/` and `scripts/`: validator, renderer, and smoke tooling;
 - `tests/`: fake/no-credentials regression coverage;
@@ -90,7 +91,22 @@ Run the no-credentials Tom local/dev smoke:
 uv run python scripts/smoke_tom_local.py
 ```
 
-Run the regression suite:
+Run the full no-real-credentials regression suite before handoff:
+
+```bash
+uv run python scripts/validate_profile.py
+uv run python scripts/validate_profile.py --all
+uv run python scripts/render_hermes_config.py
+uv run python scripts/install_skills.py --profile tom-local-dev
+uv run python scripts/render_compose.py
+uv run python scripts/remote_deploy.py --config deploy/remote/mock-target.toml
+uv run python scripts/remote_deploy.py --config deploy/remote/mock-target.toml --mock-check
+uv run python scripts/check_storage_contract.py
+uv run python scripts/smoke_tom_local.py
+uv run python -m unittest discover -s tests
+```
+
+Or run the unit/regression suite directly:
 
 ```bash
 uv run python -m unittest discover -s tests
@@ -235,3 +251,8 @@ one manual live Telegram smoke with a real bot token and owner account before a
 deployed personal-agent runtime is considered usable. That manual smoke should
 confirm that configured check-ins and health/status pings appear only in the
 owner chat and that no group, non-owner, or external-action delivery occurs.
+
+Use [docs/human-review-checklist.md](docs/human-review-checklist.md) for the
+required EMB-261 parent readiness summary, accepted child-slice evidence,
+manual Telegram transcript requirements, backup/restore evidence, and the
+explicit HITL boundaries for EMB-276 and EMB-317.

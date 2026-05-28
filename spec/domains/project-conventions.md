@@ -6,7 +6,7 @@ below apply to repo-owned distribution material and local validation tooling.
 ## Paths
 
 - Distribution-owned material lives in git under `distribution.yaml`, `SOUL.md`,
-  `profiles/`, `skills/`, `schemas/`, `exo_distribution/`, `scripts/`,
+  `docs/`, `profiles/`, `skills/`, `schemas/`, `exo_distribution/`, `scripts/`,
   `tests/`, and `spec/`.
 - User-owned/runtime material must stay outside git. This includes Hermes
   homes, memories, sessions, logs, backups, state databases, mounted personal

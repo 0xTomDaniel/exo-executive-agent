@@ -425,6 +425,11 @@ before the deployed runtime is considered usable.
   boundary, not the config source of truth.
 - 2026-05-25: Use Phase as the preferred secret-management system for
   production/operator deployments.
+- 2026-05-28: Record EMB-451 terminal readiness evidence in
+  `docs/human-review-checklist.md`. This finalization did not create a
+  target-repo ADR because it consolidates previously accepted TOML schema,
+  Phase secret materialization, skills installer, storage contract, and remote
+  deployment decisions without selecting a new hard-to-reverse strategy.
 - 2026-05-25: No ADR yet. Create target-repo ADRs later only when a
   hard-to-reverse or surprising implementation choice is selected.
 

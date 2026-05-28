@@ -38,6 +38,7 @@ COMPOSE_GENERATED = REPO_ROOT / "deploy/compose/generated/hermes-multi-owner.com
 ENV_EXAMPLE = REPO_ROOT / ".env.example"
 SKILLS_MANIFEST = REPO_ROOT / "skills/sources.toml"
 REMOTE_TARGET = REPO_ROOT / "deploy/remote/mock-target.toml"
+HUMAN_REVIEW_CHECKLIST = REPO_ROOT / "docs/human-review-checklist.md"
 
 
 class TomLocalDistributionTest(unittest.TestCase):
@@ -307,6 +308,26 @@ class TomLocalDistributionTest(unittest.TestCase):
             self.assertFalse(line.startswith("VITE_"), line)
             if line and not line.startswith("#") and "=" in line:
                 self.assertTrue(line.endswith("="), line)
+
+    def test_human_review_checklist_records_parent_prd_readiness_boundaries(self) -> None:
+        content = HUMAN_REVIEW_CHECKLIST.read_text(encoding="utf-8")
+
+        for issue_key in (
+            "EMB-445",
+            "EMB-446",
+            "EMB-447",
+            "EMB-448",
+            "EMB-449",
+            "EMB-450",
+            "EMB-451",
+        ):
+            self.assertIn(issue_key, content)
+        self.assertIn("EMB-261 remains the only final PR", content)
+        self.assertIn("No child-owned final PR should be opened or attached for EMB-451", content)
+        self.assertIn("Human Review requires one real bot token and one real owner account", content)
+        self.assertIn("EMB-276 owns live ESXi VM provisioning and deployment proof", content)
+        self.assertIn("EMB-317 owns storage provider/topology selection and live mount proof", content)
+        self.assertIn("Ordinary CI, Agent Review, and Agent QA must not require real Telegram", content)
 
     def test_no_private_runtime_state_is_committed(self) -> None:
         forbidden_parts = {
