@@ -587,9 +587,13 @@ class TomLocalDistributionTest(unittest.TestCase):
             self.assertTrue(bridge["phase"]["path"].startswith("/"))
             self.assertIn("/srv/exo/hermes/", bridge["dotenv_bridge"])
             self.assertTrue(bridge["dotenv_bridge"].endswith("/secret-bridge/provider.env"))
-            self.assertEqual(len(bridge["dotenv_keys"]), 2)
+            self.assertEqual(bridge["dotenv_keys"], ["TELEGRAM_OWNER_ID"])
+            self.assertEqual(
+                bridge["secret_names"],
+                ["TELEGRAM_BOT_TOKEN", "TELEGRAM_OWNER_ID"],
+            )
             for secret_name in bridge["secret_names"]:
-                self.assertTrue(secret_name.endswith(("_TOKEN", "_OWNER_ID", "_API_KEY")))
+                self.assertTrue(secret_name.endswith(("_TOKEN", "_OWNER_ID")))
                 self.assertNotIn("fake-token-not-live", secret_name)
 
     def test_secret_bridge_materializer_fails_without_phase_values(self) -> None:
@@ -599,9 +603,8 @@ class TomLocalDistributionTest(unittest.TestCase):
                     "sh",
                     "deploy/remote/materialize-secret-bridge.sh",
                     "tom-personal-agent",
-                    "TOM_TELEGRAM_BOT_TOKEN",
-                    "TOM_TELEGRAM_OWNER_ID",
-                    "TOM_MODEL_API_KEY",
+                    "TELEGRAM_BOT_TOKEN",
+                    "TELEGRAM_OWNER_ID",
                 ],
                 cwd=REPO_ROOT,
                 env={"EXO_RUNTIME_ROOT": tmp},
@@ -614,6 +617,38 @@ class TomLocalDistributionTest(unittest.TestCase):
             self.assertIn("missing required Phase-injected secrets", result.stderr)
             self.assertFalse((bridge_dir / "telegram-bot-token").exists())
             self.assertFalse((bridge_dir / "provider.env").exists())
+
+    def test_secret_bridge_materializer_allows_missing_optional_model_key(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            result = subprocess.run(
+                [
+                    "sh",
+                    "deploy/remote/materialize-secret-bridge.sh",
+                    "tom-personal-agent",
+                    "TELEGRAM_BOT_TOKEN",
+                    "TELEGRAM_OWNER_ID",
+                ],
+                cwd=REPO_ROOT,
+                env={
+                    "EXO_RUNTIME_ROOT": tmp,
+                    "TELEGRAM_BOT_TOKEN": "fake-token-not-live",
+                    "TELEGRAM_OWNER_ID": "12345",
+                },
+                capture_output=True,
+                text=True,
+            )
+
+            bridge_dir = Path(tmp) / "tom-personal-agent" / "secret-bridge"
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(
+                (bridge_dir / "telegram-bot-token").read_text(encoding="utf-8"),
+                "fake-token-not-live",
+            )
+            self.assertEqual(
+                (bridge_dir / "provider.env").read_text(encoding="utf-8"),
+                "TELEGRAM_OWNER_ID=12345\n",
+            )
+            self.assertNotIn("OPENAI_API_KEY", (bridge_dir / "provider.env").read_text())
 
     def test_remote_deploy_mock_check_reports_fixture_failures(self) -> None:
         target = load_deploy_target(REMOTE_TARGET)

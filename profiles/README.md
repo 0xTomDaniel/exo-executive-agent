@@ -13,11 +13,11 @@ uv run python scripts/validate_profile.py --all
 
 Owner template profiles:
 
-| Profile | Owner | TOML config | Phase path | Required secrets | Container |
+| Profile | Owner | TOML config | Phase path | Secret names | Container |
 | --- | --- | --- | --- | --- | --- |
-| `tom-personal-agent` | Tom Daniel | `profiles/tom-personal-agent/profile.toml` | `/tom/personal-agent` | `TOM_TELEGRAM_BOT_TOKEN`, `TOM_TELEGRAM_OWNER_ID`, `TOM_OPENAI_API_KEY` | `exo-hermes-tom-personal-agent` |
-| `sebastian-personal-agent` | Sebastian Varela | `profiles/sebastian-personal-agent/profile.toml` | `/sebastian/personal-agent` | `SEBASTIAN_TELEGRAM_BOT_TOKEN`, `SEBASTIAN_TELEGRAM_OWNER_ID`, `SEBASTIAN_OPENAI_API_KEY` | `exo-hermes-sebastian-personal-agent` |
-| `noah-personal-agent` | Noah Ranch | `profiles/noah-personal-agent/profile.toml` | `/noah/personal-agent` | `NOAH_TELEGRAM_BOT_TOKEN`, `NOAH_TELEGRAM_OWNER_ID`, `NOAH_OPENAI_API_KEY` | `exo-hermes-noah-personal-agent` |
+| `tom-personal-agent` | Tom Daniel | `profiles/tom-personal-agent/profile.toml` | `/tom/personal-agent` | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_OWNER_ID`; optional `OPENAI_API_KEY` only for API-key providers | `exo-hermes-tom-personal-agent` |
+| `sebastian-personal-agent` | Sebastian Varela | `profiles/sebastian-personal-agent/profile.toml` | `/sebastian/personal-agent` | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_OWNER_ID`; optional `OPENAI_API_KEY` only for API-key providers | `exo-hermes-sebastian-personal-agent` |
+| `noah-personal-agent` | Noah Ranch | `profiles/noah-personal-agent/profile.toml` | `/noah/personal-agent` | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_OWNER_ID`; optional `OPENAI_API_KEY` only for API-key providers | `exo-hermes-noah-personal-agent` |
 
 All profile TOML files validate against
 `schemas/profile-config.schema.json`. Each profile records its role in
@@ -71,6 +71,7 @@ directories, backup directories, and placeholder read-only storage mounts for
 each owner.
 
 To add another owner, copy one of the `*-personal-agent` profile directories,
-choose a unique profile id, owner name, Phase path, secret names, container
-name, Hermes home, Telegram token path, log path, backup path, and placeholder
-mount paths, then run the validation and Compose render commands above.
+choose a unique profile id, owner name, Phase path, container name, Hermes home,
+Telegram token path, log path, backup path, and placeholder mount paths, then
+run the validation and Compose render commands above. Secret names may stay
+generic because each owner has a distinct Phase path and instance-local bridge.

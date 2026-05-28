@@ -73,6 +73,15 @@ class ProfileConfig:
     def telegram_bot_token_secret(self) -> str:
         return _table(self.data, "telegram")["bot_token_secret"]
 
+    @property
+    def phase_scope(self) -> tuple[str, str, str]:
+        phase = _table(self.data, "phase")
+        return (
+            str(phase["app"]),
+            str(phase["environment"]),
+            str(phase["path"]),
+        )
+
 
 REQUIRED_TOP_LEVEL = (
     "profile",
@@ -103,7 +112,7 @@ FORBIDDEN_RUNTIME_FRAGMENTS = (
 )
 PROFILE_MODES = ("local-dev", "template")
 TELEGRAM_MODES = ("fake", "phase")
-MODEL_MODES = ("fake", "phase")
+MODEL_MODES = ("fake", "phase", "hermes-auth")
 SAFE_TOOL_PREFIXES = ("memory.", "files.", "telegram.reply_text")
 
 
@@ -168,7 +177,7 @@ def validate_profile_config(config: ProfileConfig) -> None:
     _require_exact_keys(model, ("mode", "provider", "api_key_secret"), "model")
     if model["mode"] not in MODEL_MODES:
         raise ValidationError(f"model.mode must be one of {MODEL_MODES}")
-    _validate_secret_name(model["api_key_secret"], "model.api_key_secret")
+    _validate_model_secret(model)
 
     phase = _table(data, "phase")
     _require_exact_keys(phase, ("app", "environment", "path"), "phase")
@@ -265,16 +274,7 @@ def validate_profile_set(configs: list[ProfileConfig]) -> None:
     _require_unique(configs, "container name", lambda config: config.container_name)
     _require_unique(configs, "Hermes home", lambda config: config.hermes_home)
     _require_unique(configs, "Telegram token path", lambda config: config.telegram_token_path)
-    _require_unique(
-        configs,
-        "Telegram owner secret",
-        lambda config: config.telegram_owner_secret,
-    )
-    _require_unique(
-        configs,
-        "Telegram bot token secret",
-        lambda config: config.telegram_bot_token_secret,
-    )
+    _require_unique(configs, "Phase app/env/path", lambda config: config.phase_scope)
     _require_unique(configs, "log path", lambda config: config.log_path)
     _require_unique(configs, "backup path", lambda config: config.backup_path)
 
@@ -469,6 +469,15 @@ def _validate_local_time(value: object, field: str) -> None:
         raise ValidationError(f"{field} must use a 24-hour local time")
 
 
+def _validate_model_secret(model: dict[str, object]) -> None:
+    api_key_secret = model["api_key_secret"]
+    if model["mode"] == "hermes-auth":
+        if api_key_secret != "":
+            raise ValidationError("model.api_key_secret must be empty for hermes-auth mode")
+        return
+    _validate_secret_name(api_key_secret, "model.api_key_secret")
+
+
 def _validate_secret_name(value: object, field: str) -> None:
     if not isinstance(value, str) or SECRET_NAME.fullmatch(value) is None:
         raise ValidationError(f"{field} must name an uppercase secret env bridge variable")
@@ -505,9 +514,9 @@ def _require_non_empty_strings(
 def _require_unique(
     configs: list[ProfileConfig],
     label: str,
-    get_value: Callable[[ProfileConfig], str],
+    get_value: Callable[[ProfileConfig], object],
 ) -> None:
-    seen: dict[str, str] = {}
+    seen: dict[object, str] = {}
     for config in configs:
         value = get_value(config)
         owner = seen.get(value)

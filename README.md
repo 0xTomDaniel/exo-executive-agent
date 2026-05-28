@@ -62,10 +62,12 @@ uv run python scripts/render_compose.py
 ```
 
 Secrets are Phase-backed and documented only as a blank bridge inventory in
-`.env.example`. The example intentionally contains only required secret keys
-for the local/dev runtime path: Telegram token, Telegram owner id, and model API
-key. Ordinary profile, storage, tool, and deployment config belongs in TOML,
-not `.env`.
+`.env.example`. The example intentionally contains the Telegram token and
+Telegram owner id keys required by the local/dev and production per-instance
+bridges, plus optional provider keys such as `OPENAI_API_KEY`. `OPENAI_API_KEY`
+is only used by profiles that select an API-key model provider; Hermes Codex
+OAuth / ChatGPT Pro login does not require it. Ordinary profile, storage, tool,
+and deployment config belongs in TOML, not `.env`.
 
 Production/operator runs should prefer Phase injection, such as:
 

@@ -14,16 +14,16 @@ skills_dir = "/opt/data/skills"
 
 [telegram]
 mode = "phase"
-owner_id_secret = "TOM_TELEGRAM_OWNER_ID"
-bot_token_secret = "TOM_TELEGRAM_BOT_TOKEN"
+owner_id_secret = "TELEGRAM_OWNER_ID"
+bot_token_secret = "TELEGRAM_BOT_TOKEN"
 token_path = "${EXO_RUNTIME_ROOT}/tom-personal-agent/secret-bridge/telegram-bot-token"
 owner_only = true
 text_only = true
 
 [model]
-mode = "phase"
-provider = "openai"
-api_key_secret = "TOM_OPENAI_API_KEY"
+mode = "hermes-auth"
+provider = "openai-codex"
+api_key_secret = ""
 
 [phase]
 app = "Tom's personal agent"

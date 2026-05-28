@@ -65,8 +65,9 @@ Profile TOML files own the non-secret Phase metadata:
   `Tom's personal agent`
 - Phase environment: profile-specific, currently `prod` for owner templates
 - Phase path: one per personal-agent instance
-- Secret names: profile-specific Telegram bot token, Telegram owner id, and
-  model provider key names
+- Secret names: generic per-instance names under each Phase path. Telegram
+  requires `TELEGRAM_BOT_TOKEN` and `TELEGRAM_OWNER_ID`; `OPENAI_API_KEY` is
+  optional and only used by profiles that choose an API-key model provider.
 
 The dry-run plan runs `deploy/remote/materialize-secret-bridge.sh` from the
 copied deploy root under `phase run`. That script writes only instance-local
@@ -74,11 +75,12 @@ bridge files under
 `${EXO_RUNTIME_ROOT}/<profile>/secret-bridge/`:
 
 - `telegram-bot-token`, for providers that require a token file;
-- `provider.env`, a smallest-available dotenv-compatible bridge containing only
-  the profile's owner id and model key when a provider requires env ingestion.
+- `provider.env`, a smallest-available dotenv-compatible bridge containing the
+  profile's owner id and, only when configured, a model provider API key.
 
-The materializer fails closed if Phase does not inject every required secret
-name for the profile. Generated bridges are ignored runtime artifacts. Compose
+The materializer fails closed if Phase does not inject every required Telegram
+secret for the profile, and fails on an API key only when the profile names one.
+Generated bridges are ignored runtime artifacts. Compose
 connects `provider.env` through the profile-local `env_file`; other local
 ingestion should use Phase runtime injection, Vite built-in env loading for
 Vite surfaces, or Node built-in DotEnv support for Node services/CLIs. Do not

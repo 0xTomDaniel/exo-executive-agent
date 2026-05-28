@@ -366,6 +366,15 @@ def _secret_bridge_metadata(target: DeployTarget, config: ProfileConfig) -> dict
     phase = config.data["phase"]  # type: ignore[index]
     telegram = config.data["telegram"]  # type: ignore[index]
     model = config.data["model"]  # type: ignore[index]
+    model_secret = str(model["api_key_secret"])
+    secret_names = [
+        str(telegram["bot_token_secret"]),
+        str(telegram["owner_id_secret"]),
+    ]
+    dotenv_keys = [str(telegram["owner_id_secret"])]
+    if model_secret:
+        secret_names.append(model_secret)
+        dotenv_keys.append(model_secret)
     return {
         "profile_id": config.profile_id,
         "phase": {
@@ -373,11 +382,7 @@ def _secret_bridge_metadata(target: DeployTarget, config: ProfileConfig) -> dict
             "environment": phase["environment"],
             "path": phase["path"],
         },
-        "secret_names": [
-            telegram["bot_token_secret"],
-            telegram["owner_id_secret"],
-            model["api_key_secret"],
-        ],
+        "secret_names": secret_names,
         "token_file": str(telegram["token_path"]),
         "dotenv_bridge": (
             target.dotenv_bridge_dir.replace("${EXO_RUNTIME_ROOT}", target.runtime_root).replace(
@@ -386,7 +391,7 @@ def _secret_bridge_metadata(target: DeployTarget, config: ProfileConfig) -> dict
             )
             + "/provider.env"
         ),
-        "dotenv_keys": [telegram["owner_id_secret"], model["api_key_secret"]],
+        "dotenv_keys": dotenv_keys,
         "git_policy": (
             "generated bridge artifacts are instance-local under runtime_root and ignored"
         ),
@@ -398,6 +403,13 @@ def _secret_bridge_command(target: DeployTarget, config: ProfileConfig) -> str:
     phase = bridge["phase"]
     telegram = config.data["telegram"]  # type: ignore[index]
     model = config.data["model"]  # type: ignore[index]
+    args = [
+        config.profile_id,
+        str(telegram["bot_token_secret"]),
+        str(telegram["owner_id_secret"]),
+    ]
+    if model["api_key_secret"]:
+        args.append(str(model["api_key_secret"]))
     return _ssh(
         target,
         (
@@ -410,10 +422,7 @@ def _secret_bridge_command(target: DeployTarget, config: ProfileConfig) -> str:
             f"--env {shlex.quote(str(phase['environment']))} "
             f"--path {shlex.quote(str(phase['path']))} "
             "-- ./deploy/remote/materialize-secret-bridge.sh "
-            f"{shlex.quote(config.profile_id)} "
-            f"{shlex.quote(str(telegram['bot_token_secret']))} "
-            f"{shlex.quote(str(telegram['owner_id_secret']))} "
-            f"{shlex.quote(str(model['api_key_secret']))}"
+            + " ".join(shlex.quote(arg) for arg in args)
         ),
     )
 

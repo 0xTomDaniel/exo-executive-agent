@@ -44,8 +44,10 @@ def _validate_phase_fixture(config: ProfileConfig, phase_fixture: dict[str, obje
     required = {
         config.data["telegram"]["bot_token_secret"],  # type: ignore[index]
         config.data["telegram"]["owner_id_secret"],  # type: ignore[index]
-        config.data["model"]["api_key_secret"],  # type: ignore[index]
     }
+    model_api_key_secret = config.data["model"]["api_key_secret"]  # type: ignore[index]
+    if model_api_key_secret:
+        required.add(model_api_key_secret)
     missing = sorted(secret for secret in required if not secrets.get(secret))
     if missing:
         raise ValidationError(f"fake Phase fixture is missing required secrets: {missing}")

@@ -90,7 +90,6 @@ def _compose_service(config: ProfileConfig) -> str:
         f'      HERMES_WORKSPACE: "{hermes["workspace"]}"',
         f'      TELEGRAM_BOT_TOKEN_FILE: "{telegram["token_path"]}"',
         f'      TELEGRAM_OWNER_ID_SECRET: "{telegram["owner_id_secret"]}"',
-        f'      MODEL_API_KEY_SECRET: "{model["api_key_secret"]}"',
         f'      PHASE_APP: "{phase["app"]}"',
         f'      PHASE_ENVIRONMENT: "{phase["environment"]}"',
         f'      PHASE_PATH: "{phase["path"]}"',
@@ -111,6 +110,11 @@ def _compose_service(config: ProfileConfig) -> str:
         f'      - "{logs["path"]}:/var/log/hermes"',
         f'      - "{backups["path"]}:/opt/backups"',
     ]
+    if model["api_key_secret"]:
+        lines.insert(
+            lines.index(f'      PHASE_APP: "{phase["app"]}"'),
+            f'      MODEL_API_KEY_SECRET: "{model["api_key_secret"]}"',
+        )
     for mount in storage["placeholder_mounts"]:  # type: ignore[index]
         mode = "ro" if mount["access"] == "read-only" else "rw"
         lines.append(f'      - "{mount["path"]}:{mount["mount_path"]}:{mode}"')

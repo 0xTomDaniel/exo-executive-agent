@@ -34,7 +34,7 @@ files, Hermes memories, sessions, logs, state databases, backups, mounted
 personal files, and local paths.
 
 **Optional profile variant**: A reusable Hermes profile template or
-distribution variant with a documented role, config file, required secrets,
+distribution variant with a documented role, config file, secret interface,
 enabled tools, and privacy boundaries. A variant is not a live profile
 directory.
 
@@ -91,9 +91,10 @@ assumed for ordinary Octo implementation or QA work.
   secrets or third-party tools that require env vars. They are not the durable
   config source of truth and should not become a broad `.env` catalog.
 - The repository should include a committed secret-only `.env.example` that
-  documents the required secret keys, their Phase app/environment/path mapping,
-  and the runtime/provider reason each key exists. It must not contain ordinary
-  non-secret configuration or every optional provider supported by Hermes.
+  documents required secret keys, explicitly optional provider keys, their
+  Phase app/environment/path mapping, and the runtime/provider reason each key
+  exists. It must not contain ordinary non-secret configuration or every
+  optional provider supported by Hermes.
 - If a real `.env`-compatible artifact is produced, it must be generated,
   ignored by git, instance-local, and limited to the smallest provider-required
   secret bridge. It must not contain ordinary non-secret configuration.
@@ -187,8 +188,10 @@ Each variant must document:
 
 The initial owner template set is `tom-personal-agent`,
 `sebastian-personal-agent`, and `noah-personal-agent`. Each template must use a
-distinct Phase path, Telegram owner/token secret names, Telegram token file
-path, Hermes home, log path, backup path, and container/restart name. The
+distinct Phase path, Telegram token file path, Hermes home, log path, backup
+path, and container/restart name. Secret names may be generic within each Phase
+path; for example every owner path can use `TELEGRAM_BOT_TOKEN` and
+`TELEGRAM_OWNER_ID` without owner prefixes. The
 `tom-local-dev` profile remains a fake/no-credentials smoke profile and may
 coexist with the installable Tom template as a separate profile id.
 
@@ -277,6 +280,10 @@ git.
 
 Secret names should be documented by Phase app/environment/path and purpose,
 then mapped to the TOML fields or Hermes/provider runtime variables they feed.
+Per-instance Phase paths, not owner-prefixed secret names, are the owner
+boundary. Telegram requires `TELEGRAM_BOT_TOKEN` and `TELEGRAM_OWNER_ID` in the
+selected path. `OPENAI_API_KEY` is optional and should be omitted for profiles
+using Hermes Codex OAuth / ChatGPT Pro login through Hermes.
 The first Tom live proof uses the existing Phase app `Tom's personal agent`,
 Production environment, and `/tom/personal-agent` path unless the operator
 renames or recreates that Phase app before final deployment.
@@ -287,7 +294,8 @@ Hermes, Docker Compose, Telegram, or an LLM provider requires that interface,
 but only for the minimal names required by those tools. The durable source is
 Phase rather than a committed or manually maintained env file.
 Secret bridge materialization must fail before writing runtime bridge files if
-Phase does not inject all per-profile required secret variables.
+Phase does not inject all per-profile required variables. Optional model API
+keys are required only when the profile names one.
 
 Do not add a repo dependency on the `dotenv` npm package unless an implementation
 spike proves that Vite's built-in env loading, Node's built-in DotEnv support,
@@ -447,9 +455,11 @@ before the deployed runtime is considered usable.
   `nousresearch/hermes-agent:latest` pulls successfully on the VM. Compose
   should run `gateway run` explicitly for gateway deployments.
 - 2026-05-28: Live Phase inventory showed an existing Production app named
-  `Tom's personal agent`, but no required Tom Telegram/OpenAI secrets at
-  `/tom/personal-agent`; final live start remains blocked on materializing those
-  secret names through Phase without exposing raw values.
+  `Tom's personal agent`, but no required generic Telegram secrets at
+  `/tom/personal-agent`; final live start remains blocked on materializing
+  `TELEGRAM_BOT_TOKEN` and `TELEGRAM_OWNER_ID` through Phase without exposing
+  raw values. `OPENAI_API_KEY` is not required for the Tom proof because the
+  intended model path is Hermes Codex OAuth / ChatGPT Pro login.
 - 2026-05-25: Prefer one Docker container and one persistent Hermes data
   directory per personal-agent instance.
 - 2026-05-25: Prefer remote SSH deployment scripts that can run the full
