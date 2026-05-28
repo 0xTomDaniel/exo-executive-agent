@@ -9,6 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from exo_distribution.config import load_profile_config
+from exo_distribution.proactive import run_fake_proactive_smoke
 from exo_distribution.smoke import run_fake_telegram_smoke
 
 
@@ -27,7 +28,17 @@ def main() -> int:
     repo_root = Path.cwd()
     config = load_profile_config(Path(args.profile))
     replies = run_fake_telegram_smoke(config, repo_root)
-    print(json.dumps({"profile": config.profile_id, "replies": replies}, indent=2))
+    proactive_deliveries = run_fake_proactive_smoke(config, repo_root)
+    print(
+        json.dumps(
+            {
+                "profile": config.profile_id,
+                "replies": replies,
+                "proactive_deliveries": proactive_deliveries,
+            },
+            indent=2,
+        )
+    )
     return 0
 
 

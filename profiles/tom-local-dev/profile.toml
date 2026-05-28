@@ -89,6 +89,23 @@ enabled = false
 allow = []
 policy = "External-action tools require per-instance opt-in, Phase-managed secrets, and approval/audit documentation."
 
+[proactive]
+enabled = true
+target_profile_id = "tom-local-dev"
+delivery_surface = "telegram-owner-text"
+
+[proactive.check_ins]
+enabled = true
+morning_enabled = true
+morning_local_time = "09:00"
+evening_enabled = true
+evening_local_time = "18:00"
+
+[proactive.health_pings]
+enabled = true
+provider = "fake-local"
+fixture = "profiles/tom-local-dev/fixtures/fake_health_status_problems.json"
+
 [smoke]
 telegram_fixture = "profiles/tom-local-dev/fixtures/fake_telegram_owner_text.json"
 phase_fixture = "profiles/tom-local-dev/fixtures/fake_phase_minimal.json"

@@ -76,6 +76,7 @@ REQUIRED_TOP_LEVEL = (
     "logs",
     "backups",
     "tools",
+    "proactive",
     "smoke",
 )
 SECRET_NAME = re.compile(r"^[A-Z][A-Z0-9_]*$")
@@ -209,6 +210,20 @@ def validate_profile_config(config: ProfileConfig) -> None:
     if external_actions["enabled"] is not False or external_actions["allow"] != []:
         raise ValidationError("external-action tools must be disabled by default")
 
+    proactive = _table(data, "proactive")
+    _require_exact_keys(
+        proactive,
+        ("enabled", "target_profile_id", "delivery_surface", "check_ins", "health_pings"),
+        "proactive",
+    )
+    _validate_boolean(proactive["enabled"], "proactive.enabled")
+    if proactive["target_profile_id"] != profile["id"]:
+        raise ValidationError("proactive.target_profile_id must match profile.id")
+    if proactive["delivery_surface"] != "telegram-owner-text":
+        raise ValidationError("proactive.delivery_surface must be telegram-owner-text")
+    _validate_proactive_check_ins(_table(proactive, "check_ins"))
+    _validate_proactive_health_pings(_table(proactive, "health_pings"))
+
     smoke = _table(data, "smoke")
     _require_exact_keys(
         smoke,
@@ -337,6 +352,50 @@ def _validate_safe_core_tools(value: object) -> None:
         names.add(name)
         if not name.startswith(SAFE_TOOL_PREFIXES):
             raise ValidationError(f"safe/core tool {name} is not in the approved default set")
+
+
+def _validate_proactive_check_ins(table: dict[str, object]) -> None:
+    _require_exact_keys(
+        table,
+        (
+            "enabled",
+            "morning_enabled",
+            "morning_local_time",
+            "evening_enabled",
+            "evening_local_time",
+        ),
+        "proactive.check_ins",
+    )
+    _validate_boolean(table["enabled"], "proactive.check_ins.enabled")
+    _validate_boolean(table["morning_enabled"], "proactive.check_ins.morning_enabled")
+    _validate_boolean(table["evening_enabled"], "proactive.check_ins.evening_enabled")
+    _validate_local_time(table["morning_local_time"], "proactive.check_ins.morning_local_time")
+    _validate_local_time(table["evening_local_time"], "proactive.check_ins.evening_local_time")
+
+
+def _validate_proactive_health_pings(table: dict[str, object]) -> None:
+    _require_exact_keys(
+        table,
+        ("enabled", "provider", "fixture"),
+        "proactive.health_pings",
+    )
+    _validate_boolean(table["enabled"], "proactive.health_pings.enabled")
+    if table["provider"] != "fake-local":
+        raise ValidationError("proactive.health_pings.provider must be fake-local")
+    _require_non_empty_strings(table, ("fixture",), "proactive.health_pings")
+
+
+def _validate_boolean(value: object, field: str) -> None:
+    if not isinstance(value, bool):
+        raise ValidationError(f"{field} must be a boolean")
+
+
+def _validate_local_time(value: object, field: str) -> None:
+    if not isinstance(value, str) or re.fullmatch(r"[0-2][0-9]:[0-5][0-9]", value) is None:
+        raise ValidationError(f"{field} must use HH:MM local time")
+    hour = int(value.split(":", 1)[0])
+    if hour > 23:
+        raise ValidationError(f"{field} must use a 24-hour local time")
 
 
 def _validate_secret_name(value: object, field: str) -> None:

@@ -37,6 +37,12 @@ All owner templates enable only safe/core tools by default:
 - `files.read_workspace`;
 - `telegram.reply_text`.
 
+Each profile also declares minimal proactive v1 config under `[proactive]`.
+The config targets the same profile id, uses only owner-chat Telegram text
+delivery, and controls morning/evening check-ins plus fake/local health pings.
+Automated validation uses local fixtures only; live Telegram health ping smoke
+is a Human Review activity.
+
 External-action tools remain disabled until a specific owner instance opts in
 with Phase-managed secrets and approval/audit documentation.
 

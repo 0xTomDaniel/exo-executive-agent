@@ -102,11 +102,33 @@ The smoke uses:
   `profiles/tom-local-dev/fixtures/fake_telegram_owner_text.json`;
 - fake Phase/minimal secret bridge values from
   `profiles/tom-local-dev/fixtures/fake_phase_minimal.json`;
+- fake proactive health/status problems from
+  `profiles/tom-local-dev/fixtures/fake_health_status_problems.json`;
 - local storage fixtures under `profiles/tom-local-dev/fixtures/storage`;
 - fake model mode, with no live provider calls.
 
 The expected behavior is one reply to the owner chat and no reply to a
-non-owner chat.
+non-owner chat. The smoke also plans owner-only Telegram text proactive
+deliveries for the configured morning check-in, evening check-in, and fake
+service/sync/storage-safety/deployment health problems.
+
+## Minimal Proactive v1
+
+Profiles configure minimal proactive behavior in TOML under `[proactive]`.
+The v1 scope is deliberately narrow:
+
+- enable or disable all proactive delivery per profile;
+- target exactly the current profile via `target_profile_id`;
+- deliver only through the `telegram-owner-text` surface;
+- configure morning and evening local check-in times;
+- configure fake/local health pings for service, sync, storage safety, and
+  deployment problems.
+
+Automated validation uses the fake local provider only. It never contacts live
+Telegram, Phase, model providers, cloud storage, or ESXi, and it never sends to
+groups, arbitrary contacts, or non-owner principals. Rich follow-up campaigns,
+complex routine scheduling, and proactive external actions remain outside this
+distribution slice.
 
 ## Tools and External Actions
 
@@ -180,4 +202,6 @@ runtime/operator paths and are ignored by git.
 
 Automated checks do not use live Telegram. Human Review remains responsible for
 one manual live Telegram smoke with a real bot token and owner account before a
-deployed personal-agent runtime is considered usable.
+deployed personal-agent runtime is considered usable. That manual smoke should
+confirm that configured check-ins and health/status pings appear only in the
+owner chat and that no group, non-owner, or external-action delivery occurs.

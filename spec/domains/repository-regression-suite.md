@@ -30,6 +30,9 @@ Expected coverage:
 - fake Phase fixtures provide only minimal required secret bridge names;
 - fake Telegram smoke replies to the owner-only text interaction and ignores a
   non-owner message;
+- fake proactive smoke plans only owner-chat Telegram text deliveries for
+  configured morning/evening check-ins and fake service, sync, storage safety,
+  and deployment health/status problems;
 - no live Telegram, model provider, Phase service, ESXi host, or private storage
   access is required.
 - committed files do not include private runtime homes, logs, backups, sessions,

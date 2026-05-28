@@ -131,11 +131,17 @@ assumed for ordinary Octo implementation or QA work.
   money, trade, post publicly, mutate broad cloud storage, or call sensitive
   provider APIs are opt-in per instance.
 - v1 user-facing runtime is owner-only Telegram text chat.
+- Minimal proactive v1 behavior is limited to owner-only Telegram text
+  morning/evening check-ins and health/status pings for service, sync, storage
+  safety, or deployment problems. It is configured in TOML, must target the
+  current profile, and must be testable through fake/local providers.
 - CLI, Docker, and SSH commands are operator setup, debug, and recovery
   surfaces, not equal first-class v1 user surfaces.
 - Voice, file/photo/document ingestion, OCR/PDF processing, arbitrary Telegram
   attachments, group chat, and multi-principal memory boundaries are out of v1
   scope.
+- Rich autonomous follow-up campaigns, complex routine scheduling, and
+  proactive external actions outside the owner chat are out of v1 scope.
 - v1 memory uses Hermes built-in memory/session/context behavior plus Markdown
   vault/files as the shared durable memory baseline.
 - External memory providers such as Honcho are optional future or per-instance
@@ -222,6 +228,15 @@ should distinguish:
 
 The schema should reject unknown or misplaced fields where practical, so config
 drift fails before an agent container starts.
+
+The `[proactive]` TOML table controls the minimal proactive surface:
+
+- global enabled/disabled state;
+- profile targeting through `target_profile_id`, which must match the profile;
+- owner-only `telegram-owner-text` delivery;
+- morning and evening local check-in toggles and times;
+- fake/local health ping fixture selection for automated service, sync,
+  storage-safety, and deployment problem checks.
 
 ### Secrets Interface
 

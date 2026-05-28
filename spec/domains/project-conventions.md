@@ -27,6 +27,9 @@ below apply to repo-owned distribution material and local validation tooling.
   `uv run python scripts/render_hermes_config.py`.
 - Multi-owner Compose output is rendered from all committed profiles with
   `uv run python scripts/render_compose.py`.
+- Minimal proactive behavior is configured only in TOML under `[proactive]`.
+  It targets the same profile id, uses the `telegram-owner-text` surface, and
+  validates with fake/local health providers for automated checks.
 - Unknown or misplaced TOML fields should fail validation before deployment or
   smoke execution.
 
@@ -44,10 +47,13 @@ below apply to repo-owned distribution material and local validation tooling.
 ## Runtime Defaults
 
 - Local/dev automated validation uses fake Telegram, fake model mode, fake Phase
-  fixtures, and local storage fixtures.
+  fixtures, fake proactive health/status fixtures, and local storage fixtures.
 - The default profile enables safe/core tools only.
 - External-action tools require explicit per-instance opt-in, Phase-managed
   secrets, and approval/audit documentation.
+- Proactive v1 may emit only owner-chat Telegram text check-ins and
+  health/status pings. Broad follow-up campaigns, complex scheduling, and
+  proactive external actions are out of scope.
 - Active Hermes gateway containers must not share a Hermes home, Telegram token
   path, log boundary, backup boundary, or restart/container boundary.
 

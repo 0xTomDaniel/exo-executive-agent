@@ -15,6 +15,7 @@
     "logs",
     "backups",
     "tools",
+    "proactive",
     "smoke"
   ],
   "properties": {
@@ -74,6 +75,17 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["safe_core", "external_actions"]
+    },
+    "proactive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "target_profile_id",
+        "delivery_surface",
+        "check_ins",
+        "health_pings"
+      ]
     },
     "smoke": {
       "type": "object",

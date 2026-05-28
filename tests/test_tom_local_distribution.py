@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import subprocess
 import sys
 import tempfile
@@ -7,11 +8,13 @@ import unittest
 from pathlib import Path
 
 from exo_distribution.config import (
+    ProfileConfig,
     discover_profile_paths,
     load_profile_config,
     schema_summary,
     validate_profile_set,
 )
+from exo_distribution.proactive import run_fake_proactive_smoke
 from exo_distribution.render import render_compose, render_hermes_config
 from exo_distribution.skills import (
     install_planned_skills,
@@ -125,6 +128,65 @@ class TomLocalDistributionTest(unittest.TestCase):
             ],
         )
 
+    def test_proactive_config_controls_owner_check_ins_and_health_pings(self) -> None:
+        config = load_profile_config(PROFILE)
+        proactive = config.data["proactive"]  # type: ignore[index]
+        check_ins = proactive["check_ins"]  # type: ignore[index]
+        health_pings = proactive["health_pings"]  # type: ignore[index]
+
+        self.assertTrue(proactive["enabled"])  # type: ignore[index]
+        self.assertEqual(proactive["target_profile_id"], "tom-local-dev")  # type: ignore[index]
+        self.assertEqual(
+            proactive["delivery_surface"],  # type: ignore[index]
+            "telegram-owner-text",
+        )
+        self.assertEqual(check_ins["morning_local_time"], "09:00")
+        self.assertEqual(check_ins["evening_local_time"], "18:00")
+        self.assertEqual(health_pings["provider"], "fake-local")
+
+    def test_fake_proactive_smoke_delivers_only_owner_telegram_texts(self) -> None:
+        config = load_profile_config(PROFILE)
+        deliveries = run_fake_proactive_smoke(config, REPO_ROOT)
+
+        self.assertEqual({delivery["chat_id"] for delivery in deliveries}, {"fake-tom-owner"})
+        self.assertEqual(
+            [delivery["kind"] for delivery in deliveries],
+            [
+                "morning_check_in",
+                "evening_check_in",
+                "health_service",
+                "health_sync",
+                "health_storage_safety",
+                "health_deployment",
+            ],
+        )
+        for delivery in deliveries:
+            self.assertNotIn("fake-non-owner", delivery["text"])
+
+    def test_proactive_disabled_state_sends_nothing(self) -> None:
+        config = load_profile_config(PROFILE)
+        data = copy.deepcopy(config.data)
+        data["proactive"]["enabled"] = False  # type: ignore[index]
+        disabled_config = ProfileConfig(path=config.path, data=data)
+
+        self.assertEqual(run_fake_proactive_smoke(disabled_config, REPO_ROOT), [])
+
+    def test_health_problem_reporting_uses_fake_local_provider(self) -> None:
+        config = load_profile_config(PROFILE)
+        deliveries = run_fake_proactive_smoke(config, REPO_ROOT)
+        health_texts = [
+            delivery["text"]
+            for delivery in deliveries
+            if delivery["kind"].startswith("health_")
+        ]
+
+        self.assertEqual(len(health_texts), 4)
+        self.assertTrue(any("(service)" in text for text in health_texts))
+        self.assertTrue(any("(sync)" in text for text in health_texts))
+        self.assertTrue(any("(storage_safety)" in text for text in health_texts))
+        self.assertTrue(any("(deployment)" in text for text in health_texts))
+        self.assertTrue(any("critical" in text for text in health_texts))
+
     def test_smoke_command_uses_no_live_credentials(self) -> None:
         result = subprocess.run(
             [sys.executable, "scripts/smoke_tom_local.py"],
@@ -135,6 +197,8 @@ class TomLocalDistributionTest(unittest.TestCase):
         )
         self.assertIn('"profile": "tom-local-dev"', result.stdout)
         self.assertIn("fake Telegram", result.stdout)
+        self.assertIn('"kind": "morning_check_in"', result.stdout)
+        self.assertIn('"kind": "health_storage_safety"', result.stdout)
 
     def test_env_example_is_secret_only_and_blank(self) -> None:
         content = ENV_EXAMPLE.read_text(encoding="utf-8")
