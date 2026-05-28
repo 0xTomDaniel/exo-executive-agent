@@ -10,6 +10,7 @@ from pathlib import Path
 
 from exo_distribution.config import (
     ProfileConfig,
+    ValidationError,
     discover_profile_paths,
     load_profile_config,
     schema_summary,
@@ -156,6 +157,42 @@ class TomLocalDistributionTest(unittest.TestCase):
             {state.zone for state in health},
             {"runtime", "vault", "personal_files", "placeholder:calendar-export"},
         )
+
+    def test_installable_owner_storage_sync_health_matches_declared_mounts(self) -> None:
+        for profile_path in (
+            REPO_ROOT / "profiles/tom-personal-agent/profile.toml",
+            REPO_ROOT / "profiles/sebastian-personal-agent/profile.toml",
+            REPO_ROOT / "profiles/noah-personal-agent/profile.toml",
+        ):
+            with self.subTest(profile=profile_path.parent.name):
+                config = load_profile_config(profile_path)
+                mounts = storage_mount_declarations(config)
+                health = read_fake_sync_health(config, REPO_ROOT)
+
+                self.assertEqual(
+                    {state.zone for state in health},
+                    {mount.zone for mount in mounts},
+                )
+                self.assertIn("placeholder:personal-documents", {state.zone for state in health})
+                self.assertEqual(
+                    {state.status for state in health},
+                    {"healthy", "stale", "errored", "unavailable"},
+                )
+
+    def test_storage_sync_health_rejects_undeclared_fixture_zones(self) -> None:
+        config = load_profile_config(REPO_ROOT / "profiles/tom-personal-agent/profile.toml")
+        data = copy.deepcopy(config.data)
+        data["smoke"]["storage_sync_fixture"] = (  # type: ignore[index]
+            "profiles/tom-local-dev/fixtures/storage/sync-health.json"
+        )
+        mismatched_config = ProfileConfig(path=config.path, data=data)
+
+        with self.assertRaisesRegex(
+            ValidationError,
+            "missing declared zones: placeholder:personal-documents; "
+            "unexpected zones: placeholder:calendar-export",
+        ):
+            read_fake_sync_health(mismatched_config, REPO_ROOT)
 
     def test_storage_contract_command_uses_fake_local_fixture(self) -> None:
         result = subprocess.run(

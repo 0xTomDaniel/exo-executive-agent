@@ -63,6 +63,7 @@ def read_fake_sync_health(config: ProfileConfig, repo_root: Path) -> list[SyncHe
         if not isinstance(summary, str) or not summary.strip():
             raise ValidationError(f"storage sync state {index} must include a summary")
         health.append(SyncHealth(zone=zone, status=status, summary=summary))
+    _validate_sync_health_zones(config, health)
     return health
 
 
@@ -96,6 +97,33 @@ def _mount_declaration(zone: str, table: object) -> MountDeclaration:
         recovery=_string_field(table, "recovery"),
         allowed_write_paths=tuple(allowed),
     )
+
+
+def _validate_sync_health_zones(config: ProfileConfig, health: list[SyncHealth]) -> None:
+    declared_zones = {mount.zone for mount in storage_mount_declarations(config)}
+    health_zones = [state.zone for state in health]
+    unique_health_zones = set(health_zones)
+
+    if len(unique_health_zones) != len(health_zones):
+        duplicates = sorted(
+            zone for zone in unique_health_zones if health_zones.count(zone) > 1
+        )
+        raise ValidationError(
+            f"storage sync fixture repeats zones for {config.profile_id}: "
+            f"{', '.join(duplicates)}"
+        )
+    if unique_health_zones != declared_zones:
+        missing = sorted(declared_zones - unique_health_zones)
+        unexpected = sorted(unique_health_zones - declared_zones)
+        details = []
+        if missing:
+            details.append(f"missing declared zones: {', '.join(missing)}")
+        if unexpected:
+            details.append(f"unexpected zones: {', '.join(unexpected)}")
+        raise ValidationError(
+            f"storage sync fixture zones do not match {config.profile_id} mounts; "
+            + "; ".join(details)
+        )
 
 
 def _string_field(table: dict[str, object], key: str) -> str:
