@@ -331,8 +331,8 @@ before the deployed runtime is considered usable.
 - A runtime-created skill should become durable distribution material.
 - A repo-owned skill directory is accidentally mounted writable through
   `skills.external_dirs`.
-- The ESXi guest is reachable by SSH but lacks Docker, Compose, or required
-  filesystem mounts.
+- The ESXi guest is reachable by SSH but lacks Docker, Compose, rsync, Phase
+  CLI, or required filesystem mounts.
 - One personal-agent instance starts while another is unhealthy.
 - Telegram tokens are swapped, duplicated, or assigned to the wrong owner.
 - Phase authentication is missing, points at the wrong app/environment/path, or

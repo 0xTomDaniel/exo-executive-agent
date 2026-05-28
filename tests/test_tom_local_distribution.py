@@ -515,6 +515,7 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertIn("docker compose", command_text)
         self.assertIn("command -v uv", prereq_commands)
         self.assertIn("command -v phase", prereq_commands)
+        self.assertIn("command -v rsync", prereq_commands)
         self.assertGreaterEqual(len(compose_command_list), 6)
         for command in compose_command_list:
             self.assertIn("EXO_RUNTIME_ROOT=/srv/exo/hermes docker compose", command)

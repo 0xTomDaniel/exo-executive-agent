@@ -78,8 +78,8 @@ below apply to repo-owned distribution material and local validation tooling.
 - Remote deploy validation uses dry-run or mock-target paths. Live ESXi
   execution remains Human Review/HITL unless a later issue grants access and
   secrets.
-- Remote deploy plans must verify remote Docker, Compose, Python, uv, and
-  Phase CLI availability before later steps depend on them.
+- Remote deploy plans must verify remote Docker, Compose, Python, uv, Phase
+  CLI, and rsync availability before later steps depend on them.
 - Remote deploy Compose commands must set `EXO_RUNTIME_ROOT` to the target
   runtime root, and Phase secret bridge materialization must run from the
   copied deploy root or an absolute deploy-root script path.

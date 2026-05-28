@@ -173,6 +173,7 @@ def build_deploy_plan(
                 _ssh(target, "command -v python3"),
                 _ssh(target, "command -v uv"),
                 _ssh(target, "command -v phase"),
+                _ssh(target, "command -v rsync"),
                 _ssh(target, f"mkdir -p {target.deploy_root} {target.runtime_root}"),
                 _ssh(target, f"test -w {target.deploy_root} && test -w {target.runtime_root}"),
             ],

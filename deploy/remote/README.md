@@ -29,8 +29,8 @@ storage-safety problem so failure reporting stays covered without live services.
 
 The plan covers:
 
-- prerequisite checks for Docker, Compose, Python, uv, Phase CLI, deploy root,
-  and runtime root;
+- prerequisite checks for Docker, Compose, Python, uv, Phase CLI, rsync,
+  deploy root, and runtime root;
 - TOML profile validation through `scripts/validate_profile.py --all`;
 - Hermes config and Compose rendering;
 - copying distribution-owned material with secret, runtime, Phase export, log,
