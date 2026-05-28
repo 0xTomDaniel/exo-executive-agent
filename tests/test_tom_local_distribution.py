@@ -120,7 +120,13 @@ class TomLocalDistributionTest(unittest.TestCase):
             self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/skills:/opt/data/skills", rendered)
             self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/log-boundary", rendered)
         self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/backup-boundary", rendered)
-        self.assertEqual(rendered.count("/opt/data/hermes-home"), 3)
+        self.assertEqual(rendered.count("/opt/data/hermes-home"), 6)
+        self.assertEqual(rendered.count('HERMES_HOME: "/opt/data/hermes-home"'), 3)
+        self.assertEqual(rendered.count('HERMES_WORKSPACE: "/workspace"'), 3)
+        self.assertEqual(
+            rendered.count('TELEGRAM_BOT_TOKEN_FILE: "/run/secrets/telegram-bot-token"'),
+            3,
+        )
         self.assertEqual(rendered.count("/opt/data/skills"), 3)
         self.assertEqual(rendered.count(":/opt/data/hermes-home:rw"), 3)
         self.assertEqual(rendered.count(":/opt/data/vault:rw"), 3)
@@ -498,6 +504,7 @@ class TomLocalDistributionTest(unittest.TestCase):
                 "install-or-update-profile-material",
                 "materialize-phase-secret-bridges",
                 "install-or-sync-profile-skills",
+                "normalize-container-runtime-ownership",
                 "compose-start-or-restart",
                 "health-checks",
                 "status-and-log-inspection",
@@ -527,6 +534,9 @@ class TomLocalDistributionTest(unittest.TestCase):
         secret_bridge_commands = "\n".join(
             steps_by_name["materialize-phase-secret-bridges"]["commands"]  # type: ignore[index]
         )
+        ownership_commands = "\n".join(
+            steps_by_name["normalize-container-runtime-ownership"]["commands"]  # type: ignore[index]
+        )
         copy_commands = "\n".join(
             steps_by_name["copy-distribution-material"]["commands"]  # type: ignore[index]
         )
@@ -549,6 +559,8 @@ class TomLocalDistributionTest(unittest.TestCase):
             "./deploy/remote/materialize-secret-bridge.sh",
             secret_bridge_commands,
         )
+        self.assertIn("sudo chown -R 10000:10000", ownership_commands)
+        self.assertIn("telegram-bot-token", ownership_commands)
         for excluded_path in (
             ".phase",
             "phase-export*",
@@ -587,7 +599,14 @@ class TomLocalDistributionTest(unittest.TestCase):
             self.assertTrue(bridge["phase"]["path"].startswith("/"))
             self.assertIn("/srv/exo/hermes/", bridge["dotenv_bridge"])
             self.assertTrue(bridge["dotenv_bridge"].endswith("/secret-bridge/provider.env"))
-            self.assertEqual(bridge["dotenv_keys"], ["TELEGRAM_OWNER_ID"])
+            self.assertEqual(
+                bridge["dotenv_keys"],
+                [
+                    "TELEGRAM_BOT_TOKEN",
+                    "TELEGRAM_ALLOWED_USERS",
+                    "TELEGRAM_HOME_CHANNEL",
+                ],
+            )
             self.assertEqual(
                 bridge["secret_names"],
                 ["TELEGRAM_BOT_TOKEN", "TELEGRAM_OWNER_ID"],
@@ -646,7 +665,14 @@ class TomLocalDistributionTest(unittest.TestCase):
             )
             self.assertEqual(
                 (bridge_dir / "provider.env").read_text(encoding="utf-8"),
-                "TELEGRAM_OWNER_ID=12345\n",
+                "\n".join(
+                    [
+                        "TELEGRAM_BOT_TOKEN=fake-token-not-live",
+                        "TELEGRAM_ALLOWED_USERS=12345",
+                        "TELEGRAM_HOME_CHANNEL=12345",
+                        "",
+                    ]
+                ),
             )
             self.assertNotIn("OPENAI_API_KEY", (bridge_dir / "provider.env").read_text())
 

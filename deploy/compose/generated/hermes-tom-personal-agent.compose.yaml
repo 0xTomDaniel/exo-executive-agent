@@ -11,9 +11,9 @@ services:
       - "${EXO_RUNTIME_ROOT}/tom-personal-agent/secret-bridge/provider.env"
     environment:
       HERMES_PROFILE_ID: "tom-personal-agent"
-      HERMES_HOME: "${EXO_RUNTIME_ROOT}/tom-personal-agent/hermes-home"
-      HERMES_WORKSPACE: "${EXO_RUNTIME_ROOT}/tom-personal-agent/workspace"
-      TELEGRAM_BOT_TOKEN_FILE: "${EXO_RUNTIME_ROOT}/tom-personal-agent/secret-bridge/telegram-bot-token"
+      HERMES_HOME: "/opt/data/hermes-home"
+      HERMES_WORKSPACE: "/workspace"
+      TELEGRAM_BOT_TOKEN_FILE: "/run/secrets/telegram-bot-token"
       TELEGRAM_OWNER_ID_SECRET: "TELEGRAM_OWNER_ID"
       PHASE_APP: "Tom's personal agent"
       PHASE_ENVIRONMENT: "prod"

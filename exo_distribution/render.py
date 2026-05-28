@@ -76,6 +76,9 @@ def _compose_service(config: ProfileConfig) -> str:
     backups = data["backups"]  # type: ignore[index]
 
     service_name = str(config.profile_id).replace("_", "-")
+    runtime_container_path = storage["runtime"]["container_path"]  # type: ignore[index]
+    workspace_container_path = "/workspace"
+    telegram_token_container_path = "/run/secrets/telegram-bot-token"
     lines = [
         f"  {service_name}:",
         f'    image: "{container["image"]}"',
@@ -86,9 +89,9 @@ def _compose_service(config: ProfileConfig) -> str:
         f'      - "${{EXO_RUNTIME_ROOT}}/{config.profile_id}/secret-bridge/provider.env"',
         "    environment:",
         f'      HERMES_PROFILE_ID: "{config.profile_id}"',
-        f'      HERMES_HOME: "{hermes["home"]}"',
-        f'      HERMES_WORKSPACE: "{hermes["workspace"]}"',
-        f'      TELEGRAM_BOT_TOKEN_FILE: "{telegram["token_path"]}"',
+        f'      HERMES_HOME: "{runtime_container_path}"',
+        f'      HERMES_WORKSPACE: "{workspace_container_path}"',
+        f'      TELEGRAM_BOT_TOKEN_FILE: "{telegram_token_container_path}"',
         f'      TELEGRAM_OWNER_ID_SECRET: "{telegram["owner_id_secret"]}"',
         f'      PHASE_APP: "{phase["app"]}"',
         f'      PHASE_ENVIRONMENT: "{phase["environment"]}"',
@@ -97,8 +100,8 @@ def _compose_service(config: ProfileConfig) -> str:
         (
             f'      - "{hermes["home"]}:{storage["runtime"]["container_path"]}:rw"'
         ),  # type: ignore[index]
-        f'      - "{hermes["workspace"]}:/workspace"',
-        f'      - "{telegram["token_path"]}:/run/secrets/telegram-bot-token:ro"',
+        f'      - "{hermes["workspace"]}:{workspace_container_path}"',
+        f'      - "{telegram["token_path"]}:{telegram_token_container_path}:ro"',
         f'      - "${{EXO_RUNTIME_ROOT}}/{config.profile_id}/skills:/opt/data/skills"',
         (
             f'      - "{storage["vault"]["path"]}:{storage["vault"]["container_path"]}:rw"'

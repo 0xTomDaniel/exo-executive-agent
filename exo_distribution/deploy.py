@@ -198,7 +198,7 @@ def build_deploy_plan(
             "kind": "local",
             "commands": [
                 "uv run python scripts/render_hermes_config.py",
-                "uv run python scripts/render_compose.py",
+                _render_compose_command(compose_output, selected_profile_ids),
             ],
             "outputs": [str(compose_output)],
         },
@@ -264,6 +264,18 @@ def build_deploy_plan(
                     ),
                 )
                 for config in installable
+            ],
+        },
+        {
+            "name": "normalize-container-runtime-ownership",
+            "kind": "remote",
+            "commands": [
+                _ssh(target, _container_runtime_ownership_command(target, config))
+                for config in installable
+            ],
+            "notes": [
+                "Hermes image drops to UID/GID 10000 after init.",
+                "Writable bind mounts and token file must be owned by that runtime user.",
             ],
         },
         {
@@ -341,6 +353,18 @@ def build_deploy_plan(
     return plan
 
 
+def _render_compose_command(
+    compose_output: Path,
+    selected_profile_ids: tuple[str, ...],
+) -> str:
+    args = ["uv run python scripts/render_compose.py"]
+    for profile_id in selected_profile_ids:
+        args.append(f"--profile {shlex.quote(profile_id)}")
+    if compose_output != Path("deploy/compose/generated/hermes-multi-owner.compose.yaml"):
+        args.append(f"--output {shlex.quote(str(compose_output))}")
+    return " ".join(args)
+
+
 def load_mock_health(fixture_path: str) -> dict[str, object]:
     fixture = Path(fixture_path)
     with fixture.open("r", encoding="utf-8") as fixture_file:
@@ -371,7 +395,11 @@ def _secret_bridge_metadata(target: DeployTarget, config: ProfileConfig) -> dict
         str(telegram["bot_token_secret"]),
         str(telegram["owner_id_secret"]),
     ]
-    dotenv_keys = [str(telegram["owner_id_secret"])]
+    dotenv_keys = [
+        "TELEGRAM_BOT_TOKEN",
+        "TELEGRAM_ALLOWED_USERS",
+        "TELEGRAM_HOME_CHANNEL",
+    ]
     if model_secret:
         secret_names.append(model_secret)
         dotenv_keys.append(model_secret)
@@ -424,6 +452,28 @@ def _secret_bridge_command(target: DeployTarget, config: ProfileConfig) -> str:
             "-- ./deploy/remote/materialize-secret-bridge.sh "
             + " ".join(shlex.quote(arg) for arg in args)
         ),
+    )
+
+
+def _container_runtime_ownership_command(target: DeployTarget, config: ProfileConfig) -> str:
+    profile_root = f"{target.runtime_root}/{config.profile_id}"
+    writable_dirs = [
+        f"{profile_root}/hermes-home",
+        f"{profile_root}/workspace",
+        f"{profile_root}/vault",
+        f"{profile_root}/skills",
+        f"{profile_root}/log-boundary",
+        f"{profile_root}/backup-boundary",
+    ]
+    token_file = f"{profile_root}/secret-bridge/telegram-bot-token"
+    return (
+        "sudo chown -R 10000:10000 "
+        + " ".join(shlex.quote(path) for path in writable_dirs)
+        + " && "
+        + f"if [ -e {shlex.quote(token_file)} ]; then "
+        + f"sudo chown 10000:10000 {shlex.quote(token_file)} && "
+        + f"sudo chmod 0600 {shlex.quote(token_file)}; "
+        + "fi"
     )
 
 

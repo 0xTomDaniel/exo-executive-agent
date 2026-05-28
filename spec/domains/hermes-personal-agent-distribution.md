@@ -284,6 +284,9 @@ Per-instance Phase paths, not owner-prefixed secret names, are the owner
 boundary. Telegram requires `TELEGRAM_BOT_TOKEN` and `TELEGRAM_OWNER_ID` in the
 selected path. `OPENAI_API_KEY` is optional and should be omitted for profiles
 using Hermes Codex OAuth / ChatGPT Pro login through Hermes.
+Runtime bridge files may map generic Phase names to provider-native names; for
+Hermes Telegram this maps `TELEGRAM_OWNER_ID` to `TELEGRAM_ALLOWED_USERS` and
+`TELEGRAM_HOME_CHANNEL`.
 The first Tom live proof uses the existing Phase app `Tom's personal agent`,
 Production environment, and `/tom/personal-agent` path unless the operator
 renames or recreates that Phase app before final deployment.

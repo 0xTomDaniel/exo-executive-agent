@@ -76,10 +76,14 @@ bridge files under
 
 - `telegram-bot-token`, for providers that require a token file;
 - `provider.env`, a smallest-available dotenv-compatible bridge containing the
-  profile's owner id and, only when configured, a model provider API key.
+  Hermes-native Telegram runtime keys `TELEGRAM_BOT_TOKEN`,
+  `TELEGRAM_ALLOWED_USERS`, and `TELEGRAM_HOME_CHANNEL`, plus a model provider
+  API key only when configured.
 
-The materializer fails closed if Phase does not inject every required Telegram
-secret for the profile, and fails on an API key only when the profile names one.
+The materializer fails closed if Phase does not inject every required generic
+Telegram secret for the profile, and maps `TELEGRAM_OWNER_ID` to Hermes'
+allowlist/home-channel variables. It fails on an API key only when the profile
+names one.
 Generated bridges are ignored runtime artifacts. Compose
 connects `provider.env` through the profile-local `env_file`; other local
 ingestion should use Phase runtime injection, Vite built-in env loading for
