@@ -232,7 +232,8 @@ restart/runtime boundary.
 Remote setup installs the repo-owned `SOUL.md` into each profile Hermes home and
 the repo-owned `AGENTS.md` into each profile workspace as
 `/workspace/AGENTS.md`. Hermes loads the workspace `AGENTS.md` as project
-context, while `SOUL.md` remains the primary identity prompt.
+context through `terminal.cwd` / `TERMINAL_CWD=/workspace`, while `SOUL.md`
+remains the primary identity prompt.
 
 The generated Compose example declares one service per installable owner
 template. It mounts each Hermes home at `/opt/data/hermes-home`, the owner

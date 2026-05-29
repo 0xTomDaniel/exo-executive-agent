@@ -194,8 +194,10 @@ Root `AGENTS.md` is the shared always-on Exo project and operating-policy
 context. It must remain safe for every owner profile and route owner-specific
 guidance to profile-targeted skills such as `tom-operating-style`. Deployment
 must install it into each profile workspace as `/workspace/AGENTS.md`, because
-Hermes loads AGENTS project context from its workdir while loading `SOUL.md`
-from the Hermes home.
+Hermes loads AGENTS project context from `terminal.cwd` / `TERMINAL_CWD` while
+loading `SOUL.md` from the Hermes home. Setup must point Hermes terminal cwd at
+`/workspace` through generated Compose env for first start and by patching an
+existing Hermes `config.yaml` during redeploy.
 
 Existing Hermes conversations may keep old identity context even after
 `SOUL.md` or profile material is updated. Deployment and Human Review must

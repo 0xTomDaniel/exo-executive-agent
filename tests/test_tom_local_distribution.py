@@ -144,6 +144,7 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertEqual(rendered.count("/opt/data/hermes-home"), 6)
         self.assertEqual(rendered.count('HERMES_HOME: "/opt/data/hermes-home"'), 3)
         self.assertEqual(rendered.count('HERMES_WORKSPACE: "/workspace"'), 3)
+        self.assertEqual(rendered.count('TERMINAL_CWD: "/workspace"'), 3)
         self.assertEqual(
             rendered.count('TELEGRAM_BOT_TOKEN_FILE: "/run/secrets/telegram-bot-token"'),
             3,
@@ -642,6 +643,7 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertIn("sudo install -o 10000 -g 10000 -m 0640", command_text)
         self.assertIn("Captain Exo", command_text)
         self.assertIn("They call me Exo", command_text)
+        self.assertIn("cwd: /workspace", command_text)
         self.assertIn("command -v uv", prereq_commands)
         self.assertIn("command -v phase", prereq_commands)
         self.assertIn("command -v rsync", prereq_commands)

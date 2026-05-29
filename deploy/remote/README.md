@@ -38,7 +38,8 @@ The plan covers:
 - per-profile runtime directory creation;
 - profile TOML install/update into each instance config boundary;
 - `SOUL.md` install/update into each instance Hermes home and `AGENTS.md`
-  install/update into each instance workspace;
+  install/update into each instance workspace, with Hermes `terminal.cwd`
+  pointed at `/workspace` for AGENTS discovery;
 - Phase-backed secret bridge materialization;
 - profile skill install/sync into each instance's container-owned skills
   directory through a bounded `sudo env PATH="$PATH" uv run ...` command;
@@ -123,8 +124,9 @@ For a fresh VM or update, the operator flow is:
 5. Create runtime directories, install/update profile TOML into each profile
    config boundary, install the repo-owned `SOUL.md` into the profile's Hermes
    home, and install the repo-owned `AGENTS.md` into the profile workspace as
-   `/workspace/AGENTS.md` so Hermes loads Exo project context from the runtime
-   workdir.
+   `/workspace/AGENTS.md`. The generated Compose env and existing
+   `config.yaml` patch point Hermes terminal cwd at `/workspace` so Hermes loads
+   Exo project context from the runtime workdir.
 6. Materialize Phase secret bridges.
 7. Install or sync approved skills for each profile. On redeploy, this step
    runs through `sudo` because the live skills directory is owned by the Hermes

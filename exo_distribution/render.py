@@ -91,6 +91,7 @@ def _compose_service(config: ProfileConfig) -> str:
         f'      HERMES_PROFILE_ID: "{config.profile_id}"',
         f'      HERMES_HOME: "{runtime_container_path}"',
         f'      HERMES_WORKSPACE: "{workspace_container_path}"',
+        f'      TERMINAL_CWD: "{workspace_container_path}"',
         f'      TELEGRAM_BOT_TOKEN_FILE: "{telegram_token_container_path}"',
         f'      TELEGRAM_OWNER_ID_SECRET: "{telegram["owner_id_secret"]}"',
         f'      PHASE_APP: "{phase["app"]}"',

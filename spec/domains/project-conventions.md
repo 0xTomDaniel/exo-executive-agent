@@ -86,7 +86,9 @@ below apply to repo-owned distribution material and local validation tooling.
 - Remote deploy setup must install `SOUL.md` into each profile Hermes home and
   `AGENTS.md` into each profile workspace as `/workspace/AGENTS.md`; `AGENTS.md`
   must remain shared/profile-neutral, with owner-specific behavior selected
-  through profile-targeted skills.
+  through profile-targeted skills. Generated Compose env and existing Hermes
+  `config.yaml` must point terminal cwd at `/workspace` so Hermes actually
+  loads the workspace AGENTS context.
 - Remote deploy skill sync must be repeatable after the first ownership
   normalization pass. If the profile skills directory is container-owned, the
   installer runs through a bounded `sudo env PATH="$PATH" uv run ...` command
