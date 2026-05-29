@@ -29,6 +29,9 @@ RUNTIME_RSYNC_EXCLUDES = (
     "backups",
     "personal-files",
 )
+RUNTIME_RSYNC_INCLUDES = (
+    ".env.example",
+)
 
 
 @dataclass(frozen=True)
@@ -579,10 +582,15 @@ def _rsync_ssh(target: DeployTarget) -> str:
 
 
 def _rsync_exclude_args() -> str:
-    return " ".join(
+    include_args = [
+        f"--include {shlex.quote(pattern)}"
+        for pattern in RUNTIME_RSYNC_INCLUDES
+    ]
+    exclude_args = [
         f"--exclude {shlex.quote(pattern)}"
         for pattern in RUNTIME_RSYNC_EXCLUDES
-    )
+    ]
+    return " ".join([*include_args, *exclude_args])
 
 
 def _table(data: dict[str, object], key: str) -> dict[str, object]:

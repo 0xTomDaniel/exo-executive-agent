@@ -697,6 +697,7 @@ class TomLocalDistributionTest(unittest.TestCase):
             "sessions",
         ):
             self.assertIn(excluded_path, copy_commands)
+        self.assertIn("--include .env.example", copy_commands)
         self.assertGreaterEqual(copy_commands.count("--exclude"), 15)
         self.assertIn("logs --tail 100", command_text)
         self.assertIn("restart", command_text)
