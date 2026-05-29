@@ -33,7 +33,8 @@ The plan covers:
   deploy root, and runtime root;
 - TOML profile validation through `scripts/validate_profile.py --all`;
 - Hermes config and Compose rendering;
-- copying distribution-owned material with secret, runtime, Phase export, log,
+- copying distribution-owned material, including committed non-secret examples
+  like `.env.example`, with live env, secret, runtime, Phase export, log,
   backup, session, memory, and personal-file exclusions;
 - per-profile runtime directory creation;
 - profile TOML install/update into each instance config boundary;

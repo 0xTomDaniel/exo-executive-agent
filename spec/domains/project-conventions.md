@@ -93,9 +93,10 @@ below apply to repo-owned distribution material and local validation tooling.
   normalization pass. If the profile skills directory is container-owned, the
   installer runs through a bounded `sudo env PATH="$PATH" uv run ...` command
   and the later ownership step returns files to the Hermes runtime UID.
-- Remote deploy copy plans must exclude ignored secret/runtime artifacts,
-  including `.phase/`, Phase exports, generated secret bridges, Hermes homes,
-  memories, sessions, logs, backups, and personal files.
+- Remote deploy copy plans must keep committed non-secret examples such as
+  `.env.example`, while excluding ignored secret/runtime artifacts including
+  live `.env*` files, `.phase/`, Phase exports, generated secret bridges,
+  Hermes homes, memories, sessions, logs, backups, and personal files.
 
 ## Skills
 
