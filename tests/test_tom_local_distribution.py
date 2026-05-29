@@ -42,6 +42,10 @@ REMOTE_TARGET = REPO_ROOT / "deploy/remote/mock-target.toml"
 HUMAN_REVIEW_CHECKLIST = REPO_ROOT / "docs/human-review-checklist.md"
 SOUL = REPO_ROOT / "SOUL.md"
 AGENTS = REPO_ROOT / "AGENTS.md"
+TOM_OPERATING_STYLE = AGENT_SKILLS / "tom-operating-style/SKILL.md"
+TOM_OPERATING_PATTERNS = AGENT_SKILLS / "tom-operating-style/references/operating-patterns.md"
+PLANNING_RHYTHM_DAILY = AGENT_SKILLS / "planning-rhythm-os/references/daily-rhythm.md"
+OBSIDIAN_SKILL = AGENT_SKILLS / "obsidian/SKILL.md"
 
 
 class TomLocalDistributionTest(unittest.TestCase):
@@ -96,6 +100,24 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertIn("owner-only Telegram text", content)
         self.assertIn("/workspace/AGENTS.md", content)
 
+    def test_imported_exocortex_operating_rules_are_captured_in_skills(self) -> None:
+        tom_skill = TOM_OPERATING_STYLE.read_text(encoding="utf-8")
+        tom_patterns = TOM_OPERATING_PATTERNS.read_text(encoding="utf-8")
+        daily_rhythm = PLANNING_RHYTHM_DAILY.read_text(encoding="utf-8")
+        obsidian_skill = OBSIDIAN_SKILL.read_text(encoding="utf-8")
+
+        self.assertIn("Tom's [[💎]] highest-importance marker", tom_skill)
+        self.assertIn("Lived-history grounding", tom_patterns)
+        self.assertIn("[[Planning/Weekly Tasks.base|Weekly Tasks Base]]", tom_patterns)
+        self.assertIn("Saturday run / stoned-run ritual", tom_patterns)
+        self.assertIn("Sunday yoga", tom_patterns)
+        self.assertIn("movement before work blocks", tom_patterns)
+        self.assertIn("Meditation remains the gate before optional work", tom_patterns)
+        self.assertIn("Core habits: water, meditation, movement/training", daily_rhythm)
+        self.assertIn("Named weekly rituals or mandatory habits", daily_rhythm)
+        self.assertIn("Prefer Obsidian CLI for note creation", obsidian_skill)
+        self.assertIn("Bases for structured tracking", obsidian_skill)
+
     def test_rendered_hermes_config_matches_committed_example(self) -> None:
         config = load_profile_config(PROFILE)
         rendered = render_hermes_config(config, TEMPLATE)
@@ -140,7 +162,7 @@ class TomLocalDistributionTest(unittest.TestCase):
             )
             self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/skills:/opt/data/skills", rendered)
             self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/log-boundary", rendered)
-        self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/backup-boundary", rendered)
+            self.assertIn(f"${{EXO_RUNTIME_ROOT}}/{profile_id}/backup-boundary", rendered)
         self.assertEqual(rendered.count("/opt/data/hermes-home"), 6)
         self.assertEqual(rendered.count('HERMES_HOME: "/opt/data/hermes-home"'), 3)
         self.assertEqual(rendered.count('HERMES_WORKSPACE: "/workspace"'), 3)
@@ -477,6 +499,7 @@ class TomLocalDistributionTest(unittest.TestCase):
                 "exo.tom_operating_style",
             ],
         )
+        self.assertNotIn("exo.obsidian", [plan.source.id for plan in tom_plans])
 
     def test_skill_installer_installs_updates_and_refuses_unmanaged_collisions(self) -> None:
         manifest = load_skills_manifest(SKILLS_MANIFEST, REPO_ROOT)
