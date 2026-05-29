@@ -59,6 +59,7 @@ def main() -> int:
                         "id": plan.source.id,
                         "name": plan.source.name,
                         "kind": plan.source.kind,
+                        "category": plan.source.category,
                         "repo": plan.source.repo,
                         "path": plan.source.path,
                         "ref": plan.source.ref,

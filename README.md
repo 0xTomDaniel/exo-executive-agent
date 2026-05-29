@@ -172,10 +172,18 @@ Phase-managed secrets, and approval/audit documentation.
 
 ## Skills Manifest and Installer
 
-Repo-owned skills are declared in `skills/sources.toml`. Each entry records the
-source repository, source path, pinned ref, target profiles, install
-destination, source-of-truth policy, collision policy, sync behavior, and the
-promotion path for runtime-created skills.
+Repo-owned skills live as flat Agent Skills directories under
+`.agents/skills/<skill-name>/`, where each skill has a `SKILL.md` file whose
+frontmatter `name` matches the directory name. The flat `.agents/skills/`
+layout is the cross-client discovery surface; do not nest skills under
+category folders such as `general/` or `personal/`.
+
+`skills/sources.toml` is the profile-aware manifest. Each entry records the
+source repository, source path, pinned ref, general/personal category, target
+profiles, install destination, source-of-truth policy, collision policy, sync
+behavior, and the promotion path for runtime-created skills. Tom-specific
+procedural guidance such as `tom-operating-style` stays in the main flat skill
+tree, but the manifest targets it only to `tom-personal-agent`.
 
 Plan the Tom local/dev install set:
 
@@ -207,8 +215,9 @@ reviewed manifest update.
 repo-owned skill directories are not the production source of truth. Sensitive
 external-action skills remain unapproved by default and require owner approval,
 Phase-managed secrets, and audit notes before a profile targets them. The
-private calendar fixture in `skills/fixtures/private-fallback/` exists only so
-AFK checks can validate private-source metadata without repository credentials.
+private calendar fallback in `.agents/skills/private-calendar-audit/` exists
+only so AFK checks can validate private-source metadata without repository
+credentials.
 
 ## Multi-Owner Isolation
 

@@ -37,6 +37,7 @@ COMPOSE_TEMPLATE = REPO_ROOT / "deploy/compose/hermes-multi-owner.compose.yaml.t
 COMPOSE_GENERATED = REPO_ROOT / "deploy/compose/generated/hermes-multi-owner.compose.yaml"
 ENV_EXAMPLE = REPO_ROOT / ".env.example"
 SKILLS_MANIFEST = REPO_ROOT / "skills/sources.toml"
+AGENT_SKILLS = REPO_ROOT / ".agents/skills"
 REMOTE_TARGET = REPO_ROOT / "deploy/remote/mock-target.toml"
 HUMAN_REVIEW_CHECKLIST = REPO_ROOT / "docs/human-review-checklist.md"
 SOUL = REPO_ROOT / "SOUL.md"
@@ -384,17 +385,54 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertEqual(manifest.default_install_root, "/opt/data/skills")
         sources_by_id = {source.id: source for source in manifest.sources}
         self.assertEqual(
+            {
+                path.name
+                for path in AGENT_SKILLS.iterdir()
+                if path.is_dir()
+            },
+            {
+                "agent-browser",
+                "exo-daily-brief",
+                "hermes-file-brief",
+                "obsidian",
+                "planning-capture-os",
+                "planning-rhythm-os",
+                "planning-task-os",
+                "private-calendar-audit",
+                "save-video-content",
+                "skill-creator",
+                "tom-operating-style",
+                "tutor",
+            },
+        )
+        self.assertEqual(
             sources_by_id["exo.daily_brief"].repo,
             "github.com/0xTomDaniel/exo-executive-agent",
         )
+        self.assertEqual(sources_by_id["exo.daily_brief"].path, ".agents/skills/exo-daily-brief")
         self.assertEqual(
             sources_by_id["hermes.file_brief"].repo,
             "github.com/hermes-fixtures/core-skills",
         )
+        self.assertEqual(
+            sources_by_id["hermes.file_brief"].fallback_fixture,
+            ".agents/skills/hermes-file-brief",
+        )
         self.assertFalse(sources_by_id["private.calendar_audit"].approved)
+        self.assertEqual(sources_by_id["exo.tom_operating_style"].category, "personal")
+        self.assertEqual(
+            sources_by_id["exo.tom_operating_style"].profile_targets,
+            ("tom-personal-agent",),
+        )
+        self.assertFalse(sources_by_id["exo.agent_browser"].approved)
+        self.assertFalse(sources_by_id["exo.obsidian"].approved)
+        self.assertFalse(sources_by_id["exo.save_video_content"].approved)
+        self.assertFalse(sources_by_id["exo.skill_creator"].approved)
         for source in manifest.sources:
             self.assertNotIn(source.ref, {"HEAD", "main", "master", "latest"})
             self.assertTrue(source.install_destination.startswith("/opt/data/skills/"))
+            self.assertEqual(source.source_dir(REPO_ROOT).parent, AGENT_SKILLS)
+            self.assertTrue((source.source_dir(REPO_ROOT) / "SKILL.md").is_file())
 
     def test_profile_specific_skill_plan_excludes_unapproved_private_source(self) -> None:
         manifest = load_skills_manifest(SKILLS_MANIFEST, REPO_ROOT)
@@ -413,6 +451,22 @@ class TomLocalDistributionTest(unittest.TestCase):
             ["/opt/data/skills/exo-daily-brief", "/opt/data/skills/hermes-file-brief"],
         )
         self.assertEqual(plan_skill_install(manifest, "unknown-profile", REPO_ROOT), [])
+        tom_plans = plan_skill_install(
+            manifest,
+            "tom-personal-agent",
+            REPO_ROOT,
+            install_root=Path("/tmp/exo-skills"),
+        )
+        self.assertEqual(
+            [plan.source.id for plan in tom_plans],
+            [
+                "exo.planning_capture_os",
+                "exo.planning_rhythm_os",
+                "exo.planning_task_os",
+                "exo.tutor",
+                "exo.tom_operating_style",
+            ],
+        )
 
     def test_skill_installer_installs_updates_and_refuses_unmanaged_collisions(self) -> None:
         manifest = load_skills_manifest(SKILLS_MANIFEST, REPO_ROOT)
@@ -441,8 +495,8 @@ class TomLocalDistributionTest(unittest.TestCase):
             updated_manifest_path = Path(tmp) / "sources-updated.toml"
             updated_manifest_path.write_text(
                 SKILLS_MANIFEST.read_text(encoding="utf-8").replace(
-                    "fixture-2026-05-27-core-v1",
-                    "fixture-2026-05-27-core-v2",
+                    "fixture-2026-05-28-core-v2",
+                    "fixture-2026-05-28-core-v3",
                     1,
                 ),
                 encoding="utf-8",

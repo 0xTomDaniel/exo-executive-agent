@@ -50,11 +50,18 @@ implementation is Python.
 Phase and injecting them only at runtime or deploy time. Phase is the preferred
 secret-management system for production and operator deployments.
 
+**Skills source tree**: The flat `.agents/skills/<skill-name>/` project
+directory that contains checked-in Agent Skills. Each direct child directory is
+a skill and must contain `SKILL.md` with a frontmatter `name` matching the
+directory. General and personal categorization belongs in metadata and
+`skills/sources.toml`, not nested category folders, so standard skill loaders
+can discover the tree.
+
 **Skills source manifest**: `skills/sources.toml`, a source-controlled manifest
 listing approved skill sources across repositories. Entries include repo, path,
-pinned ref, intended profiles, install destination, collision policy,
-sync/update behavior, fallback/operator notes for unavailable private sources,
-promotion policy, and source-of-truth expectations.
+pinned ref, general/personal category, intended profiles, install destination,
+collision policy, sync/update behavior, fallback/operator notes for unavailable
+private sources, promotion policy, and source-of-truth expectations.
 
 **Skill installer/package manager**: `scripts/install_skills.py`, the mechanism
 that plans or installs approved skills into each personal-agent instance's
@@ -322,10 +329,17 @@ must be documented with the exact runtime/version gap it solves.
 
 ### Skills Interface
 
-The repository includes `skills/sources.toml` as the first durable skills source
-manifest. It records local core fixtures, an external core fixture source, and a
-private external-action fallback fixture so no-credential checks can prove
-multi-repo parsing and install/update behavior.
+The repository includes `.agents/skills/` as the durable project-level skill
+source tree and `skills/sources.toml` as the first durable profile-selection
+manifest. The source tree is flat for Agent Skills compatibility. The manifest
+records local core skills, imported Exocortex skills, an external core fixture
+source, and a private external-action fallback fixture so no-credential checks
+can prove multi-repo parsing and install/update behavior.
+
+Profile-specific skills such as `tom-operating-style` may live in the shared
+flat source tree, but they must be selected through `profile_targets` rather
+than by nesting them in a separate personal directory. Tom's operating-style
+skill targets `tom-personal-agent` only.
 
 `scripts/install_skills.py` is the first installer/package-manager path. It
 loads the manifest, selects approved entries for a target profile, maps

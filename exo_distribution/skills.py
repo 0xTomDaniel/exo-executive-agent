@@ -11,12 +11,14 @@ from exo_distribution.config import ValidationError
 
 
 SkillKind = Literal["safe_core", "external_action"]
+SkillCategory = Literal["general", "personal"]
 SourceAccess = Literal["repo-fixture", "fixture-fallback", "private-git-fallback"]
 PlanAction = Literal["install", "replace", "up-to-date", "collision"]
 
 UNPINNED_REFS = {"", "HEAD", "head", "main", "master", "latest"}
 SOURCE_ACCESS: set[str] = {"repo-fixture", "fixture-fallback", "private-git-fallback"}
 SKILL_KINDS: set[str] = {"safe_core", "external_action"}
+SKILL_CATEGORIES: set[str] = {"general", "personal"}
 
 
 @dataclass(frozen=True)
@@ -24,6 +26,7 @@ class SkillSource:
     id: str
     name: str
     kind: SkillKind
+    category: SkillCategory
     repo: str
     path: str
     ref: str
@@ -187,6 +190,7 @@ def _parse_source(index: int, data: object, default_install_root: str) -> SkillS
         "id",
         "name",
         "kind",
+        "category",
         "repo",
         "path",
         "ref",
@@ -208,6 +212,7 @@ def _parse_source(index: int, data: object, default_install_root: str) -> SkillS
     source_id = _require_non_empty_string(data, "id", f"skills source {index}")
     name = _require_non_empty_string(data, "name", source_id)
     kind = _require_choice(data, "kind", SKILL_KINDS, source_id)
+    category = _require_choice(data, "category", SKILL_CATEGORIES, source_id)
     repo = _require_non_empty_string(data, "repo", source_id)
     path = _require_non_empty_string(data, "path", source_id)
     ref = _require_non_empty_string(data, "ref", source_id)
@@ -257,6 +262,7 @@ def _parse_source(index: int, data: object, default_install_root: str) -> SkillS
         id=source_id,
         name=name,
         kind=kind,  # type: ignore[arg-type]
+        category=category,  # type: ignore[arg-type]
         repo=repo,
         path=path,
         ref=ref,
@@ -286,6 +292,7 @@ def _validate_sources(
         source_dir = source.source_dir(repo_root)
         if not source_dir.is_dir():
             raise ValidationError(f"{source.id} source directory is missing: {source_dir}")
+        _validate_agent_skill_directory(repo_root, source_dir, source.name)
         _validate_install_destination(source.install_destination, default_install_root, source.id)
 
 
@@ -348,6 +355,7 @@ def _write_source_metadata(plan: SkillInstallPlan, manifest: SkillsManifest) -> 
         "source_id": plan.source.id,
         "name": plan.source.name,
         "kind": plan.source.kind,
+        "category": plan.source.category,
         "repo": plan.source.repo,
         "path": plan.source.path,
         "ref": plan.source.ref,
@@ -377,6 +385,45 @@ def _validate_relative_source_path(value: str, label: str) -> None:
     path = PurePosixPath(value)
     if path.is_absolute() or ".." in path.parts:
         raise ValidationError(f"{label} must be a repo-relative path")
+
+
+def _validate_agent_skill_directory(repo_root: Path, source_dir: Path, skill_name: str) -> None:
+    try:
+        source_dir.relative_to(repo_root / ".agents" / "skills")
+    except ValueError as exc:
+        raise ValidationError(
+            f"{skill_name} source directory must live under .agents/skills"
+        ) from exc
+    if source_dir.parent != repo_root / ".agents" / "skills" or source_dir.name != skill_name:
+        raise ValidationError(
+            f"{skill_name} source directory must be flat at .agents/skills/{skill_name}"
+        )
+
+    skill_file = source_dir / "SKILL.md"
+    if not skill_file.is_file():
+        raise ValidationError(f"{skill_name} source directory must contain SKILL.md")
+
+    text = skill_file.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        raise ValidationError(f"{skill_name} SKILL.md must start with YAML frontmatter")
+    frontmatter_end = text.find("\n---", 4)
+    if frontmatter_end == -1:
+        raise ValidationError(f"{skill_name} SKILL.md frontmatter is not closed")
+    frontmatter = text[4:frontmatter_end].splitlines()
+    declared_name = None
+    declared_description = None
+    for line in frontmatter:
+        stripped = line.strip()
+        if stripped.startswith("name:"):
+            declared_name = stripped.split(":", 1)[1].strip().strip('"').strip("'")
+        if stripped.startswith("description:"):
+            declared_description = stripped.split(":", 1)[1].strip()
+    if declared_name != skill_name:
+        raise ValidationError(
+            f"{skill_name} SKILL.md name must match parent directory; got {declared_name!r}"
+        )
+    if declared_description == "":
+        raise ValidationError(f"{skill_name} SKILL.md description must be non-empty")
 
 
 def _refuse_repo_owned_destination(repo_root: Path, actual_destination: Path) -> None:

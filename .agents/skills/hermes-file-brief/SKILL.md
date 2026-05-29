@@ -1,3 +1,12 @@
+---
+name: hermes-file-brief
+description: >-
+  Read a bounded workspace file list and summarize safe local distribution
+  context for the owner. Use when a Hermes/Exo runtime needs a local file brief
+  without external credentials.
+metadata:
+  exo.category: general
+---
 # Hermes File Brief
 
 Read a bounded workspace file list and summarize safe local distribution

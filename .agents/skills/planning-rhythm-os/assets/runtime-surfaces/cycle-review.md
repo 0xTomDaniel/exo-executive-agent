@@ -1,0 +1,55 @@
+# Cycle Review Runtime Surface
+
+> Portable runtime-surface scaffold for `planning-rhythm-os`.
+> Canonical cadence-review procedure lives in the skill's `references/review-cadence.md`.
+> Adapt local metadata, links, and note-system conventions as needed.
+
+## Cycle Anchors
+- Review cycle (the cycle being closed):
+- Plan cycle (the next cycle being planned):
+- Review date:
+- Quarter:
+- Weeks covered:
+- Sprints covered:
+
+## Scope Review
+- Day artifacts reviewed:
+- Weekly reviews reviewed:
+- Sprint reviews reviewed:
+- Relevant cycle / quarter notes reviewed:
+- Tasks reviewed:
+- Resurfacing items surfaced:
+
+## Cycle Reflection
+- Biggest wins:
+- Biggest misses:
+- Main lessons:
+- Strategic decisions:
+- System / process failures:
+
+## Execution Review
+- What actually shipped:
+- What slipped:
+- What was harder than expected:
+- What repeated across multiple sprints:
+
+## Balanced-Life Review
+- Work / mission / craft:
+- Health / body / recovery:
+- Relationships / love / friendship / family:
+- Hobbies / play / exploration / creative nourishment:
+- Soul / meaning / spirit / inner life:
+- Where the next cycle may stay intentionally asymmetric, and what still must be protected:
+
+## Habit + Operating Pattern Review
+- Habit patterns across the cycle:
+- Energy / focus / environment patterns:
+- What improved execution:
+- What degraded execution:
+
+## Next Cycle Setup
+- Main outcomes to pursue:
+- Risks to manage:
+- Balanced-life anchors to protect:
+- Carry-forward decisions (Now / Later / Drop):
+- What changes next cycle so execution improves:

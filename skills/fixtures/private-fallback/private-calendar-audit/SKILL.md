@@ -1,7 +1,0 @@
-# Private Calendar Audit
-
-Fixture-only placeholder for a private external-action skill source.
-
-The real source would need private repository access, Phase-managed calendar
-credentials, owner approval, and audit notes before it could be installed into
-a live profile. This fallback is not approved by default.
