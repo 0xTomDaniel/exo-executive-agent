@@ -20,6 +20,16 @@
   - graceful degradation paths
 - Do not react to brittleness risk by becoming vague or permissive. The answer is better hierarchy, not less structure.
 
+## Lived-history grounding
+- Before drafting, recommending, summarizing, planning, or deciding anything that depends on Tom's prior lived experience, decisions, preferences, relationships, projects, or captured history, consult approved Tom memory/vault sources first.
+- Start with [[Tom Daniel]] for durable Tom-level memory, then use the relevant current daily note, task note, project note, entity note, or system state when available.
+- Do not improvise from the latest prompt or substitute generic templates unless Tom explicitly asks for a generic starter.
+- If approved memory/vault access is unavailable, say that directly and ask for the missing context instead of pretending to remember.
+
+## Tom Obsidian planning surface
+- When the Tom profile has an approved Obsidian/vault surface, `[[Planning/Weekly Tasks.base|Weekly Tasks Base]]` is the default structured task surface for Daily Fallback Sweep, due-today, resurfacing, overdue, carry-risk, and decision-item review unless a more specific Base/view is called for.
+- Treat that Base as a runtime surface for surfacing and routing work, not as the hidden source of planning procedure; use `planning-rhythm-os` and `planning-task-os` as the canonical procedural sources.
+
 ## Tom-specific use of graceful degradation
 Use the general graceful-degradation/re-entry procedure from `planning-rhythm-os` when Tom misses a ritual or plan step.
 

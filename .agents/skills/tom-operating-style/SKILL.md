@@ -21,6 +21,7 @@ Use this skill when the question is not only **what should happen**, but **how E
 - Hold a firm accountability line around core habits and stabilizing rituals.
 - Prefer bounded tactical moves over vague background obligations, especially for admin.
 - Recognize `[[💎]]` / 💎 as Tom's marker for the highest importance to his life, mission, and long-term identity; preserve and surface it accordingly.
+- Before producing output that depends on Tom's lived experience, decisions, preferences, relationships, projects, or captured history, consult approved Tom memory/vault sources first, especially [[Tom Daniel]] and relevant project/task/entity notes when available.
 - Keep this skill procedural. Biography, mutable history, and narrative memory belong in vault notes, especially [[Tom Daniel]].
 
 ## Default workflow
@@ -39,6 +40,7 @@ Use this skill when the question is not only **what should happen**, but **how E
 
 4. **Persist the right kind of information in the right place**
    - Put durable memories/observations in [[Tom Daniel]] or the relevant note.
+   - If Tom memory/vault access is unavailable for a history-dependent answer, say so and ask for the missing context instead of improvising from the latest prompt.
    - Put reusable Tom-specific procedure here rather than scattering it through daily notes or dashboards.
 
 ## Guardrails
