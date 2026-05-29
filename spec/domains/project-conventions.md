@@ -87,6 +87,10 @@ below apply to repo-owned distribution material and local validation tooling.
   `AGENTS.md` into each profile workspace as `/workspace/AGENTS.md`; `AGENTS.md`
   must remain shared/profile-neutral, with owner-specific behavior selected
   through profile-targeted skills.
+- Remote deploy skill sync must be repeatable after the first ownership
+  normalization pass. If the profile skills directory is container-owned, the
+  installer runs through a bounded `sudo env PATH="$PATH" uv run ...` command
+  and the later ownership step returns files to the Hermes runtime UID.
 - Remote deploy copy plans must exclude ignored secret/runtime artifacts,
   including `.phase/`, Phase exports, generated secret bridges, Hermes homes,
   memories, sessions, logs, backups, and personal files.

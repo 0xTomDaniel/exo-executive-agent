@@ -250,6 +250,9 @@ def build_deploy_plan(
                     target,
                     (
                         f"cd {target.deploy_root} && "
+                        "sudo env PATH=\"$PATH\" "
+                        "UV_CACHE_DIR=/tmp/exo-uv-cache "
+                        "UV_PROJECT_ENVIRONMENT=/tmp/exo-executive-agent-venv "
                         "uv run python scripts/install_skills.py "
                         f"--profile {config.profile_id} "
                         f"--install-root {target.runtime_root}/{config.profile_id}/skills --apply"

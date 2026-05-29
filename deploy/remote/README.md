@@ -40,7 +40,8 @@ The plan covers:
 - `SOUL.md` install/update into each instance Hermes home and `AGENTS.md`
   install/update into each instance workspace;
 - Phase-backed secret bridge materialization;
-- profile skill install/sync into each instance's skills directory;
+- profile skill install/sync into each instance's container-owned skills
+  directory through a bounded `sudo env PATH="$PATH" uv run ...` command;
 - Docker Compose pull, start, restart, status, health, and logs commands;
 - backup-boundary discovery and restore/redeploy references.
 
@@ -125,7 +126,9 @@ For a fresh VM or update, the operator flow is:
    `/workspace/AGENTS.md` so Hermes loads Exo project context from the runtime
    workdir.
 6. Materialize Phase secret bridges.
-7. Install or sync approved skills for each profile.
+7. Install or sync approved skills for each profile. On redeploy, this step
+   runs through `sudo` because the live skills directory is owned by the Hermes
+   container UID after the first normalization pass.
 8. Run Compose pull and `up -d --remove-orphans`.
 9. Inspect status, health, and logs.
 

@@ -632,6 +632,8 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertIn("scripts/validate_profile.py --all", command_text)
         self.assertIn("scripts/render_compose.py", command_text)
         self.assertIn("scripts/install_skills.py", command_text)
+        self.assertIn("sudo env PATH", command_text)
+        self.assertIn("UV_PROJECT_ENVIRONMENT=/tmp/exo-executive-agent-venv", command_text)
         self.assertIn("docker compose", command_text)
         self.assertIn("/SOUL.md", command_text)
         self.assertIn("/hermes-home/SOUL.md", command_text)
