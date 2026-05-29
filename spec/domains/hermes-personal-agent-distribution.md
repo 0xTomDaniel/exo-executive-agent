@@ -8,10 +8,10 @@ private Hermes agents, initially for Tom Daniel, Sebastian Varela, and Noah
 Ranch.
 
 The repository owns non-secret, redeployable source material: Hermes profile
-distribution manifests, identity templates, TOML config schemas and templates,
-optional profile variants, portable skills, skill source manifests, cron and MCP
-templates, Docker Compose templates, remote deployment scripts, health checks,
-and setup documentation.
+distribution manifests, identity and project-context templates, TOML config
+schemas and templates, optional profile variants, portable skills, skill source
+manifests, cron and MCP templates, Docker Compose templates, remote deployment
+scripts, health checks, and setup documentation.
 
 The repository does not own live instance state. Credentials, private memories,
 sessions, logs, backups, mounted personal files, private machine-specific paths,
@@ -175,12 +175,13 @@ assumed for ordinary Octo implementation or QA work.
 ### Distribution Interface
 
 The distribution should expose Hermes-compatible profile material such as
-`distribution.yaml`, `SOUL.md`, generated or templated Hermes `config.yaml`,
-`skills/`, `cron/`, optional `mcp.json`, and non-secret examples. Exo-owned
-configuration should be authored in TOML, validated by schema, and rendered into
-Hermes-native files or process environment only where Hermes or a provider
-requires that shape. The final layout may include profile variant subdirectories
-if the selected Hermes-compatible installer path requires it.
+`distribution.yaml`, `SOUL.md`, `AGENTS.md`, generated or templated Hermes
+`config.yaml`, `.agents/skills/`, `cron/`, optional `mcp.json`, and non-secret
+examples. Exo-owned configuration should be authored in TOML, validated by
+schema, and rendered into Hermes-native files or process environment only where
+Hermes or a provider requires that shape. The final layout may include profile
+variant subdirectories if the selected Hermes-compatible installer path requires
+it.
 
 `SOUL.md` is the authoritative user-facing identity prompt. Deployment must
 install it into each profile's Hermes home so Telegram replies identify the
@@ -188,6 +189,13 @@ assistant as Exo. Hermes may appear in infrastructure, status, and runtime docs,
 but it must not leak into normal owner-facing self-introductions as the
 assistant's name. Setup must also patch any seeded upstream personality preset
 that names the assistant Hermes.
+
+Root `AGENTS.md` is the shared always-on Exo project and operating-policy
+context. It must remain safe for every owner profile and route owner-specific
+guidance to profile-targeted skills such as `tom-operating-style`. Deployment
+must install it into each profile workspace as `/workspace/AGENTS.md`, because
+Hermes loads AGENTS project context from its workdir while loading `SOUL.md`
+from the Hermes home.
 
 Existing Hermes conversations may keep old identity context even after
 `SOUL.md` or profile material is updated. Deployment and Human Review must

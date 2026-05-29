@@ -6,8 +6,8 @@ below apply to repo-owned distribution material and local validation tooling.
 ## Paths
 
 - Distribution-owned material lives in git under `distribution.yaml`, `SOUL.md`,
-  `docs/`, `profiles/`, `skills/`, `schemas/`, `exo_distribution/`, `scripts/`,
-  `tests/`, and `spec/`.
+  `AGENTS.md`, `.agents/skills/`, `docs/`, `profiles/`, `skills/`,
+  `schemas/`, `exo_distribution/`, `scripts/`, `tests/`, and `spec/`.
 - User-owned/runtime material must stay outside git. This includes Hermes
   homes, memories, sessions, logs, backups, state databases, mounted personal
   files, Phase service tokens, generated secret bridge files, and
@@ -83,12 +83,19 @@ below apply to repo-owned distribution material and local validation tooling.
 - Remote deploy Compose commands must set `EXO_RUNTIME_ROOT` to the target
   runtime root, and Phase secret bridge materialization must run from the
   copied deploy root or an absolute deploy-root script path.
+- Remote deploy setup must install `SOUL.md` into each profile Hermes home and
+  `AGENTS.md` into each profile workspace as `/workspace/AGENTS.md`; `AGENTS.md`
+  must remain shared/profile-neutral, with owner-specific behavior selected
+  through profile-targeted skills.
 - Remote deploy copy plans must exclude ignored secret/runtime artifacts,
   including `.phase/`, Phase exports, generated secret bridges, Hermes homes,
   memories, sessions, logs, backups, and personal files.
 
 ## Skills
 
+- `.agents/skills/<skill-name>/` is the flat Agent Skills source tree. Each
+  direct child must contain `SKILL.md` with a frontmatter `name` matching the
+  directory. Do not nest skill directories under category folders.
 - `skills/sources.toml` is the repo-owned source manifest for installable
   skills. It must record repo, path, pinned ref, target profile, install
   destination, source-of-truth expectations, collision policy, sync policy, and

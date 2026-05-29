@@ -363,6 +363,8 @@ def _profile_material_command(target: DeployTarget, config: ProfileConfig) -> st
     profile_config_dest = f"{profile_root}/config/profile.toml"
     soul_src = f"{target.deploy_root}/SOUL.md"
     soul_dest = f"{profile_root}/hermes-home/SOUL.md"
+    agents_src = f"{target.deploy_root}/AGENTS.md"
+    agents_dest = f"{profile_root}/workspace/AGENTS.md"
     config_yaml = f"{profile_root}/hermes-home/config.yaml"
     config_patch = "\n".join(
         [
@@ -380,6 +382,8 @@ def _profile_material_command(target: DeployTarget, config: ProfileConfig) -> st
         f"install -m 0640 {shlex.quote(profile_config_src)} {shlex.quote(profile_config_dest)} && "
         f"sudo install -d -o 10000 -g 10000 -m 0700 {shlex.quote(profile_root + '/hermes-home')} && "
         f"sudo install -o 10000 -g 10000 -m 0640 {shlex.quote(soul_src)} {shlex.quote(soul_dest)} && "
+        f"sudo install -d -o 10000 -g 10000 -m 0700 {shlex.quote(profile_root + '/workspace')} && "
+        f"sudo install -o 10000 -g 10000 -m 0640 {shlex.quote(agents_src)} {shlex.quote(agents_dest)} && "
         f"if [ -f {shlex.quote(config_yaml)} ]; then "
         f"sudo python3 -c {shlex.quote(config_patch)} {shlex.quote(config_yaml)}; "
         "fi"

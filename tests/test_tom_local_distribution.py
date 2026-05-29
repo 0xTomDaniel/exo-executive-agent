@@ -41,6 +41,7 @@ AGENT_SKILLS = REPO_ROOT / ".agents/skills"
 REMOTE_TARGET = REPO_ROOT / "deploy/remote/mock-target.toml"
 HUMAN_REVIEW_CHECKLIST = REPO_ROOT / "docs/human-review-checklist.md"
 SOUL = REPO_ROOT / "SOUL.md"
+AGENTS = REPO_ROOT / "AGENTS.md"
 
 
 class TomLocalDistributionTest(unittest.TestCase):
@@ -86,6 +87,14 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertIn("Your name is Exo.", content)
         self.assertIn("Hermes is the runtime and infrastructure layer", content)
         self.assertIn("Do not say \"I am Hermes\"", content)
+
+    def test_agents_md_records_shared_exo_runtime_policy(self) -> None:
+        content = AGENTS.read_text(encoding="utf-8")
+        self.assertIn("Agent name: **Exo**.", content)
+        self.assertIn("Hermes is the runtime and infrastructure layer", content)
+        self.assertIn("tom-operating-style", content)
+        self.assertIn("owner-only Telegram text", content)
+        self.assertIn("/workspace/AGENTS.md", content)
 
     def test_rendered_hermes_config_matches_committed_example(self) -> None:
         config = load_profile_config(PROFILE)
@@ -626,6 +635,8 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertIn("docker compose", command_text)
         self.assertIn("/SOUL.md", command_text)
         self.assertIn("/hermes-home/SOUL.md", command_text)
+        self.assertIn("/AGENTS.md", command_text)
+        self.assertIn("/workspace/AGENTS.md", command_text)
         self.assertIn("sudo install -o 10000 -g 10000 -m 0640", command_text)
         self.assertIn("Captain Exo", command_text)
         self.assertIn("They call me Exo", command_text)

@@ -16,6 +16,8 @@ Distribution-owned paths in git:
 
 - `distribution.yaml`: Hermes-compatible distribution manifest shape;
 - `SOUL.md`: identity and behavioral direction for Exo;
+- `AGENTS.md`: always-on runtime policy and project context installed into
+  each profile workspace;
 - `profiles/tom-local-dev/`: non-secret Tom local/dev profile template,
   fixtures, and rendered Hermes config example;
 - `profiles/*-personal-agent/`: non-secret installable owner template
@@ -226,6 +228,11 @@ token path, log directory, backup directory, and placeholder storage mounts
 under `${EXO_RUNTIME_ROOT}`. The Compose renderer validates this profile set and
 fails before rendering if two active gateways share a Hermes home or another
 restart/runtime boundary.
+
+Remote setup installs the repo-owned `SOUL.md` into each profile Hermes home and
+the repo-owned `AGENTS.md` into each profile workspace as
+`/workspace/AGENTS.md`. Hermes loads the workspace `AGENTS.md` as project
+context, while `SOUL.md` remains the primary identity prompt.
 
 The generated Compose example declares one service per installable owner
 template. It mounts each Hermes home at `/opt/data/hermes-home`, the owner

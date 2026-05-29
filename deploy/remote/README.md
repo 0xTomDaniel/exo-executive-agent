@@ -37,6 +37,8 @@ The plan covers:
   backup, session, memory, and personal-file exclusions;
 - per-profile runtime directory creation;
 - profile TOML install/update into each instance config boundary;
+- `SOUL.md` install/update into each instance Hermes home and `AGENTS.md`
+  install/update into each instance workspace;
 - Phase-backed secret bridge materialization;
 - profile skill install/sync into each instance's skills directory;
 - Docker Compose pull, start, restart, status, health, and logs commands;
@@ -117,10 +119,11 @@ For a fresh VM or update, the operator flow is:
 2. Ensure Docker Compose, Python, uv, rsync, SSH, and Phase CLI are available.
 3. Validate profiles and render templates locally.
 4. Copy distribution material to the deploy root with the plan's rsync command.
-5. Create runtime directories and install/update profile TOML into each
-   profile config boundary, and install the repo-owned `SOUL.md` into the
-   profile's Hermes home so the user-facing assistant identity is Exo rather
-   than the underlying Hermes runtime.
+5. Create runtime directories, install/update profile TOML into each profile
+   config boundary, install the repo-owned `SOUL.md` into the profile's Hermes
+   home, and install the repo-owned `AGENTS.md` into the profile workspace as
+   `/workspace/AGENTS.md` so Hermes loads Exo project context from the runtime
+   workdir.
 6. Materialize Phase secret bridges.
 7. Install or sync approved skills for each profile.
 8. Run Compose pull and `up -d --remove-orphans`.
