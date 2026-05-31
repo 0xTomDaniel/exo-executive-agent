@@ -46,6 +46,8 @@ TOM_OPERATING_STYLE = AGENT_SKILLS / "tom-operating-style/SKILL.md"
 TOM_OPERATING_PATTERNS = AGENT_SKILLS / "tom-operating-style/references/operating-patterns.md"
 PLANNING_RHYTHM_DAILY = AGENT_SKILLS / "planning-rhythm-os/references/daily-rhythm.md"
 OBSIDIAN_SKILL = AGENT_SKILLS / "obsidian/SKILL.md"
+EMBER_WEEKLY_SKILL = AGENT_SKILLS / "ember-weekly-planning/SKILL.md"
+EMBER_WEEKLY_ICP = AGENT_SKILLS / "ember-weekly-planning/references/icp-qualification.md"
 
 
 class TomLocalDistributionTest(unittest.TestCase):
@@ -105,6 +107,8 @@ class TomLocalDistributionTest(unittest.TestCase):
         tom_patterns = TOM_OPERATING_PATTERNS.read_text(encoding="utf-8")
         daily_rhythm = PLANNING_RHYTHM_DAILY.read_text(encoding="utf-8")
         obsidian_skill = OBSIDIAN_SKILL.read_text(encoding="utf-8")
+        ember_weekly = EMBER_WEEKLY_SKILL.read_text(encoding="utf-8")
+        ember_icp = EMBER_WEEKLY_ICP.read_text(encoding="utf-8")
 
         self.assertIn("Tom's [[💎]] highest-importance marker", tom_skill)
         self.assertIn("Lived-history grounding", tom_patterns)
@@ -117,6 +121,11 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertIn("Named weekly rituals or mandatory habits", daily_rhythm)
         self.assertIn("Prefer Obsidian CLI for note creation", obsidian_skill)
         self.assertIn("Bases for structured tracking", obsidian_skill)
+        self.assertIn("Run Ember's weekly Friday team review/planning session", ember_weekly)
+        self.assertIn("Recap is input; next-week commitments are the output", ember_weekly)
+        self.assertIn("Monday launchpad", ember_weekly)
+        self.assertIn("separate economic lane", ember_weekly)
+        self.assertIn("high-signal discovery call", ember_icp)
 
     def test_rendered_hermes_config_matches_committed_example(self) -> None:
         config = load_profile_config(PROFILE)
@@ -424,6 +433,7 @@ class TomLocalDistributionTest(unittest.TestCase):
             },
             {
                 "agent-browser",
+                "ember-weekly-planning",
                 "exo-daily-brief",
                 "hermes-file-brief",
                 "obsidian",
@@ -454,6 +464,11 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertEqual(sources_by_id["exo.tom_operating_style"].category, "personal")
         self.assertEqual(
             sources_by_id["exo.tom_operating_style"].profile_targets,
+            ("tom-personal-agent",),
+        )
+        self.assertEqual(sources_by_id["exo.ember_weekly_planning"].category, "personal")
+        self.assertEqual(
+            sources_by_id["exo.ember_weekly_planning"].profile_targets,
             ("tom-personal-agent",),
         )
         self.assertFalse(sources_by_id["exo.agent_browser"].approved)
@@ -495,6 +510,7 @@ class TomLocalDistributionTest(unittest.TestCase):
                 "exo.planning_capture_os",
                 "exo.planning_rhythm_os",
                 "exo.planning_task_os",
+                "exo.ember_weekly_planning",
                 "exo.tutor",
                 "exo.tom_operating_style",
             ],

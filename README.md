@@ -183,9 +183,10 @@ category folders such as `general/` or `personal/`.
 `skills/sources.toml` is the profile-aware manifest. Each entry records the
 source repository, source path, pinned ref, general/personal category, target
 profiles, install destination, source-of-truth policy, collision policy, sync
-behavior, and the promotion path for runtime-created skills. Tom-specific
-procedural guidance such as `tom-operating-style` stays in the main flat skill
-tree, but the manifest targets it only to `tom-personal-agent`.
+behavior, and the promotion path for runtime-created skills. Tom/profile-specific
+procedural guidance such as `tom-operating-style` and `ember-weekly-planning`
+stays in the main flat skill tree, but the manifest targets it only to
+`tom-personal-agent`.
 
 Plan the Tom local/dev install set:
 

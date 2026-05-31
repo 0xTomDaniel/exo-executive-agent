@@ -114,6 +114,24 @@ sync_policy = "replace-if-ref-changed"
 promotion_policy = "Runtime edits are not authoritative; promote changes by updating this skill, bumping the pinned ref, and reviewing the git diff."
 
 [[sources]]
+id = "exo.ember_weekly_planning"
+name = "ember-weekly-planning"
+kind = "safe_core"
+category = "personal"
+repo = "github.com/0xTomDaniel/exo-executive-agent"
+path = ".agents/skills/ember-weekly-planning"
+ref = "exocortex-import-2026-05-31-v1"
+profile_targets = ["tom-personal-agent"]
+install_destination = "/opt/data/skills/ember-weekly-planning"
+source_of_truth = "git"
+approved = true
+source_access = "repo-fixture"
+operator_note = "Tom/Ember-specific Friday team planning ritual with Sebastian Varela. It is kept in the shared flat skill source tree for compatibility but targeted only to Tom's profile."
+collision_policy = "fail"
+sync_policy = "replace-if-ref-changed"
+promotion_policy = "Runtime edits are not authoritative; promote Tom/Ember planning changes by updating this skill, bumping the pinned ref, and reviewing the git diff."
+
+[[sources]]
 id = "exo.tutor"
 name = "tutor"
 kind = "safe_core"

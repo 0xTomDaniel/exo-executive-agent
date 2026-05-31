@@ -349,7 +349,7 @@ can prove multi-repo parsing and install/update behavior.
 Profile-specific skills such as `tom-operating-style` may live in the shared
 flat source tree, but they must be selected through `profile_targets` rather
 than by nesting them in a separate personal directory. Tom's operating-style
-skill targets `tom-personal-agent` only.
+skill and Tom/Ember weekly-planning skill target `tom-personal-agent` only.
 
 `scripts/install_skills.py` is the first installer/package-manager path. It
 loads the manifest, selects approved entries for a target profile, maps

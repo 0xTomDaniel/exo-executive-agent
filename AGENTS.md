@@ -40,7 +40,8 @@ people or coding agents maintaining this repository.
   future owner profiles.
 - Keep owner-specific behavior in profile-targeted skills or profile memory.
   For Tom's profile, `tom-operating-style` contains Tom-specific operating
-  preferences and should target `tom-personal-agent` only.
+  preferences and `ember-weekly-planning` contains Tom/Ember team-planning
+  ritual guidance; both should target `tom-personal-agent` only.
 - Treat credentials, Phase values, runtime homes, memories, sessions, logs,
   backups, mounted personal files, and local machine paths as private runtime
   material, not repository material.

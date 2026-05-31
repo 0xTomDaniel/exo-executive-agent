@@ -1,0 +1,23 @@
+{
+  "skill_name": "ember-weekly-planning",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Walk me through our Friday Ember planning session with Varela for next week. We need a recap, but mostly a plan so Monday is ready.",
+      "expected_output": "Runs the Friday team planning workflow, emphasizes recap as input and next-week commitments as output, asks for raw recap, and guides toward MIT, experiment, commitments, and Monday launchpad.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "We have five ICP questions for Ember. Help turn them into a customer profile and sales-call qualification rubric.",
+      "expected_output": "Uses the skill's ICP qualification procedure, avoids treating the skill as the source of live ICP state, turns the questions into thresholds/buckets, and ties qualification to pain, willingness to pay, and sales-call selection.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "A parallel partner/client funding opportunity might matter next week, but we also need to protect the Ember sales experiment. Help route it in the Friday plan.",
+      "expected_output": "Names the separate economic lane, decides whether it belongs in the week plan, creates a distinct owner/timing/success-criteria commitment if relevant, and protects the primary Ember customer/revenue experiment from being displaced.",
+      "files": []
+    }
+  ]
+}
