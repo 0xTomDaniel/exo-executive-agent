@@ -26,6 +26,14 @@ Persist an immutable local intent before POST, including the request body and id
 
 Native per-run instructions identify the persistent system as Exo, preserve follow-up context, distinguish session history from the unfinished Obsidian bridge, and expose the native sending workflow.
 
+### Preserve the intended executor
+
+An observed backing rewrite changed an instruction to ask an existing worker into a direct investigation request. Persistent Exo consequently used project/API/service tools instead of prompting that worker. This was an actor-preservation failure, not a lifecycle-wait or presentation-ownership defect.
+
+Backing instructions now preserve the intended executor, action, scope and attribution, preferring original user wording and resolving pronouns only from established context. Per-run persistent instructions and the Herdr skill independently require coordination of the assigned worker rather than silent takeover. Passive status inspection is distinct from a request that the worker investigate or answer. A diagnostic question does not authorize repairs, goal restart or approval bypass. Blocked/unavailable workers require explicit takeover authorization, not an automatic substitute investigation.
+
+A fresh backing no-send routing check preserved the original agent-directed utterance without invoking tools. This is limited model-routing evidence, not an end-to-end worker delivery test or proof that all response latency is fixed. A live replay was intentionally deferred after a newer user request had already resumed the worker and supplied guidance; do not duplicate or override newer work for acceptance testing. Backing instruction changes require a fresh conversation; updated per-run instructions are read on new submissions, not retroactively applied to existing immutable intents.
+
 ## Accepted report workflow
 
 The accepted normal workflow keeps the full report with persistent Exo and returns concise answers through Voice. A live exercise verified persistent report creation/save, file-backed follow-up retrieval, and user-confirmed spoken responses. The backing executor relayed those responses rather than independently writing the report. Both responses fit single final envelopes: this did NOT exercise full-report paging. Whole-report Voice assembly and exact quotations remain unverified capabilities, but are not blockers for this accepted summary/retrieval workflow. Reopen paging acceptance only for a concrete whole-document delivery requirement.
