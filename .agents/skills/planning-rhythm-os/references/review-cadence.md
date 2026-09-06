@@ -5,13 +5,21 @@ aliases:
 ---
 # Review Cadence
 
-> This file is the canonical operational reference for Sunday routing, review cadence, and weekly review flow.
+> This file is the canonical operational reference for the Friday-review / Sunday-planning cadence, review debt, review stacks, and weekly planning handoff.
 
 ## Core cadence rule
 
-Reviews normally happen on **Sundays**.
-On a given Sunday, review **every planning timeframe that is closing** that day.
-The review should look back across the **entire duration** of that timeframe, not just the last few days.
+Tom's default weekly split is:
+- **Friday: weekly review / execution closeout.** Review the week while work evidence is fresh; run retrospective synthesis, outcome conversion, balance/habits, resurfacing, and backlog hygiene.
+- **Sunday: weekly planning / reset.** Reconcile only material Saturday/Sunday evidence, consume Friday's review outputs, choose the next Weekly MIT and Top 3, establish capacity/tradeoffs, and set Monday's launchpad.
+
+Protect the split. Do not rerun the full Friday review on Sunday by default; that recreates the overlong combined session and consumes the attention needed for planning. Friday's review normally covers Monday through the review time on Friday. Sunday's brief weekend reconciliation appends meaningful weekend reality without reopening settled work-week conclusions unless the new evidence genuinely changes them.
+
+Periods still close on their true calendar boundary. For a sprint/cycle/quarter/year ending Sunday, start its retrospective on Friday after the weekly review while evidence is fresh, then use Sunday only for a bounded weekend delta, explicit final decision/confirmation, and next-period planning. If no weekend evidence affects the conclusion, do not repeat the retrospective.
+
+If Friday review is missed, Sunday must detect the debt before planning. Use graceful degradation: a bounded recovery review that extracts only decision-critical evidence, then protect enough attention for actual planning. Record the miss and Friday re-entry point for the next week.
+
+If Exo interaction skips a Friday/Sunday or period boundary, the next re-entry must check which weekly/sprint/cycle/quarter/year review or planning artifacts were missed. Promote genuine review debt into the active recovery stack before treating a current/next period plan as locked.
 
 ## Covered timeframes
 - [[Week]]
@@ -21,115 +29,144 @@ The review should look back across the **entire duration** of that timeframe, no
 - [[Year]]
 
 ## Review stack order
-If multiple periods close on the same Sunday, run them from **smallest to largest**:
+When multiple periods close on the coming Sunday, begin the retrospective stack Friday from **smallest to largest**:
 1. Weekly review
 2. Sprint review
 3. Cycle review
 4. Quarterly review
 5. Yearly review
 
-This lets higher-level reviews synthesize the lower-level ones created in the same session.
+This lets higher-level reviews synthesize lower-level evidence. Sunday finalizes only unresolved decisions/weekend deltas, then plans from largest relevant period down into the next week and Monday.
 
 ## Review-stack integrity
-- Create/use the required review notes for every period closing that day before running the stack.
-- Instantiating a higher-level review note is **not** the same as completing that review.
-- Higher-level reviews may synthesize lower-level outputs, but each level still requires explicit discussion/confirmation before it counts as complete.
-- If time/energy only allows a scaffold, label it explicitly as a draft / first-pass artifact and keep the review stack in progress.
-- If the full review stack is not recoverable in the available window, choose an explicit graceful-degradation path: reduced review, minimum viable review, or intentional defer with a named re-entry point.
-- Do not mark the current day review stack complete until each required level has actually been worked through with the user.
-- If admin/inbox items interrupt a Sunday review, treat them as a bounded interruption: capture or clear them, then explicitly return to the review stack at the exact next unfinished review step. Do not answer "what's next?" with a normal admin/execution list unless the review stack has been closed or the user explicitly chooses to pause it.
+- Before declaring the active Friday review stack or Sunday planning/finalization stack, run review-debt discovery, not only date math.
+- When reporting that no **older review debt** was found, distinguish that from reviews or plans closing/starting this weekend and restate the active stack.
+- Review-debt discovery includes:
+  - inspect current and immediately prior period artifacts for open/unfinished review or planning-recovery pointers;
+  - query/search open tasks whose purpose is missed weekly/sprint/cycle/quarter/year review recovery;
+  - query/search review artifacts with all plausible unfinished-status variants (including compound values such as `Missed - Draft`) where the review date is today or earlier;
+  - **distinguish substantive review debt from metadata-only status drift:** read the artifact body, source day note/conversation, immediate continuation, downstream period plan/review, and completed recovery tasks before deciding a stale marker means the review was not worked;
+  - when evidence shows a review was substantively completed or explicitly recovered in reduced form, correct it to `Done` with review mode, completion/correction dates, and evidence; when invalidated, close it truthfully with successor/rationale.
+- Create/use every required review artifact; instantiating a scaffold is not completion.
+- A Friday retrospective may be complete before the calendar period ends when its declared coverage is explicit and Sunday owns the weekend addendum. This is not a missed review.
+- A higher-level Friday first pass remains `In Progress` only when substantive decisions are unresolved; do not keep it open merely because Sunday has not occurred.
+- If time/energy only allows a scaffold, label it draft/first-pass. If the full stack is not recoverable, choose reduced review, minimum viable review, or intentional defer with a named re-entry point.
+- Genuine overdue higher-cadence review debt outranks ordinary current-period planning, but recovery must be bounded enough to preserve planning attention.
+- If admin/inbox items interrupt review or planning, capture/route them and explicitly return to the exact unfinished cadence step.
 
-## Balanced-life review lens
-Every cadence review and next-period plan should explicitly consider:
+## Balanced-life lens
+Every cadence review and next-period plan explicitly considers:
 - work / mission / craft
 - health / body / recovery
 - relationships / love / friendship / family
 - hobbies / play / exploration / creative nourishment
 - soul / meaning / spirit / inner life
 
-The goal is not fake equal weighting. Startup-founder periods may be intentionally asymmetric. The rule is to make that asymmetry explicit: note what is being protected, what is being consciously deferred, and what minimum anchor keeps a non-work dimension alive.
+The goal is not fake equal weighting. Startup-founder periods may be intentionally asymmetric; record what is protected, consciously deferred, and why.
 
-## Weekly review semantics
-- `review_week` = the ISO week being closed / reviewed
-- `plan_week` = the upcoming ISO week being planned
-- On Sunday, these are different weeks.
-- Sunday's current day artifact still belongs to the current ISO week.
+Preserve intrinsically motivated play separately from externally evidenced expression. Private creative nourishment can count without publication unless the selected outcome is inherently communicative or Tom explicitly chose a sharing contract.
 
-## Weekly review process
+## Governing-purpose alignment
+When the user has an explicit higher-level purpose or mission, treat it as a governing layer over the portfolio rather than automatically creating another equal lane.
+- Friday review: name direct purpose/mission progress, enabling progress, drift/displacement, and how each major lane funded, embodied, transmitted, constrained, or protected the purpose.
+- Sunday planning: select at least one bounded progress signal for the coming week, relate the Weekly MIT/Top 3 to the governing purpose, and state any deliberate week with no direct progress plus its re-entry point.
+- Require evidence appropriate to the purpose: a tested thesis, artifact, experiment, relationship, governance decision, or externally observable step. Repeatedly restating the purpose is not progress.
+- Preserve support lanes such as income, health, relationships, family, and responsible closure. The check is whether support remains intentionally connected to the governing purpose rather than silently replacing it.
+
+## Weekly semantics
+- `review_week` = the ISO week being closed/reviewed.
+- `plan_week` = the upcoming ISO week being planned.
+- Friday's review and Sunday's planning refer to the same review/plan pair.
+- The Friday review artifact records `review_date` and `coverage_end`; Sunday's weekend addendum may extend evidence through Sunday.
+- Sunday's daily artifact still belongs to `review_week`; committed carry-forwards target `plan_week`.
+
+## Friday weekly review process
 1. **Mind dump first**
-   - Capture the user's raw thoughts in their own words before opening structured task views.
+   - Capture Tom's raw thoughts in his own words before opening structured task views.
    - Do not pre-fill the mind dump from system summaries.
-2. **Read the week back through day logs / daily artifacts**
-   - Read every day log / daily artifact from the week, including chat/message logs.
-   - Look for repeated blockers, hidden insights, and pattern signals.
-3. **Review the current week**
-   - Wins, misses, lessons, habits, notable constraints, and balance across work / health / relationships / hobbies / soul.
-4. **Run backlog hygiene**
-   - Open the relevant task surface (normally the system's current-week task view, plus overdue / surfaced items as needed).
-   - Explicitly include overdue (`due < today`) and stale-review (`review_on < today`) debt; weekly reviews are the deep cleanup layer, but daily fall-through sweeps must still catch this debt if the review is missed.
-   - Do not skip Sunday stale-debt cleanup merely because a cleanup task exists. If time/energy is constrained, run a lean pass: clear obvious Done/Drop/Someday items, recommit true current items, and create a dated cleanup block only for the remainder.
-   - Distinguish metadata/surface hygiene from substantive review. Emptying an overdue/stale Base view is not enough; meaningful stale items should be batched and walked through with the user unless they are obvious mechanical completions or low-value incubations.
-   - Hand off to `planning-task-os` and its canonical references for Now/Later/Drop rules, carry-forward logic, completed-task cleanup, and task-metadata updates.
-5. **Explore the knowledge graph / resurfacing**
-   - Preserve both lanes: planned/cadenced resurfacing and random rediscovery.
-   - Revisit older journal entries, saved media, or forgotten notes when possible rather than only current tasks.
-   - If a resurfaced item should matter next week/period, operationalize it before closing the review.
-6. **Choose the Weekly MIT**
-   - Name the single best lever for the upcoming week.
-7. **Prepare next week**
-   - Ensure the next week artifact and week plan exist; if the week artifact is missing, create it using the system's current week-artifact runtime surface.
-   - Verify the next week artifact's cadence fields / period links are correct (for example `week_of_year`, `week_start`, `week_end`, `quarter`, `cycle`, `sprint`, `period_type`).
-   - If the next week is a bonus week, surface it by name/dates/focus mode and do not create the next cycle's execution plan over it unless the user explicitly chooses that tradeoff.
-   - Before starting a new cycle, check whether a scheduled bonus week lies between the closed cycle/quarter and the new cycle; if yes, instantiate/link the bonus-week artifact and future-facing reminder first.
-   - Advance any period-scoped task surfaces / Bases / dashboards that are supposed to track the live current week / cycle / sprint, and validate them immediately after rollover.
-   - Confirm hard dates, decision deadlines, and non-negotiable constraints.
-   - Pre-select Monday Top 3 and the first deep-work block.
-   - On Sunday, committed carry-forwards target `plan_week`, not `review_week`.
-8. **Close out**
-   - Before saying the review/planning is complete, explicitly state the habit score/assessment, planned resurfacing reviewed, random rediscovery reviewed, and overdue/stale debt disposition.
-   - Link the review to the next-week plan.
-   - Propagate Now / Later / Drop and carry-forward decisions into the real task notes / metadata.
-   - Remove draft / provisional markers from finalized planning artifacts once the user confirms them.
-   - Mark finalized planning artifacts as locked/planned once the user confirms them.
-   - Write a concise sentence about what changes next week.
+2. **Read the week back**
+   - Read available daily artifacts/message logs from Monday through Friday.
+   - Treat missing days as evidence and reconcile material gaps.
+3. **Review the week**
+   - Wins, misses, lessons, habits, notable constraints, and the balanced-life lens.
+4. **Audit outcome conversion and external evidence**
+   - Read the active cycle/week outcome scoreboard back explicitly.
+   - Separate shipped/external outcome, external evidence, and enabling/internal progress.
+   - After two missed weekly gates or a sprint gate, force continue / contract / bypass / change-goal / defer / stop.
+   - Confirm an external-evidence test occurred or is deliberately planned.
+   - For any new strategic/external lane, name owner, capacity, evidence, stop condition, and displacement.
+5. **Run backlog hygiene**
+   - Open the current task surface plus overdue/stale views.
+   - Include `due < today` and `review_on < today`; clear obvious Done/Drop/Someday, recommit true current work, and date any remainder.
+   - Meaningful stale items must be discussed/batched unless they are mechanical completions or low-value incubations.
+   - Hand exact task semantics to `planning-task-os`.
+6. **Explore resurfacing**
+   - Preserve planned/cadenced and random-rediscovery lanes.
+   - Operationalize anything that should affect next week.
+7. **Produce a planning handoff—not the plan**
+   - Name decision inputs: outcome/evidence verdicts, unresolved decisions, hard dates, realistic available capacity, candidate MITs, risks, and balanced-life minimums.
+   - Do not spend Friday attention perfecting next week's daily plan unless needed for a team commitment or imminent Monday constraint.
+8. **Close the Friday review**
+   - State habit assessment, planned and random resurfacing, debt disposition, and the concise change signal for next week.
+   - Mark the review complete when its retrospective work is complete; note `coverage_end: Friday` and leave a clear Sunday planning pointer.
 
-## Required review outputs
-Each review should produce:
-- reflection on wins, misses, lessons, and pattern changes
-- balanced-life reflection plus explicit next-period protection / defer decisions across work, health, relationships, hobbies/play, and soul/meaning
-- resurfaced items worth carrying forward now
-- a handoff into the next period's plan
-- explicit Now / Later / Drop decisions where relevant
-- habit / operating-system observations
+## Sunday weekly planning process
+1. **Protect planning attention**
+   - State that Sunday is planning/reset, not a default replay of Friday's review.
+   - If Friday review exists, read its handoff first.
+2. **Run a bounded weekend reconciliation**
+   - Capture meaningful Saturday/Sunday outcomes, habits, relationship events, constraints, or decisions.
+   - Append only evidence that changes the weekly assessment or next-week plan.
+3. **Resolve cadence debt and closing-period decisions**
+   - Audit review debt and the periods ending today.
+   - Finalize only unresolved higher-level decisions/weekend deltas from Friday; do not repeat settled retrospectives.
+   - If Friday review was missed, use a time-bounded reduced recovery review before planning.
+4. **Run Sunday surfacing delta**
+   - Explicitly route exact-today `due` / `review_on` items and acknowledge overdue/stale debt.
+   - Do not perform another full backlog-hygiene session if Friday already did it; process only material new/due items or explicitly route a bounded remainder.
+5. **Choose the Weekly MIT**
+   - Name one best lever, externally observable finish line, why it matters, explicit non-goals/fallback, and at most one manually intensive enabler.
+6. **Build the next-week plan**
+   - Create/repair the next week artifact and validate cadence fields.
+   - Re-check hard dates, active outcomes, still-open overdue/Now items, relationship/admin commitments, and realistic capacity.
+   - Choose Top 3, named life anchors, lane boundaries, evidence/stop conditions, and displaced commitments.
+   - If a bonus week intervenes, surface and plan it explicitly rather than silently starting the next cycle.
+   - Advance/validate current-week structured surfaces where needed.
+7. **Create Monday's launchpad**
+   - Pre-select Monday Top 3, first deep-work block, hard habits/appointments, and any bounded pre-deep-work Admin Strike.
+8. **Close planning**
+   - Link Friday review to the next-week artifact.
+   - Propagate Now/Later/Drop and carry-forward decisions into real task metadata.
+   - Remove provisional markers and mark the plan locked only after Tom confirms it.
+   - State what changes next week and proceed to Sunday's yoga/meditation reset.
+
+## Required outputs
+### Friday review
+- reconstructed intended goals/commitments
+- wins, misses, lessons, habits, and balance assessment
+- outcome/external-evidence verdicts and forced decisions
+- resurfacing worth carrying forward
+- backlog/debt disposition
+- concise Sunday planning handoff
+
+### Sunday planning
+- weekend delta / final closing-period decisions
+- Weekly MIT with external finish line and non-goals
+- Top 3 with capacity/displacement clarity
+- balanced-life protections/deferrals
+- next-week artifact and Monday launchpad
+- propagated task metadata and a confirmed/locked plan
 
 ## Follow-up rule
-Do not leave explicit post-review follow-ups as plain-text reminders inside ritual notes.
-Examples:
-- browser tabs
-- admin capture
-- relationship follow-up
-- inbox cleanup
+Do not leave explicit review/planning follow-ups as plain-text ritual reminders. Complete them or convert them into explicit future-facing artifacts.
 
-Before closing the review, either:
-- complete them
-- or convert them into explicit future-facing artifacts
+## Runtime-surface boundary
+Canonical procedure lives here. Runtime surfaces can point, prompt, and summarize, but must not become a second hidden procedural source. Portable scaffolds live in `../assets/runtime-surfaces/`.
 
-## Runtime surface boundary
-The canonical cadence-review procedure lives in this skill/reference, not in checklist notes or templates.
-Runtime surfaces can point, prompt, and summarize, but if reusable review/planning procedure changes, migrate that logic here (or another relevant skill) rather than letting hidden canonical logic accumulate in a checklist.
-Portable scaffolds for common cadence artifacts also live in `../assets/runtime-surfaces/`; local system templates may mirror/adapt them, but should not be the only copy needed for the skill to function.
-
-## Templates / artifacts
-Common runtime artifacts include:
-- a weekly review artifact named `Weekly Review - YYYY-W##`
-- a week artifact for the period being executed / planned
-- a week-plan artifact for the upcoming week
-- optional higher-level review artifacts for sprint/cycle/quarter/year
+## Common artifacts
+- `Weekly Review - YYYY-W##` — normally worked Friday, with optional Sunday weekend addendum
+- `Planning/Weeks/YYYY-W##` — next-week execution/plan artifact, normally locked Sunday
+- optional sprint/cycle/quarter/year review and plan artifacts
 
 ## Boundary with planning-task-os
-Use this skill for cadence/review flow.
-Use `planning-task-os` for:
-- task property semantics
-- carry-forward requirements
-- Now / Later / Someday / Drop calibration
-- `importance` / `due` / `review_on` / `status` updates
+Use this skill for cadence/review/planning flow. Use `planning-task-os` for task property semantics, carry-forward, Now/Later/Someday/Drop, `importance`, `due`, `review_on`, and `status` updates.

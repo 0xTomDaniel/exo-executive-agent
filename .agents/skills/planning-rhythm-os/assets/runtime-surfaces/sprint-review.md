@@ -11,6 +11,13 @@
 - Parent cycle:
 - Weeks covered:
 
+## Intended Sprint Goal / Commitments
+> Reconstruct this before judging outcomes. Read the sprint artifact, prior sprint review, week artifacts, weekly MITs, and task commitments. State the goal in plain language and ask the user whether that matches their memory before closing the review.
+- What we thought this sprint was for:
+- Explicit commitments / gates:
+- Scope added mid-sprint:
+- What would have counted as a clear win:
+
 ## Scope Review
 - Day artifacts reviewed:
 - Weekly reviews / summaries reviewed:

@@ -22,6 +22,24 @@ aliases:
 - [[Quarter]] and [[Year]] are primarily for directional framing, synthesis, and review rather than detailed commitment planning.
 - Default rule: do not make detailed promises beyond the current 6-week cycle unless there is a true hard external commitment.
 
+## Cycle planning and sprint decomposition
+Before marking a 6-week cycle active/locked:
+1. Confirm the cycle thesis and 1–3 outcomes with the user.
+2. Decompose the cycle into all three 2-week sprints; do not stop at sprint links or placeholder milestones.
+3. For each sprint, define the intended external evidence, success gate, capacity/tradeoff boundary, and end-of-sprint decision (continue, contract, bypass, change goal, add/remove capacity, defer, or stop).
+4. Use the sprint sequence as a feasibility test: if the outcomes cannot be sequenced credibly, revise the outcomes rather than preserving an aspirational cycle plan.
+5. Keep the cycle and dependent sprint artifacts provisional until the full sequence has been discussed and confirmed.
+
+The cycle defines **what and why**; the sprints define **sequence, evidence, and correction points**. Both are required for a locked plan.
+
+## Nested-period commitment clarity
+When a week sits inside a sprint/cycle, make the boundaries explicit rather than presenting every higher-period gate as if it were due this week:
+- Label **this week's committed finish lines**, **this week's working/stretch targets**, and **the entire sprint's hard gates/deadlines** separately.
+- If a weekly target is earlier than the sprint deadline, state that it creates recovery/integration buffer; do not silently redefine the hard deadline.
+- Give each sprint outcome a concrete weekly checkpoint or deliverable, but do not overload one week with the entire sprint scope.
+- Keep internal enabler/evaluation labels subordinate to the user-facing outcome. Never make the user remember or execute an agent-invented acceptance gate (for example “issue 3”) when real delivery can generate the evidence incidentally.
+- When feedback/polish is expected, define the current week's finish line and stop condition so iterative rounds do not become an unbounded substitute for the sprint outcome.
+
 ## Property conventions
 - Categorical/entity fields use wikilinks.
 - Machine dates use ISO values.
@@ -59,14 +77,16 @@ In note-based systems, these may be generated at note-creation time via templati
 The canonical source should be the corresponding week artifact for that system.
 That means weekly rollover should ensure the upcoming week artifact exists before dependent day artifacts are created.
 
-## Sunday semantics
-- Sunday still belongs to the current ISO week.
-- Therefore, on Sunday:
+## Friday review / Sunday planning semantics
+- Friday's weekly review targets the current ISO week and records an explicit Friday `coverage_end`; it may be substantively complete before the calendar week ends.
+- Sunday still belongs to the current ISO week. Sunday's bounded weekend reconciliation extends/corrects the Friday review only when meaningful weekend evidence changes it.
+- On Sunday:
   - the current day artifact remains tagged with the current week
-  - the weekly review closes the current week
+  - planning-period boundaries still close on their true Sunday dates
+  - unresolved higher-level review decisions/weekend deltas are finalized without replaying the full Friday retrospective
   - the week plan targets the next week starting Monday
 
-More generally: on any Sunday, review whichever planning periods are closing that day.
+More generally: Friday begins the retrospective stack for periods ending Sunday; Sunday finalizes true deltas/decisions and protects next-period planning.
 
 ## Naming conventions
 - `Weekly Review - YYYY-W##`

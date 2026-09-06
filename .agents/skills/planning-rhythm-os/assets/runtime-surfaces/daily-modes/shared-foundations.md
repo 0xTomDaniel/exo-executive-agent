@@ -17,8 +17,8 @@
 ## Core Habits
 > If you intentionally skip a habit for health/safety (e.g., illness/COVID exposure), note the reason and set a resumption date (and optionally substitute a lighter version).
 - [ ] Drink a glass of water after waking
-- [ ] Meditation (20m)
-- [ ] Movement / training — if today has a named mandatory ritual (e.g. Saturday run or Sunday yoga), ask and record it by name
+- [ ] Meditation (20m; if the current mode intentionally integrates it into a named yoga/breathwork ritual, count the combined ritual rather than duplicating it; if today is an explicitly designed cadence off-day, record the off-day as adherence rather than a lapse)
+- [ ] Movement / training — if today has a named scheduled/recovery-aware ritual (e.g. on-run-week Thursday full rest before a Friday-morning run with Ayhen, an off-week Thursday workout/recovery choice, a recovery-aware substitute, or Sunday yoga), ask and record it by name
 - [ ] Planning + review / proper closeout for the day's mode
 
 ## Weekly Minimum Radar

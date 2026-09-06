@@ -14,7 +14,7 @@ aliases:
 - Default lane: reflection, cleanup, recovery, catch-up, vacation, or the explicitly chosen focus mode—not automatic launch/execution mode.
 - If urgent work must override the bonus week, record the tradeoff explicitly in the daily note and bonus-week note; do not let the next cycle silently consume the buffer.
 
-### Monday-Friday — execution days
+### Monday-Thursday — execution days
 - Default mode: focused work / delivery.
 - Open the current day surface and apply the current routing surface.
 - Run normal daily planning: capture, resurfacing checks, Top 3, first deep-work block, hard commitments.
@@ -27,19 +27,27 @@ aliases:
 - When shallow/admin residue threatens to sprawl, use a bounded tactic from `execution-tactics.md` rather than letting miscellaneous work leak across the whole day.
 - Default execution-day surfaces include the structured task views that support due-today, resurfacing, overdue, and carry-risk work.
 
+### Friday — execution close + weekly review
+- Preserve the main delivery lane, but protect a Friday closeout block for the weekly retrospective while evidence is fresh.
+- Run the Friday weekly review from `review-cadence.md`: mind dump, week reconstruction, outcome/evidence audit, balanced-life/habit assessment, backlog hygiene, resurfacing, and a concise Sunday planning handoff.
+- For sprint/cycle/quarter/year periods ending Sunday, begin the smallest-to-largest retrospective stack Friday; leave only unresolved decisions and weekend delta for Sunday.
+- Friday review closes the execution week; it does not need to perfect the next-week plan.
+- If Friday is constrained, use an explicit reduced review and name the recovery point; do not silently push an unlimited review into Sunday.
+
 ### Saturday — lighter day
-- Default mode: recovery, leisure, relationships, errands, and core habits.
+- Default mode: recovery, leisure, relationships, errands, and the **Saturday-specific** habit cadence.
+- An intentionally designed weekly off-day from a normally daily habit can be part of adherence rather than a lapse when the user has explicitly chosen it to preserve intrinsic engagement, polarity, or recovery. Do not impose a token minimum version merely to preserve a streak; keep the next scheduled re-entry visible.
 - Saturday is not a default hard-core workday.
 - If work is needed, prefer the smallest context-fit action or a short intentional block.
 - If a real work lane exists, prefer one intentional work lane and use a bounded admin tactic only when it protects that lane.
 - Still surface at least one resurfacing item so the memory system stays alive.
 - Keep obligations visible without turning the day into a weekday clone.
 
-### Sunday — review / reset day
-- Default mode: review stack + weekly reset.
-- Determine the full cadence stack before any normal daily planning.
-- Do cadence reviews before admin/inbox cleanup unless the user explicitly chooses otherwise.
-- Sunday can still include habits, relationships, and light responsibilities, but it is not a standard execution day unless intentionally chosen.
+### Sunday — weekly planning / reset day
+- Default mode: protected next-week planning + weekly reset, not a replay of Friday's review.
+- Read Friday's review handoff, run only a bounded Saturday/Sunday reconciliation, resolve genuine review debt or unfinished higher-level decisions, then choose the Weekly MIT, Top 3, capacity/tradeoffs, and Monday launchpad.
+- Route exact-today and material new backlog items, but do not perform a second full stale-debt cleanup when Friday already did it.
+- Sunday can still include yoga/meditation, habits, relationships, and light responsibilities, but it is not a standard execution day unless intentionally chosen.
 
 ## Morning foundations
 
@@ -50,13 +58,17 @@ At the day-shaping level, think in a Detect → Decide → Act → Review loop:
 - **Review** with explicit closeout so the next day starts from reality.
 
 Before advancing to execution:
+- when Tom asks “what’s next?”, returns after a gap, or is in a planning/review flow, run a steering scan before recommending action: identify the correct cadence mode; check missed period boundaries; query exact-today due/review items plus overdue/stale debt; explicitly search/query for open or draft missed-review recovery artifacts/tasks (weekly/sprint/cycle/quarter/year); scan the current/next 14 days for high-salience dated artifacts and relationship/family/travel/calendar commitments; surface the active cycle/week outcome scoreboard, current release/external-evidence gate, and current sprint/cycle critical tasks; then state the recommended next step and what was intentionally deferred
 - if the previous day did not receive a real closeout, reconcile where it actually landed before locking today's plan
-- if there are one or more missing/incomplete dates since the last Exo interaction, run interaction-gap recovery across all missing dates before locking today's plan: enumerate dates, ask for compact per-date reality/habit/ritual status, and create/update retroactive daily notes where meaningful reality surfaced
+- if there are one or more missing/incomplete dates since the last Exo interaction, run interaction-gap recovery across all missing dates before locking today's plan: enumerate dates, ask for compact per-date reality/habit/ritual status, create/update retroactive daily notes where meaningful reality surfaced, and explicitly scan the missed date range for cadence boundaries (especially Sundays and week/sprint/cycle endings) so any missed weekly/sprint/cycle/quarter review debt is named and promoted into the active review stack before current-period planning proceeds; it is not enough to list the recovery task as stale debt
 - if reconciliation surfaces date-specific accomplishments, habits, events, or reflections from a missing/incomplete day, update or create that actual target daily note retroactively with a clear source/creation marker; do not leave the actual day blank just because it was reported later
 - verify the current week artifact exists and read its `period_type`; if it is missing, stop and create/repair it before assuming weekday execution mode
 - if `period_type` is `[[Bonus Week]]`, surface the bonus week and focus mode explicitly before any normal planning
-- confirm core habits / virtues for the current mode, including any named mandatory habit or day-specific weekly ritual from the visible habit roster; ask about it explicitly instead of hiding it behind generic "movement"
+- confirm core habits / virtues for the current mode, including any named mandatory habit, **intentional cadence off-day**, or day-specific weekly ritual from the visible habit roster; ask about it explicitly instead of hiding it behind generic "movement," and do not misclassify a designed off-day as a lapse
+- for a future recovery-aware movement decision, distinguish **not fully recovered now** from **unlikely to be ready at activity time**: when the user is improving and intentionally resting ahead of the activity, preserve a readiness checkpoint at the actual decision time rather than preemptively canceling it or treating ordinary improving soreness as an injury; ask about symptom type/red flags, keep the plan conditional, and contract/substitute only if readiness evidence warrants it
+- respect established combined-ritual semantics: when one habit is intentionally completed inside another named ritual (for example meditation inside Sunday yoga), surface and record the combined ritual rather than demanding a duplicate standalone session; if the combined ritual is deferred, make the shared re-entry point explicit
 - surface the day's resurfacing items explicitly by name
+- distinguish outcome progress from enabling progress; if a new enabler or lane enters today's active set, require its target outcome, blocker evidence, stop/checkpoint condition, owner/capacity, and displaced commitment before locking the plan
 - explicitly name every open task with `due` today or `review_on` today, and route each one (Top 3, Admin Strike, Later, delegation, or drop)
 - run the fall-through sweep for `due < today` and `review_on < today`: name counts plus high-salience items/next actions, then decide whether to clear, defer, or schedule cleanup
 - surface active weekly minimums as a radar check
@@ -80,7 +92,7 @@ Use a compact by-date pass:
 - What happened / where did the day actually land?
 - Completed work, errands, relationship events, or notable constraints?
 - Core habits: water, meditation, movement/training, planning/closeout.
-- Named weekly rituals or mandatory habits for that date, especially Saturday run and Sunday yoga.
+- Named scheduled rituals or recovery-aware habits for that date, especially on-run-week Thursday full rest before the Friday-morning run with Ayhen, an off-week Thursday workout/recovery choice, or a recovery-aware substitute, and Sunday yoga.
 - Open loops that should carry forward into tasks, reviews, or future-facing reminders.
 
 For one missed day, ask directly. For multi-day gaps, use a low-friction table or summary prompt and drill only into high-salience or uncertain dates. Create/update actual retroactive daily notes for meaningful day-specific reality.
@@ -89,10 +101,10 @@ For one missed day, ask directly. For multi-day gaps, use a low-friction table o
 Surface important non-daily minimums during morning review so they do not disappear just because they are not due today.
 Examples include:
 - long-form reading sessions
-- full weekly review
+- Friday full weekly review + Sunday weekly planning
 - training minimums
-- Saturday run / mandatory movement reset or intentional substitute when blocked
-- Sunday yoga / creative reset or intentional substitutes when blocked
+- Full Thursday rest on run weeks + every-other-week Friday-morning run with Ayhen; off-week Thursday uses normal recovery-aware workout planning / intentional substitute when blocked
+- Sunday yoga / creative reset after weekly planning, or an intentional substitute when blocked
 
 ## Resurfacing
 

@@ -24,7 +24,7 @@ Use this skill when the job is not just editing a single task, but designing or 
 - Let urgency come mainly from `due`, overdue state, and nearby deadlines.
 - Let `review_on` handle intentional resurfacing for things that are not urgent now; when `review_on == today()`, the item becomes a mandatory morning-review surfacing obligation, not optional background metadata.
 - Treat `due < today()` and `review_on < today()` as active debt signals: they must be visible in the daily fall-through sweep and resolved through Now / Later / Drop / Someday or a bounded cleanup pass.
-- Let `status` express commitment state (`[[Todo]]`, `[[Doing]]`, `[[Done]]`, `[[Someday]]`, etc.).
+- Let `status` express commitment/lifecycle state (`[[Todo]]`, `[[Doing]]`, `[[Someday]]`, `[[Done]]`, `[[Closed]]`, etc.). Use `[[Done]]` only when the intended outcome was completed; use `[[Closed]]` plus an explicit `resolution` when unfinished work is cancelled, duplicated, or superseded.
 - Use Eisenhower as a **thinking lens / Base view**, not necessarily as stored metadata on every task.
 - Treat this skill and its references as the **canonical operational source** for the planning/task operating system unless explicitly superseded.
 - At the task layer, this skill mainly owns the Decide/Review parts of the Detect → Decide → Act → Review loop: classify commitments clearly before work and carry them forward intentionally after work.

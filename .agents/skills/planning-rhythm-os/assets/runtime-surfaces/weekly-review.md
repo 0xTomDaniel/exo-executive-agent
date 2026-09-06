@@ -1,74 +1,81 @@
-# Weekly Review Runtime Surface
+# Friday Weekly Review Runtime Surface
 
 > Portable runtime-surface scaffold for `planning-rhythm-os`.
-> Canonical cadence-review procedure lives in the skill's `references/review-cadence.md`.
-> Adapt local metadata, links, and note-system conventions as needed.
+> Canonical procedure lives in `references/review-cadence.md`. Friday owns the retrospective; Sunday owns next-week planning.
 
 ## Cadence Context
-- Closing periods today:
-- Review stack order:
-- Higher-level reviews still required after this weekly review:
+- Review week:
+- Review date / coverage end:
+- Plan week for Sunday handoff:
+- Period retrospectives ending Sunday:
 
-## Week Anchors
-- Review week (current ISO week being closed):
-- Plan week (next ISO week being planned):
-- Review date:
-
-## Weekly Mind Dump (before reviewing the system)
-> Capture in the user's own words before any system review. Do not pre-fill this.
+## Weekly Mind Dump
+> Capture Tom's own words before reviewing the system. Do not pre-fill.
 - Captures:
   -
 
 ## Week Reflection
-- Hidden insights:
-- Process / system improvements to make:
+- Intended goals/commitments reconstructed:
 - Wins:
 - Misses:
-- Lessons:
+- Hidden insights:
+- Lessons / operating changes:
 
-## Knowledge Graph / Resurfacing
-- Random / forgotten items surfaced:
-- Older journal entries or saved items revisited:
-- Surprises / connections worth revisiting:
-- Resurfacing items to bring back now:
+## Outcome Conversion Audit
+- Shipped / externally observable outcome:
+- External evidence:
+- Enabling/internal progress:
+- Capacity versus forecast:
+- Repeated-miss forced decision:
+- New lanes, owner/capacity/stop condition/displacement:
 
-## Balanced-Life Check
+## Governing Purpose / Mission Alignment
+- Governing purpose:
+- Direct purpose/mission progress:
+- Enabling progress:
+- How major lanes funded / embodied / transmitted / constrained / protected it:
+- Drift or displacement:
+- Required planning correction / re-entry:
+
+## Weekly External-Evidence Test
+- Test:
+- Result / disconfirmation:
+- Decision:
+- Planning implication:
+
+## Balanced-Life and Habit Review
 - Work / mission / craft:
 - Health / body / recovery:
-- Relationships / love / friendship / family:
-- Hobbies / play / exploration / creative nourishment:
-- Soul / meaning / spirit / inner life:
-- Where next week may stay intentionally asymmetric, and what still must be protected:
+- Relationships / family / friendship:
+- Hobbies / play / creative nourishment:
+- Soul / meaning / inner life:
+- Habit assessment:
+- Intentional asymmetry and protected minima:
 
-## Fear / Alignment Check
-- If fear were not in charge, what would I do more fully right now?
+## Knowledge Graph / Resurfacing
+- Planned / cadenced items:
+- Random rediscovery:
+- Older material revisited:
+- Items requiring Sunday planning action:
 
-## Weekly MIT (Most Important Thing)
-- If only one meaningful thing gets done next week, it is:
-- Why this is the lever:
+## Backlog Hygiene
+- Overdue / stale counts:
+- Done / Drop / Someday cleanup:
+- Recommitted Now items:
+- Dated remainder:
+- Relationship/admin commitments still open:
 
-## Backlog Hygiene (Now / Later / Drop)
-- Daily Fallback Sweep debt reviewed (`due <= today` / `review_on <= today`):
-- Overdue / stale-review items cleaned up or re-dated:
-- Now:
-- Later (with review timing):
-- Drop:
-- Still-open surfaced relationship / admin commitments that must not be silently dropped:
+## Sunday Planning Handoff
+- Candidate Weekly MIT(s), not yet selected:
+- Hard dates / constraints:
+- Realistic available capacity:
+- Unresolved decisions:
+- Risks / stop conditions:
+- Balanced-life anchors to protect:
+- Weekend evidence to reconcile Sunday:
 
-## Habit Score
-- Hydration after waking: __ / 7
-- Meditation: __ / 7
-- Movement / training: __ / 7
-- Focused work block: __ / 7
-- Planning + review: __ / 7
-
-## Next Week Setup
-- Weekly MIT:
-- Top 3 priorities:
-  1.
-  2.
-  3.
-- Risks to manage:
-- Balanced-life anchors to protect next week:
-- Where next week is intentionally asymmetric:
-- First deep-work block booked for:
+## Friday Closeout
+- Review mode:
+- Review status:
+- Concise change signal for next week:
+- Link to next-week artifact when created Sunday:

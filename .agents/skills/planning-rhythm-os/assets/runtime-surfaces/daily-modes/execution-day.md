@@ -18,6 +18,15 @@
 - [ ] Review [[Planning/Weekly Tasks.base|Weekly Tasks Base]] → Decision Items
 - [ ] Surface at least one random older note / journal entry / saved media item
 
+## Active Outcome Scoreboard
+- Current cycle outcome:
+- This week's externally observable gate:
+- Last shipped / external evidence:
+- Today's move on that gate:
+- Current manual enabler, if any:
+- Enabler checkpoint / fallback:
+- New lane today and displaced commitment, if any:
+
 ## Top 3
 > First write outcomes in your own words. After Surface Checks, map each to an existing task note (use exact names from [[Planning/Weekly Tasks.base|Weekly Tasks Base]]) or create a new task note in `Planning/Tasks/`.
 1. [ ] 

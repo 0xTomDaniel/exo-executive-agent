@@ -28,10 +28,14 @@
 - System / process failures:
 
 ## Execution Review
-- What actually shipped:
+- What actually shipped / became externally observable:
+- What external evidence changed decisions:
+- What enabling/internal progress accumulated:
 - What slipped:
 - What was harder than expected:
 - What repeated across multiple sprints:
+- Which legitimate enablers became serial prerequisites:
+- Did any key outcome miss two weekly gates or a sprint gate without an explicit redecision?
 
 ## Balanced-Life Review
 - Work / mission / craft:
@@ -49,6 +53,11 @@
 
 ## Next Cycle Setup
 - Main outcomes to pursue:
+- One-screen outcome scoreboard created:
+- Release/external-evidence contract created:
+- Owner/capacity boundary map created:
+- Weekly external-evidence floor:
+- Repeated-miss decision rule:
 - Risks to manage:
 - Balanced-life anchors to protect:
 - Carry-forward decisions (Now / Later / Drop):

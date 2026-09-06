@@ -15,6 +15,14 @@
 - What is consciously deferred:
 - Minimum viable recovery / cleanup / reflection today:
 
+## Next-Cycle Readiness — without launching execution early
+- [ ] Review the closed cycle's outcome-conversion failures and strengths
+- [ ] Draft the next cycle's one-screen outcome scoreboard
+- [ ] Draft any release/external-evidence contract
+- [ ] Define active-lane owners, capacity, and displacement boundaries
+- [ ] Confirm one weekly external-evidence floor
+- [ ] Keep all of the above provisional until the bonus-week reflection and next-cycle planning are actually discussed
+
 ## Keep / Defer / Override
 - **Keep today:**
 - **Defer to next cycle:**

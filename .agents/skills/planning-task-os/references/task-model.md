@@ -16,16 +16,26 @@ Preferred property meanings:
 - `importance` — canonical importance field
 - `due` — urgency anchor / external time pressure; if the task is open and `due == today()`, it must be explicitly surfaced during morning review; if `due < today()`, it is overdue debt for the daily fall-through sweep
 - `review_on` — resurfacing date for future reconsideration; if the task is open and `review_on == today()`, it must be explicitly surfaced during morning review; if `review_on < today()`, it is stale resurfacing debt for the daily fall-through sweep
-- `status` — commitment state (`[[Todo]]`, `[[Doing]]`, `[[Done]]`, `[[Someday]]`, etc.)
+- `status` — commitment/lifecycle state (`[[Todo]]`, `[[Doing]]`, `[[Someday]]`, `[[Done]]`, `[[Closed]]`, etc.)
+- `resolution` — why a terminal task ended when status alone is not enough (for example `[[Superseded]]`, cancelled, duplicate, or no longer relevant)
 - `next_action` — one concrete visible next step
 - `est_minutes`, `energy`, `work_type`, optional `context` — execution support metadata
 
 If the vault still contains legacy `priority` properties, treat them as migration debt unless the system intentionally chooses to keep that name.
 If the vault still contains legacy importance values such as `[[High]]` / `[[Medium]]`, treat those as transitional calibration debt until the richer verbal importance scale is fully applied.
 
+## Truthful terminal-state semantics
+
+- `[[Done]]` means the intended outcome was actually completed. Do not use it merely to make an unfinished task disappear.
+- `[[Closed]]` means the task is no longer an active commitment even though its original outcome was not completed.
+- A closed unfinished task must preserve an auditable explanation: add `resolution`, `closed`, a dated closure note, and `superseded_by` when another task now owns the value.
+- `[[Superseded]]` does not mean the old work was worthless or completed. It means the old task formulation no longer governs action because a newer task, experiment, release contract, or decision now owns the relevant outcome.
+- Closing is reversible: if the old outcome later becomes relevant as a distinct commitment, reopen it with current metadata or create a newly scoped task and link back. Do not keep obsolete task shells active as emotional insurance.
+- Runtime surfaces must exclude both `[[Done]]` and `[[Closed]]` from active-work views while preserving the notes as history.
+
 ## Hard surfacing semantics
 
-- `due == today()` and `review_on == today()` do not automatically mean "must finish today," but they do mean "must be brought to awareness today."
+- For non-terminal tasks, `due == today()` and `review_on == today()` do not automatically mean "must finish today," but they do mean "must be brought to awareness today."
 - During morning-start, every open task matching either exact-today condition must be explicitly named in chat and in the daily note before the daily plan is locked.
 - `due < today()` and `review_on < today()` mean the task did not get resolved when it was supposed to surface; these are debt signals, not expired reminders.
 - During the daily fall-through sweep, acknowledge older debt with counts plus high-salience names/next actions before locking the plan. High-salience means all `[[Extremely important]]` / `[[Very important]]`, imminent external deadlines, relationship/admin commitments, and current sprint/cycle items.

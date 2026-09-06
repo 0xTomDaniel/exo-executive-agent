@@ -9,10 +9,12 @@ const isBonusWeek = frontmatter.period_type === "[[Bonus Week]]" || frontmatter.
 const mode = isBonusWeek
   ? "bonus"
   : dayOfWeek === "Sunday"
-    ? "review"
+    ? "planning"
     : dayOfWeek === "Saturday"
       ? "lighter"
-      : "execution";
+      : dayOfWeek === "Friday"
+        ? "review"
+        : "execution";
 
 const skillRoot = ".agents/skills/planning-rhythm-os/assets/runtime-surfaces";
 const modeConfig = {
@@ -38,10 +40,17 @@ const modeConfig = {
     partialPath: `${skillRoot}/daily-modes/saturday-lighter-day.md`,
   },
   review: {
-    title: "Sunday closeout day",
+    title: "Friday execution close + weekly review",
     callout: "important",
-    summary: "Determine the review stack from policy + period notes before normal daily planning.",
-    extra: `Run required cadence reviews smallest → largest, then do admin/inbox cleanup. Weekly review target: [[Weekly Review - ${weekTitle}]]. Current sprint: ${frontmatter.sprint ?? "check the week note"}. Use \`planning-rhythm-os\` as canonical procedure; [[Planning/Metacognition Control Tower]] is navigation only.`, 
+    summary: "Protect the delivery lane, then close the execution week while evidence is fresh; produce a concise Sunday planning handoff.",
+    extra: `Run the weekly review and any period retrospectives ending this Sunday smallest → largest. Weekly review target: [[Weekly Review - ${weekTitle}]]. Current sprint: ${frontmatter.sprint ?? "check the week note"}. Do not spend the block perfecting next week's plan.`,
+    partialPath: `${skillRoot}/daily-modes/friday-weekly-review.md`,
+  },
+  planning: {
+    title: "Sunday weekly planning + reset",
+    callout: "important",
+    summary: "Protect planning attention: consume Friday's review, reconcile only the weekend delta, and lock the next week plus Monday launchpad.",
+    extra: `Weekly review source: [[Weekly Review - ${weekTitle}]]. Resolve genuine review debt/unresolved higher-level decisions, but do not replay the full review. Use \`planning-rhythm-os\` as canonical procedure.`,
     partialPath: `${skillRoot}/daily-modes/sunday-review-reset.md`,
   },
 };

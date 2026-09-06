@@ -113,12 +113,12 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertIn("Tom's [[💎]] highest-importance marker", tom_skill)
         self.assertIn("Lived-history grounding", tom_patterns)
         self.assertIn("[[Planning/Weekly Tasks.base|Weekly Tasks Base]]", tom_patterns)
-        self.assertIn("Saturday run / stoned-run ritual", tom_patterns)
-        self.assertIn("Sunday yoga", tom_patterns)
+        self.assertIn("Friday morning with Ayhen", tom_patterns)
+        self.assertIn("Saturday yoga includes meditation", tom_patterns)
         self.assertIn("movement before work blocks", tom_patterns)
         self.assertIn("Meditation remains the gate before optional work", tom_patterns)
         self.assertIn("Core habits: water, meditation, movement/training", daily_rhythm)
-        self.assertIn("Named weekly rituals or mandatory habits", daily_rhythm)
+        self.assertIn("Named scheduled rituals or recovery-aware habits", daily_rhythm)
         self.assertIn("Prefer Obsidian CLI for note creation", obsidian_skill)
         self.assertIn("Bases for structured tracking", obsidian_skill)
         self.assertIn("Run Ember's weekly Friday team review/planning session", ember_weekly)
@@ -433,9 +433,11 @@ class TomLocalDistributionTest(unittest.TestCase):
             },
             {
                 "agent-browser",
+                "asset-assessment",
                 "ember-weekly-planning",
                 "exo-daily-brief",
                 "hermes-file-brief",
+                "meow",
                 "obsidian",
                 "planning-capture-os",
                 "planning-rhythm-os",
@@ -471,6 +473,9 @@ class TomLocalDistributionTest(unittest.TestCase):
             sources_by_id["exo.ember_weekly_planning"].profile_targets,
             ("tom-personal-agent",),
         )
+        for source_id in ("exo.meow", "exo.asset_assessment"):
+            self.assertFalse(sources_by_id[source_id].approved)
+            self.assertEqual(sources_by_id[source_id].profile_targets, ())
         self.assertFalse(sources_by_id["exo.agent_browser"].approved)
         self.assertFalse(sources_by_id["exo.obsidian"].approved)
         self.assertFalse(sources_by_id["exo.save_video_content"].approved)

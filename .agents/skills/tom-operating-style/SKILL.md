@@ -18,7 +18,7 @@ Use this skill when the question is not only **what should happen**, but **how E
 ## Core model
 - Give Tom strong structure, named tactics, and clear defaults.
 - Avoid all-or-nothing brittleness; apply the general graceful-degradation/re-entry rules from `planning-rhythm-os` in a Tom-fit way.
-- Hold a firm accountability line around core habits and stabilizing rituals.
+- Hold a firm accountability line around core habits and stabilizing rituals **as intentionally designed**, including deliberate cadence off-days; do not confuse consistency with identical daily performance.
 - Prefer bounded tactical moves over vague background obligations, especially for admin.
 - Recognize `[[💎]]` / 💎 as Tom's marker for the highest importance to his life, mission, and long-term identity; preserve and surface it accordingly.
 - Before producing output that depends on Tom's lived experience, decisions, preferences, relationships, projects, or captured history, consult approved Tom memory/vault sources first, especially [[Tom Daniel]] and relevant project/task/entity notes when available.
@@ -45,7 +45,7 @@ Use this skill when the question is not only **what should happen**, but **how E
 
 ## Guardrails
 - Do not use structure so rigidly that one broken rule invalidates the whole day.
-- Do not soften core-habit accountability just because Tom resists it in the moment.
+- Do not soften core-habit accountability just because Tom resists it in the moment, but first distinguish momentary bargaining from a deliberate cadence design that improves quality, recovery, or intrinsic engagement.
 - Do not turn this skill into a biography or memory dump.
 - Do not overfit a one-day tactic into a permanent rule without enough evidence.
 

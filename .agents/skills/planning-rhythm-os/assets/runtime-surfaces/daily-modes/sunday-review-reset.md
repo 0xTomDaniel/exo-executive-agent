@@ -1,35 +1,36 @@
-## Daily Enforcement
-- [ ] 5m weekly mind dump first (capture in your own words before reviewing the system)
-- [ ] Drink a glass of water after waking
-- [ ] Meditate when there is a good space for it
-- [ ] Determine which cadence reviews close today from `planning-rhythm-os` + current period notes
-- [ ] Explicitly surface any open task with `due` today or `review_on` today and route it inside today's review/reset flow
-- [ ] Daily fall-through sweep: overdue and stale-review debt acknowledged before/inside backlog hygiene so nothing falls through if last week was missed
-- [ ] Run the review stack smallest → largest
-- [ ] Finish required cadence reviews before admin/inbox cleanup
-- [ ] If browser tabs / inbox cleanup / admin capture will happen later, convert them into explicit task(s) before marking the review complete
-- [ ] Set up Monday from the resulting reviews
+## Sunday Weekly Planning / Reset
+- [ ] Drink morning water
+- [ ] Read Friday's weekly-review handoff; do not replay the full review by default
+- [ ] Capture a bounded Saturday/Sunday reconciliation: outcomes, habits, relationships, constraints, and plan-changing evidence
+- [ ] Detect genuine review debt and periods closing today; finalize only unresolved decisions/weekend deltas
+- [ ] Explicitly surface and route every open task with `due` today or `review_on` today
+- [ ] Acknowledge overdue/stale-review debt; run only the Sunday delta unless Friday cleanup was missed
+- [ ] Surface planned/cadenced resurfacing + random rediscovery
+- [ ] Choose the next Weekly MIT with an external finish line, non-goals, and at most one manual enabler
+- [ ] Lock Top 3, capacity/displacements, hard dates, balanced-life anchors, and weekly minimums
+- [ ] Create/repair the next week artifact and validate period links
+- [ ] Set Monday Top 3, first deep-work block, movement plan, and any bounded pre-deep-work Admin Strike
+- [ ] Convert all follow-ups into tasks/future-facing artifacts
+- [ ] Complete Sunday yoga with integrated meditation after planning unless a real constraint requires an explicit re-entry point
 
-## Sunday Review Stack
-- Weekly review note:
-- Sprint review note (if a sprint closes today):
-- Cycle review note (if a cycle closes today):
-- Quarterly review note (if a quarter closes today):
-- Yearly review note (if a year closes today):
-- After reviews: browser tabs / admin / relationship logistics — complete now or convert into explicit tasks before marking Sunday complete
+## Planning Navigation
+- Friday weekly review:
+- Higher-level review/decision notes requiring finalization:
+- Next week artifact:
+- Next sprint/cycle plan if applicable:
 
-## Review Navigation
-- Weekly review:
-- Sprint review:
-- Next week note:
-- Next week plan:
-- Next sprint note:
-
-## Review Outputs / Next Week Setup
+## Weekly Plan Outputs
 - Weekly MIT:
+- External finish line:
+- Top 3:
+  1.
+  2.
+  3.
+- Explicit non-goals / displaced lanes:
+- Balanced-life protections:
+- Risks / stop conditions:
 - Monday Top 3:
-  1. 
-  2. 
-  3. 
-- Risks to manage:
+  1.
+  2.
+  3.
 - First Monday deep-work block:

@@ -50,16 +50,24 @@ created: YYYY-MM-DD
 - Team pace / commitment reality:
 - Morale / energy reality:
 
-## 3. Next week team MIT
+## 3. Next week team MIT + outcome contract
 > The one shared outcome that would make next week clearly worthwhile.
-- 
+- Team MIT:
+- Externally observable finish line:
+- Current release/test stage:
+- Explicit non-goals:
+- Fallback / bypass:
+- Single manually intensive enabler allowed:
+- If this gate also missed last week, explicit redecision:
 
 ## 4. Weekly customer/revenue experiment
-- Question:
+> Required even if the product is unfinished; use the strongest valid lower-fidelity/manual test.
+- Hypothesis / question:
 - Audience:
-- Artifact:
+- Artifact or manual method:
 - Action volume:
-- Signal:
+- Predicted signal:
+- Disconfirmation signal:
 - Decision rule next Friday:
 
 ## 5. ICP / qualification
@@ -67,15 +75,21 @@ created: YYYY-MM-DD
 - Best-fit wedge:
 - Qualification questions / threshold:
 
-## 6. Commitments by owner
+## 6. Commitments by owner / capacity
 ### Tom
-- [ ] 
+- [ ] Outcome:
+- Capacity / timing:
+- Required update:
 
 ### Varela
-- [ ] 
+- [ ] Outcome:
+- Capacity / timing:
+- Required update:
 
-### Joint
-- [ ] 
+### Joint — only if shared ownership is real
+- [ ] Outcome:
+- Capacity / timing:
+- Required update:
 
 ## 7. Monday launchpad
 - First shared starting point:
@@ -84,12 +98,15 @@ created: YYYY-MM-DD
 - First customer / pitch action:
 - Required artifact by Monday EOD:
 
-## 8. Separate economic lane, if applicable
+## 8. Separate economic / strategic lane, if applicable
 - Lane / opportunity:
-- Why it matters economically:
+- Classification:
+- Why it matters:
 - Owner:
-- Timing:
-- Guardrail so it does not displace Ember sales experiment:
+- Capacity / timing:
+- Next external evidence:
+- What it displaces:
+- Guardrail / stop point so it does not silently displace the Ember experiment:
 
 ## 9. Parking lot for Sunday Exo review
 - 

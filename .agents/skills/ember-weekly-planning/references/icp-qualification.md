@@ -47,6 +47,16 @@ Use the live qualification questions to bucket prospects:
 - **Learning-only**: useful for language/channel insight but unlikely to buy now.
 - **Not current ICP**: do not spend scarce sales-call slots unless strategically justified.
 
+## Evidence when the product is unfinished
+A product-complete demo is not required for every qualification test. Choose the highest-fidelity valid artifact available:
+- live product or staged build
+- interactive mockup / workflow
+- specification or backtest output
+- concierge/manual service simulation
+- structured problem/pricing/commitment interview
+
+State what the lower-fidelity test cannot prove. Do not count polite interest as product validation, but do not suspend learning until engineering finishes.
+
 ## Sales-call usage
 
 Before scheduling or counting a call as high-signal:

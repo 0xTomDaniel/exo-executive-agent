@@ -34,3 +34,25 @@
 - Top outcomes:
 - Risks:
 - Guardrails:
+
+## Active Outcome Scoreboard
+- Cycle outcome being advanced:
+- This week's externally observable gate:
+- Last shipped / external evidence:
+- Current enabling work (maximum one manual critical-path enabler):
+- Enabler checkpoint / fallback:
+
+## Weekly External-Evidence Test
+- Hypothesis:
+- Target / audience:
+- Method / artifact:
+- Predicted evidence:
+- Disconfirmation signal:
+- Owner / timing:
+- Friday decision:
+
+## New-Lane Displacement Check
+- New lane, if any:
+- Owner / capacity:
+- What it advances:
+- What it displaces or is explicitly forbidden from displacing:

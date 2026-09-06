@@ -47,12 +47,12 @@ At the task layer, this is mostly the Decide/Review half of the system: decide w
 - Name and route every exact-today item.
 - For older overdue/stale items, surface counts plus high-salience names/next actions; if there are too many to process, schedule a bounded cleanup block and refresh `review_on` for any intentionally deferred items.
 - Mark obvious completions immediately so done work does not keep polluting the active surfaces.
-- If a parent decision / umbrella task has already been resolved and the remaining work lives in dedicated child follow-up tasks, mark the parent `[[Done]]` instead of keeping it active as a stale proxy for the children.
+- If a parent decision / umbrella task's intended outcome was achieved and remaining work lives in dedicated child follow-up tasks, mark the parent `[[Done]]`. If it was replaced without completion, use `status: "[[Closed]]"` plus the truthful resolution (usually `[[Superseded]]`) and link the successor instead of keeping a stale proxy active.
 
 ## Weekly hygiene checklist
 - Open the active weekly task surface (normally the system's current-week task view, plus overdue / surfaced items when needed).
 - If the system uses period-scoped task surfaces/views (for example current week / current cycle / current sprint / next sprint prep), advance those views to the newly active periods during rollover and validate them immediately.
-- Mark genuinely completed tasks `[[Done]]` instead of leaving them in the active lane.
+- Mark genuinely completed tasks `[[Done]]`; mark unfinished but intentionally terminated tasks `[[Closed]]` with an explicit resolution instead of conflating completion with cleanup.
 - Close resolved parent / decision tasks once the core outcome is achieved, even if child cleanup tasks remain open elsewhere.
 - Trim active tasks to 20 or fewer.
 - Re-score `importance` for each carried-forward task.
@@ -60,6 +60,7 @@ At the task layer, this is mostly the Decide/Review half of the system: decide w
 - Re-check still-open surfaced overdue / Now items before concluding carry-forwards, especially relationship / admin commitments already surfaced by the system.
 - Move non-current items to Later / `[[Someday]]` with `review_on`.
 - Drop stale items with no clear value.
+- Close superseded formulations without destroying history: preserve unchecked outcomes, add the closure rationale and successor link, and trust the new task rather than retaining both as active emotional insurance.
 
 ## Defaults for this vault
 - Carry-forward means intentional recommitment, not automatic rollover.
