@@ -74,3 +74,8 @@
 ## Revisit / Accountability
 - When will I revisit this note next?
 - What would make this year a win even if it becomes messy?
+
+## Progress / resumption
+- Current scope and phase:
+- Exact next unfinished step:
+- Progress record: initialize/update the `review-state` block using `references/review-progress.md`; check it before advancing this scope’s status.

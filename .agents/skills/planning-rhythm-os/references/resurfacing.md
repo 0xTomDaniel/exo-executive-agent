@@ -32,11 +32,19 @@ Regularly re-surface older notes, journal entries, saved media, and adjacent ide
 - For every task surfaced because it is exact-today, overdue, or stale-review debt, include its current concrete next action in chat when it is high-salience or selected for routing.
 - If only one item is realistic that day, choose the highest-value resurfacing item for the moment while still acknowledging the existence/count of any unresolved debt.
 
+## Dated reminder coverage
+
+Query both open tasks and all dated reminders. `review_on` is an attention hook on any supported note class, including projects, people, health, works, and companies; it does not turn that record into a task. Include exact-today and past dates. Exclude terminal states Done, Closed, and Reviewed (linked or plain representation); retain Later, Someday, Waiting, and Incubating when their review date arrives.
+
+Present a task and a non-task reminder together only when their links and content establish the same underlying commitment. Keep both source references visible and do not suppress a distinct obligation on title similarity alone. Reviewing a non-task note can lead to an action, an explicitly chosen next review date, removal of an exhausted reminder, or no change with a named unresolved decision. Never auto-advance review dates or create duplicate tasks merely to clear the view.
+
+The note-system Adapter must name the task view and the all-class reminder view, query both, and report metadata/query errors. An empty task result does not establish an empty reminder queue. This reference owns surfacing behavior; `planning-task-os` owns task field/lifecycle meanings.
+
 ## Execution-day workflow
-- Review the relevant task/resurfacing surfaces.
+- Query both the task-debt and all-class dated-reminder surfaces described above.
 - Explicitly enumerate open tasks whose `due` or `review_on` is today before locking the daily plan.
 - Also query overdue / stale-resurfacing debt (`due < today` or `review_on < today`); surface counts plus high-salience names/next actions and route a cleanup path if the list is too large.
-- Surface at least one older note / journal entry / saved media item for random rediscovery.
+- Surface at least one older note / journal entry / saved media item for random rediscovery. Use the bundled `scripts/rediscover.py <eligible-paths.txt>` sampler instead of assuming GNU `shuf` is installed; inspect the selected note before summarizing it.
 - Always include a concise summary of each random-rediscovery item in chat so the user does not have to open the note cold.
 - If a resurfaced item matters for current execution, convert it into a task, plan line, decision checkpoint, or other explicit future-facing artifact.
 - If not doing a due-today / review-today item now, re-route it explicitly rather than letting it remain background fog.

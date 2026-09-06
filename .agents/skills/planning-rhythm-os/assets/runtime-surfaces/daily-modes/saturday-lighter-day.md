@@ -1,7 +1,7 @@
 ## Daily Enforcement
 - [ ] 5m mind dump (inbox): capture what feels important before reviewing the system
 - [ ] Drink a glass of water after waking
-- [ ] Honor the intentional meditation off-day; do not require a token session for streak preservation. Re-entry is Sunday yoga with integrated meditation
+- [ ] Read the effective-dated habit roster; name today’s scheduled movement/rest and meditation anchors, including combined rituals or an explicit substitute/re-entry point
 - [ ] Protect the spirit of Saturday: recovery, leisure, relationships, and the Saturday-specific habit cadence first
 - [ ] Preserve Saturday as a lighter/flexible day; the standing run moved to every-other-week Friday morning. If an on-week Friday run was deferred, route the substitute/resumption explicitly rather than silently resetting cadence; hydration remains active while meditation is intentionally off
 - [ ] Surface at least one resurfacing item (planned/cadenced or random rediscovery)

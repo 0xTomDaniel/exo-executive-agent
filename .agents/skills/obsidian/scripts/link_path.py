@@ -1,54 +1,35 @@
 #!/usr/bin/env python3
 import argparse
-import subprocess
 from collections import deque
 
-
-def run_obsidian(args, vault=None):
-    cmd = ["obsidian"]
-    if vault:
-        cmd.append(f"vault={vault}")
-    cmd.extend(args)
-    p = subprocess.run(cmd, text=True, capture_output=True)
-    return p.returncode, p.stdout.strip(), p.stderr.strip()
-
-
-def parse_links_output(text):
-    links = []
-    for line in text.splitlines():
-        line = line.strip()
-        if not line or line == "No links found.":
-            continue
-        if line.endswith("(unresolved)"):
-            continue
-        links.append(line)
-    return links
+from obsidian_cli import note_selector, parse_links_output, resolve_note, run_obsidian
 
 
 def neighbors(note, vault=None):
-    code, out, err = run_obsidian(["links", f"file={note}"], vault=vault)
+    code, out, err = run_obsidian(["links", note_selector(note)], vault=vault)
     if code != 0:
         return [], err or out
-    return parse_links_output(out), None
+    return parse_links_output(out, include_flags=False), None
 
 
 def norm(name):
     x = name.strip().lower()
-    if x.endswith('.md'):
-        x = x[:-3]
+    x = x.removesuffix(".md")
     return x
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Find shortest outgoing-link path between two Obsidian notes")
+    ap = argparse.ArgumentParser(
+        description="Find shortest outgoing-link path between two Obsidian notes"
+    )
     ap.add_argument("source", help="Source note")
     ap.add_argument("target", help="Target note")
     ap.add_argument("--max-depth", type=int, default=4, help="Maximum BFS depth (default: 4)")
     ap.add_argument("--vault", help="Optional vault name for obsidian CLI")
     args = ap.parse_args()
 
-    src = args.source
-    target_norm = norm(args.target)
+    src = resolve_note(args.source, args.vault)
+    target_norm = norm(resolve_note(args.target, args.vault))
 
     q = deque([(src, 0)])
     prev = {src: None}
@@ -78,12 +59,14 @@ def main():
                 break
 
     if not found:
-        print(f"No path found from '{args.source}' to '{args.target}' within depth {args.max_depth}.")
+        print(
+            f"No path found from '{args.source}' to '{args.target}' within depth {args.max_depth}."
+        )
         if errors:
             print("Warnings:")
             for n, e in errors[:10]:
                 print(f"  - {n}: {e}")
-        return
+        raise SystemExit(2 if errors else 1)
 
     path = []
     cur = found
@@ -92,7 +75,7 @@ def main():
         cur = prev[cur]
     path.reverse()
 
-    print(f"Path ({len(path)-1} hops):")
+    print(f"Path ({len(path) - 1} hops):")
     for i, n in enumerate(path):
         prefix = "└─" if i == len(path) - 1 else "├─"
         print(f"{prefix} {n}")

@@ -1,42 +1,16 @@
 #!/usr/bin/env python3
 import argparse
 import json
-import subprocess
 from collections import defaultdict, deque
 
-
-def run_obsidian(args, vault=None):
-    cmd = ["obsidian"]
-    if vault:
-        cmd.append(f"vault={vault}")
-    cmd.extend(args)
-    p = subprocess.run(cmd, text=True, capture_output=True)
-    return p.returncode, p.stdout.strip(), p.stderr.strip()
-
-
-def note_selector(note):
-    if "/" in note or note.endswith(".md"):
-        return f"path={note}"
-    return f"file={note}"
-
-
-def parse_links_output(text):
-    links = []
-    for line in text.splitlines():
-        line = line.strip()
-        if not line or line == "No links found.":
-            continue
-        if line.endswith("(unresolved)"):
-            continue
-        links.append(line)
-    return links
+from obsidian_cli import note_selector, parse_links_output, resolve_note, run_obsidian
 
 
 def outgoing(note, vault=None):
     code, out, err = run_obsidian(["links", note_selector(note)], vault=vault)
     if code != 0:
         return [], err or out
-    return parse_links_output(out), None
+    return parse_links_output(out, include_flags=False), None
 
 
 def incoming(note, vault=None):
@@ -93,13 +67,14 @@ def bfs(seed, depth, include_backlinks=False, vault=None):
 
 def norm(name):
     n = name.strip().lower()
-    if n.endswith('.md'):
-        n = n[:-3]
+    n = n.removesuffix(".md")
     return n
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Find bridge notes connecting multiple seed neighborhoods")
+    ap = argparse.ArgumentParser(
+        description="Find bridge notes connecting multiple seed neighborhoods"
+    )
     ap.add_argument("seeds", nargs="+", help="Seed notes (2 or more)")
     ap.add_argument("--depth", type=int, default=2, help="Neighborhood depth per seed")
     ap.add_argument("--include-backlinks", action="store_true")
@@ -107,6 +82,7 @@ def main():
     ap.add_argument("--vault")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
+    args.seeds = [resolve_note(seed, args.vault) for seed in args.seeds]
 
     if len(args.seeds) < 2:
         raise SystemExit("Provide at least 2 seeds")
@@ -132,12 +108,14 @@ def main():
         if reach < 2:
             continue
         dist_sum = sum(per_seed.values())
-        bridges.append({
-            "node": node,
-            "seed_coverage": reach,
-            "distance_sum": dist_sum,
-            "distances": per_seed,
-        })
+        bridges.append(
+            {
+                "node": node,
+                "seed_coverage": reach,
+                "distance_sum": dist_sum,
+                "distances": per_seed,
+            }
+        )
 
     bridges.sort(key=lambda x: (-x["seed_coverage"], x["distance_sum"], x["node"].lower()))
 

@@ -58,3 +58,8 @@
 - Key risks:
 - Balanced-life anchors to protect:
 - First deep-work block:
+
+## Progress / resumption
+- Current scope and phase:
+- Exact next unfinished step:
+- Progress record: initialize/update the `review-state` block using `references/review-progress.md`; check it before advancing this scope’s status.

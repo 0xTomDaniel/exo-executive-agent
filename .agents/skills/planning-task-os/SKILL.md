@@ -1,7 +1,7 @@
 ---
 name: planning-task-os
 description: >-
-  Task/backlog operating-system design, including task schema design,
+  Task/backlog operating-system design, including routine task creation and completion/closure, task schema design,
   importance-vs-urgency modeling, Now/Later/Someday/Drop triage,
   carry-forward hygiene, task-calibration rules, and task-schema migrations
   (for example renaming `priority` to `importance` and updating trackers,
@@ -14,7 +14,7 @@ metadata:
 ---
 # Planning Task OS
 
-Use this skill when the job is not just editing a single task, but designing or operating the vault's **task decision model**.
+Use this skill for routine task creation, triage, completion/closure, carry-forward, and task-model changes. Read only the reference needed for the transition.
 
 ## Core model
 
@@ -22,7 +22,7 @@ Use this skill when the job is not just editing a single task, but designing or 
 - Prefer `importance` as the canonical property name for how much something matters.
 - Treat `priority` as a blended human decision concept, not the preferred stored source field.
 - Let urgency come mainly from `due`, overdue state, and nearby deadlines.
-- Let `review_on` handle intentional resurfacing for things that are not urgent now; when `review_on == today()`, the item becomes a mandatory morning-review surfacing obligation, not optional background metadata.
+- Let `review_on` handle intentional resurfacing for things that are not urgent now. The daily surfacing procedure is owned by `planning-rhythm-os/references/resurfacing.md`.
 - Treat `due < today()` and `review_on < today()` as active debt signals: they must be visible in the daily fall-through sweep and resolved through Now / Later / Drop / Someday or a bounded cleanup pass.
 - Let `status` express commitment/lifecycle state (`[[Todo]]`, `[[Doing]]`, `[[Someday]]`, `[[Done]]`, `[[Closed]]`, etc.). Use `[[Done]]` only when the intended outcome was completed; use `[[Closed]]` plus an explicit `resolution` when unfinished work is cancelled, duplicated, or superseded.
 - Use Eisenhower as a **thinking lens / Base view**, not necessarily as stored metadata on every task.

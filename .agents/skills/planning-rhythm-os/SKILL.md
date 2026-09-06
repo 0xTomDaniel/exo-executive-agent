@@ -14,83 +14,23 @@ metadata:
 ---
 # Planning Rhythm OS
 
-Use this skill when the job is about **how the day/week/period should flow**, not just how individual tasks are represented.
+Own day modes, cadence discovery, morning foundations, review flow, and planning-period meanings. Use `planning-task-os` for task state/fields and `planning-capture-os` for capture routing. Personal schedules and current project judgments are memory inputs, not generic weekday rules.
 
-## Core model
+## Route and execute
 
-- Route by **mode and cadence**, not by assuming every day is a generic workday.
-- Treat the day-routing surface as a **routing aid**, not the primary source of logic.
-- Resolve the ritual-critical morning foundations before advancing to execution.
-- Use graceful degradation for rhythm-critical rituals/reviews: full version → reduced explicit version → minimum viable version → intentional defer + named re-entry point. A broken step does not invalidate the day/week.
-- Run the cadence layer as a Detect → Decide → Act → Review loop: detect the real mode/constraints, decide the day's lane, act inside the chosen mode, and review with explicit closeout.
-- Preserve both resurfacing lanes: **planned/cadenced resurfacing** and **random rediscovery**.
-- Keep the active cycle/week outcome scoreboard visible; distinguish shipped/external evidence from enabling progress, and use the release-contract/enabler-checkpoint tactic when internal work threatens to become a serial prerequisite chain.
-- Before locking a 6-week cycle, explicitly decompose it into all three 2-week sprint checkpoints and discuss each checkpoint's external evidence, success gate, capacity/tradeoffs, and continue/contract/bypass/change decision. Outcomes without a confirmed sprint sequence are still provisional.
-- **Confirmation never cascades across planning levels.** Confirmation of a day, Monday launchpad, or one week does not confirm its enclosing week/sprint/cycle. Before marking a sprint `Planned` / Active, explicitly discuss and confirm the full two-week thesis, both weeks' sequencing or adaptation contract, sprint-level success gates, capacity/displacements, end-of-sprint decision, and balanced-life anchors. If only week 1 was worked through, keep the sprint Draft/In Planning and state the remaining planning gap.
-- Treat open tasks with `due == today()` or `review_on == today()` as hard morning-start surfacing obligations; do not lock the day until each has been explicitly named and routed.
-- Run a daily fall-through sweep for `due < today` and `review_on < today`; surface counts plus high-salience names/next actions before locking the day, and route cleanup debt rather than letting it disappear.
-- Treat bonus weeks as first-class cadence periods that can override normal weekday execution mode; surface them explicitly before starting the next cycle.
-- Use Tom's default split: Friday weekly retrospective/backlog closeout; Sunday bounded weekend reconciliation + protected next-week planning.
-- For periods ending Sunday, begin the retrospective stack Friday and run it **smallest to largest**; Sunday finalizes only unresolved decisions/weekend deltas before planning.
-- Treat this skill and its references as the **canonical operational source** for planning rhythm / cadence behavior unless explicitly superseded.
-- Keep day-shaping execution tactics in skill references rather than scattering them through dashboard prose or day-log improvisation.
-- Avoid duplicated planning-rhythm policy prose across the vault and the skill. Retire duplicated policy notes after migration; keep only the minimum breadcrumbs needed during transition.
+1. Read `references/daily-rhythm.md` for morning start, “what next?”, re-entry, or closeout. Resolve calendar mode, bonus-week override, missing dates, and the effective-dated habit roster before proposing execution.
+2. Read `references/review-cadence.md` for Friday retrospective, Sunday planning, and the full smallest-to-largest review stack. Discover overdue/missed reviews as well as periods ending now; promote genuine debt before treating a current plan as locked.
+3. Run `references/resurfacing.md` for task debt **and all-class dated reminders**, plus random rediscovery. Report checked surfaces, surfaced items, and uncertainty; a task-only scan cannot establish an all-clear.
+4. Use `references/review-progress.md` to persist scope, coverage, evidence, unresolved decisions, confirmation, and the exact resumption step. Run `scripts/review_state.py check <note>` before a completion claim; check the evidence against the user discussion. Confirmation never cascades across day/week/sprint/cycle scopes.
+5. Use `references/periods-taxonomy.md` for cadence metadata and bonus-week semantics. Use `references/execution-tactics.md` for bounded admin/deep-work tactics and outcome-versus-enabler decisions.
+6. Instantiate only the needed scaffold under `assets/runtime-surfaces/`. It is a display/capture aid, not a completed review or a second procedural authority.
 
-## Default workflow
+## Operating stance
 
-1. **Identify the rhythm job**
-   - Distinguish between:
-     - day-mode routing
-     - morning-start / closeout flow
-     - resurfacing / weekly-minimum surfacing
-     - Friday weekly review / Sunday weekly planning process
-     - review and planning cadence semantics
-     - bonus-week routing / surfacing
-     - planning-period taxonomy / metadata
+Preserve raw mind dump before triage or agent synthesis. Protect ritual-critical foundations and meaningful life domains without turning interruptions into an all-or-nothing failure. Use full → reduced explicit → minimum viable → intentional defer with a named re-entry point. Capture tangents, then resume the unfinished step. Friday owns retrospective/backlog work and Sunday protects next-week planning unless the personal cadence explicitly differs.
 
-2. **Read the right reference**
-   - Read `references/daily-rhythm.md` for day-of-week modes, morning foundations, and closeout.
-   - Read `references/review-cadence.md` for Friday review, Sunday planning, weekly handoff, and review-stack semantics.
-   - Read `references/resurfacing.md` for the canonical resurfacing / spaced-repetition rules.
-   - Read `references/periods-taxonomy.md` for planning-period meanings and cadence metadata.
-   - Read `references/execution-tactics.md` when shaping the execution part of a day, containing shallow/admin sprawl, or deploying named tactics such as Admin Strike.
-   - If the task involves creating or revising daily/review/planning/week runtime surfaces, read the relevant scaffold under `assets/runtime-surfaces/` and treat that skill-owned asset as the portable source.
-   - If the work also changes task schema, backlog triage, carry-forward metadata, or task-property semantics, read `planning-task-os` too.
+Before locking a cycle, work through all sprint checkpoints; before locking a sprint, work through both weeks, external evidence, capacity/displacements, balanced-life anchors, and the end-of-period decision. Placeholder links and first-week agreement do not establish these decisions.
 
-3. **Use the note-system operation layer for persistence**
-   - Use the system's note/persistence layer for notes, runtime surfaces, and structured trackers when appropriate.
-   - Use filesystem edits for precise Markdown changes when safer.
-   - Persist important cadence/rhythm decisions to the current day log and the relevant canonical instruction/pointer artifact.
+## Verification
 
-4. **Keep cross-skill boundaries clear**
-   - This skill owns day modes, rhythm, cadence, review flow, and period semantics.
-   - `planning-task-os` owns task/backlog schema, `importance`, carry-forward metadata, and task calibration.
-   - When weekly review flow reaches backlog hygiene or task-metadata updates, hand off to `planning-task-os` rather than duplicating those rules here.
-
-5. **Validate after changes**
-   - Re-read representative policy/runtime artifacts.
-   - Check that day-level routing still matches weekday/Saturday/Sunday semantics.
-   - Verify that review-stack logic still matches the current period notes.
-
-## Guardrails
-
-- Do not let the day-routing surface become the hidden source of truth for cadence logic.
-- Do not advance from morning-start into execution while ritual-critical foundations remain implicit.
-- Do not confuse graceful degradation with silent omission or lowered standards; if a ritual/review is reduced or deferred, name the reduced version or re-entry point explicitly.
-- Do not treat the "at least one planned/cadenced resurfacing item" rule as permission to omit open tasks whose `due` or `review_on` is today.
-- Do not report "no tasks surfaced" after checking only exact-today items; also check overdue and stale-review debt.
-- Do not recombine Friday review and Sunday planning into one overlong Sunday session by default; protect Sunday planning attention and use only a bounded weekend/review-debt reconciliation.
-- Do not let a bonus week be silently overwritten by the next cycle's execution plan; if it is intentionally sacrificed, say so explicitly and record the tradeoff.
-- Do not duplicate task-schema rules here that belong in `planning-task-os`.
-- Do not maintain two full prose sources of truth for the same cadence logic.
-- Do not mark a cycle active/locked merely because its outcomes are named or sprint links/placeholders exist; S1/S2/S3 must be substantively sequenced and worked through with the user.
-- Do not mark a sprint Planned/confirmed because its first week was confirmed, even if the sprint note contains agent-written scaffolding or a W36 adaptation placeholder; the user must explicitly work through and confirm the sprint-level plan.
-
-## Reference map
-
-- `references/daily-rhythm.md` — daily modes, morning foundations, weekly minimum radar, and closeout.
-- `references/review-cadence.md` — Friday review, Sunday planning, review stacks, handoff semantics, and required outputs.
-- `references/resurfacing.md` — planned/cadenced resurfacing and random rediscovery rules.
-- `references/periods-taxonomy.md` — planning-period hierarchy, review-week vs plan-week semantics, and day-level cadence metadata.
-- `references/execution-tactics.md` — bounded execution tactics that protect the main lane (for example Admin Strike and single-work-lane shaping).
-- `assets/runtime-surfaces/` — portable daily/week/review/plan scaffolds (including day-routing surfaces and mode partials) that local systems may mirror or adapt without making vault templates the only copy.
+Validate changed notes through the persistence layer, confirm real query coverage, and check review progress before advancing status. Exercise historical failure cases after workflow changes. Do not claim that structural checks or an inline rehearsal prove another model will always follow the procedure.

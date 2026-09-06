@@ -18,7 +18,7 @@
 > If you intentionally skip a habit for health/safety (e.g., illness/COVID exposure), note the reason and set a resumption date (and optionally substitute a lighter version).
 - [ ] Drink a glass of water after waking
 - [ ] Meditation (20m; if the current mode intentionally integrates it into a named yoga/breathwork ritual, count the combined ritual rather than duplicating it; if today is an explicitly designed cadence off-day, record the off-day as adherence rather than a lapse)
-- [ ] Movement / training — if today has a named scheduled/recovery-aware ritual (e.g. on-run-week Thursday full rest before a Friday-morning run with Ayhen, an off-week Thursday workout/recovery choice, a recovery-aware substitute, or Sunday yoga), ask and record it by name
+- [ ] Read the effective-dated habit roster; name today’s scheduled movement/rest and meditation anchors, including combined rituals or an explicit substitute/re-entry point
 - [ ] Planning + review / proper closeout for the day's mode
 
 ## Weekly Minimum Radar
@@ -40,3 +40,8 @@
 - Biggest win:  
 - Biggest blocker:  
 - First task / starting point tomorrow:
+
+## Progress / resumption
+- Current scope and phase:
+- Exact next unfinished step:
+- Progress record: initialize/update the `review-state` block using `references/review-progress.md`; check it before advancing this scope’s status.

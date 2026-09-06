@@ -39,23 +39,14 @@ Prefer concise command flows, discover exact command syntax with built-in help, 
      - `python scripts/unresolved_triage.py <seed> --depth 2`
      - `python scripts/bridge_finder.py <seedA> <seedB> --depth 2 --include-backlinks`
    - Prefer updating/expanding an existing canonical note when overlap is high.
-   - If creating a new note, immediately link it into canonical hubs/policies/dashboards.
-5. Prefer structured capture during live conversations:
-   - Treat the agent as a GTD-style inbox: capture the user’s raw mind-dump first, then reconcile/organize it into canonical notes (tasks/projects/policies) and Bases with minimal manual inbox processing.
-   - Use vault notes as the canonical home for memory, state, history, and current reality—not as the hidden home for reusable procedure. If a reusable operating rule or tactic is discovered while working in notes, move it into the system's canonical instruction layer instead of leaving the procedure only in a note.
-   - When creating a new memory/entity note (person/place/company/project/etc.), add minimal frontmatter so it’s queryable and consistent (at minimum `type: "[[...]]"`).
-   - Capture obvious relationships mentioned by the user (e.g. `relationship: wife`) and add a short context line in the body when helpful. Don’t guess—ask if uncertain.
-   - Create or reuse a dedicated note for active topics (plans, decisions, projects).
-   - Match note placement and schema to the content type rather than forcing new captures into an existing taxonomy by analogy.
-   - When a content type is likely to recur, use enough metadata/linking to make future retrieval and grouping possible, but keep the rule at the right level of generality for the vault.
-   - Convert important entities into `[[wikilinks]]` and favor linked entities inside frontmatter properties.
-   - Prefer date wikilinks in prose/tasks (for example `[[2026-03-09]]`) so references connect to daily notes.
-   - Add explicit sections: Context, Constraints, Decisions, Open Questions, Next Actions.
-   - Apply property conventions consistently:
-     - Use `[[wikilinks]]` for categorical/entity properties (for example `status`, `importance`, `area`, `type`, `scope`, `people`, `project`).
-     - Use machine-typed scalars for date/number/checkbox/datetime fields (for example `due: 2026-03-09`, `carry_count: 2`).
-     - For operational notes (tasks, policies, project trackers), include minimal frontmatter that supports filtering and review.
-     - If property representation changes (for example `decision` -> `[[Decision]]`), update related Base filters/views and re-validate with `base:query`.
+   - Link a new note to relevant existing entities or context when useful; do not create a hub merely to satisfy a linking rule.
+5. Model notes according to their content:
+   - Use the caller's canonical note type and destination after discovery.
+   - Entity notes need minimal queryable metadata; add relationships supported by source evidence.
+   - Use linked values for categorical/entity properties and typed scalars for dates, numbers, and checkboxes.
+   - Choose body sections appropriate to the note; do not impose a project template on every capture.
+   - For true multi-value fields, use lists instead of comma-separated strings.
+   - Keep workflow decisions in the invoking skill and historical/current state in the relevant notes.
 6. Use Bases for structured tracking when decisions/actions evolve over time:
    - Check existing bases with `obsidian bases`.
    - Read `references/bases.md` before non-trivial Base edits or new tracker design.
@@ -76,11 +67,13 @@ Prefer concise command flows, discover exact command syntax with built-in help, 
    - Prefer standard filesystem read/edit tools for surgical Markdown content edits when they are more precise or reliable than CLI append/prepend flows.
 8. Verify outcomes:
    - Read output with `obsidian read`.
+   - Before a direct metadata write, validate the candidate note with `uv run scripts/validate_notes.py <candidate.md>`; after writing, validate the saved path and check `property:read` or the relevant Base. Native property updates still require application readback. Invalid YAML or duplicate keys are errors, never empty/open/done state.
+   - For a maintenance sweep, pass a vault directory to the validator (hidden directories are excluded); pass a hidden skill/reference path explicitly when that is the target.
    - Re-run search/tasks/base queries to confirm state changes.
    - Validate property semantics after updates (`property:read` + note read). Trust Obsidian CLI's canonical serialization: single-value `type=list` properties may render as quoted scalars in YAML and are still valid list-typed properties.
    - For true multi-value fields, ensure values are not stored as a single comma-separated scalar.
 9. Persist memory:
-   - Append a concise summary of decisions, constraints, and action items to the daily note.
+   - Persist substantive decisions and outcomes in the caller’s canonical memory location. Avoid logging every mechanical edit in daily notes.
 10. Apply feedback loops:
    - When the user gives process feedback, classify it as (a) operational correction or (b) vault improvement.
    - For operational corrections, update the relevant canonical instruction source when in scope.
@@ -171,7 +164,6 @@ candidate_locations:
 
 - Use Bases for evolving plans/tracking (scoped):
 ```bash
-obsidian create path="Relocation/_index.md" content="# Relocation Hub\n" open
 obsidian command id=bases:new-file
 obsidian rename file="Untitled.base" name="Relocation Tracker.base"
 obsidian move file="Relocation - Denver Decision" to="Relocation/Relocation - Denver Decision.md"
@@ -190,7 +182,7 @@ obsidian tags counts
 ```bash
 python scripts/link_neighborhood.py "Relocation - Denver Decision" --depth 2
 python scripts/link_path.py "Relocation - Denver Decision" "Denver" --max-depth 4
-python scripts/filtered_neighborhood.py "Relocation - Denver Decision" --depth 2 --tag relocation --prop status=active
+uv run scripts/filtered_neighborhood.py "Relocation - Denver Decision" --depth 2 --tag relocation --prop status=active
 python scripts/bridge_finder.py "Denver" "Jeremy" --depth 2 --include-backlinks
 python scripts/unresolved_triage.py "Relocation - Denver Decision" --depth 2
 ```
@@ -229,3 +221,9 @@ obsidian eval code="app.vault.getFiles().length"
 - Read `references/editing-formatting.md` for `/syntax` and Editing & Formatting docs coverage, including mode behavior, properties, callouts, tags, embeds, and HTML limitations.
 - Read `references/linking-notes-files.md` for `/links` coverage, including internal link formats, heading/block refs, aliases, display text, and embeds.
 - Read `references/navigation.md` for relationship-navigation workflows and script usage guidance.
+
+## Helper runtime and artifact ownership
+
+Graph helpers share `scripts/obsidian_cli.py` for command execution, canonical note resolution, and link parsing. Select an exact path when titles are ambiguous; a tool or metadata failure is not a successful empty query. `filtered_neighborhood.py` and `validate_notes.py` declare their PyYAML dependency for `uv run`. The latter uses the same strict parser as filtering.
+
+Use `references/artifact-lifecycle.md` when organizing sources, packaged exports, captured evidence, and local runtime files.

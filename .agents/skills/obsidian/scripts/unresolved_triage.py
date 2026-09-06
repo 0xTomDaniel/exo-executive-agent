@@ -1,35 +1,9 @@
 #!/usr/bin/env python3
 import argparse
 import json
-import subprocess
 from collections import Counter, defaultdict, deque
 
-
-def run_obsidian(args, vault=None):
-    cmd = ["obsidian"]
-    if vault:
-        cmd.append(f"vault={vault}")
-    cmd.extend(args)
-    p = subprocess.run(cmd, text=True, capture_output=True)
-    return p.returncode, p.stdout.strip(), p.stderr.strip()
-
-
-def note_selector(note):
-    if "/" in note or note.endswith(".md"):
-        return f"path={note}"
-    return f"file={note}"
-
-
-def parse_links_output(text):
-    links = []
-    for line in text.splitlines():
-        line = line.strip()
-        if not line or line == "No links found.":
-            continue
-        unresolved = line.endswith("(unresolved)")
-        target = line.replace(" (unresolved)", "")
-        links.append({"target": target, "unresolved": unresolved})
-    return links
+from obsidian_cli import note_selector, parse_links_output, resolve_note, run_obsidian
 
 
 def outgoing(note, vault=None):
@@ -40,13 +14,18 @@ def outgoing(note, vault=None):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Rank unresolved link targets by frequency in local graph exploration")
+    ap = argparse.ArgumentParser(
+        description="Rank unresolved link targets by frequency in local graph exploration"
+    )
     ap.add_argument("seeds", nargs="+", help="Seed notes")
-    ap.add_argument("--depth", type=int, default=2, help="Traversal depth from each seed (default: 2)")
+    ap.add_argument(
+        "--depth", type=int, default=2, help="Traversal depth from each seed (default: 2)"
+    )
     ap.add_argument("--top", type=int, default=25, help="Max unresolved targets to print")
     ap.add_argument("--vault", help="Optional vault for obsidian CLI")
     ap.add_argument("--json", action="store_true", help="Output JSON")
     args = ap.parse_args()
+    args.seeds = [resolve_note(seed, args.vault) for seed in args.seeds]
 
     q = deque()
     seen = set()
@@ -87,14 +66,16 @@ def main():
 
     rows = []
     for target, c in counts.most_common():
-        rows.append({
-            "target": target,
-            "count": c,
-            "seed_coverage": len(source_seeds[target]),
-            "first_seen_hop": first_seen_hop.get(target),
-            "source_files": sorted(source_files[target]),
-            "source_seeds": sorted(source_seeds[target]),
-        })
+        rows.append(
+            {
+                "target": target,
+                "count": c,
+                "seed_coverage": len(source_seeds[target]),
+                "first_seen_hop": first_seen_hop.get(target),
+                "source_files": sorted(source_files[target]),
+                "source_seeds": sorted(source_seeds[target]),
+            }
+        )
 
     result = {
         "seeds": args.seeds,

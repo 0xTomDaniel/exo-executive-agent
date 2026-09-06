@@ -138,7 +138,7 @@ When the user has an explicit higher-level purpose or mission, treat it as a gov
    - Link Friday review to the next-week artifact.
    - Propagate Now/Later/Drop and carry-forward decisions into real task metadata.
    - Remove provisional markers and mark the plan locked only after Tom confirms it.
-   - State what changes next week and proceed to Sunday's yoga/meditation reset.
+   - State what changes next week and resume the remaining Sunday habit anchors from the effective-dated roster.
 
 ## Required outputs
 ### Friday review
@@ -170,3 +170,7 @@ Canonical procedure lives here. Runtime surfaces can point, prompt, and summariz
 
 ## Boundary with planning-task-os
 Use this skill for cadence/review/planning flow. Use `planning-task-os` for task property semantics, carry-forward, Now/Later/Someday/Drop, `importance`, `due`, `review_on`, and `status` updates.
+
+## Durable completion and interruptions
+
+Use `review-progress.md` for the single completion/resumption contract. Maintain a distinct progress record for each review or planning scope. Its mandatory steps include both task debt and all-class reminders; reduced coverage, missing dates, and user confirmation must be explicit. Before advancing status, run the checker and inspect the referenced discussion. On interruption, persist the exact next step, then resume it before introducing a fresh plan.

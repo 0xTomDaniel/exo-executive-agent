@@ -67,7 +67,12 @@ def package_skill(skill_path, output_dir=None):
     try:
         with zipfile.ZipFile(skill_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
             # Walk through the skill directory
-            for file_path in skill_path.rglob('*'):
+            for file_path in sorted(skill_path.rglob('*')):
+                relative = file_path.relative_to(skill_path)
+                if any(part in {'__pycache__', '.git', '.venv', '.pytest_cache', 'dist'} for part in relative.parts):
+                    continue
+                if file_path.is_symlink() or file_path.suffix in {'.pyc', '.pyo', '.skill'} or file_path.name == '.DS_Store':
+                    continue
                 if file_path.is_file():
                     # Calculate the relative path within the zip
                     arcname = file_path.relative_to(skill_path.parent)

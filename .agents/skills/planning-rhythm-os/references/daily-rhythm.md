@@ -47,7 +47,11 @@ aliases:
 - Default mode: protected next-week planning + weekly reset, not a replay of Friday's review.
 - Read Friday's review handoff, run only a bounded Saturday/Sunday reconciliation, resolve genuine review debt or unfinished higher-level decisions, then choose the Weekly MIT, Top 3, capacity/tradeoffs, and Monday launchpad.
 - Route exact-today and material new backlog items, but do not perform a second full stale-debt cleanup when Friday already did it.
-- Sunday can still include yoga/meditation, habits, relationships, and light responsibilities, but it is not a standard execution day unless intentionally chosen.
+- Use the effective-dated personal habit roster for Sunday’s movement/meditation anchors; planning mode does not decide the exercise schedule.
+
+## Schedule input
+
+Read the current personal habit roster and its effective date before choosing named movement/rest/meditation anchors. Resolve dated exceptions before the general schedule. Historical scoring uses the schedule effective then; a skipped recurring event does not reset its alternation unless explicitly agreed. Do not infer a personal exercise day from a generic weekday-mode template.
 
 ## Morning foundations
 
@@ -66,7 +70,7 @@ Before advancing to execution:
 - if `period_type` is `[[Bonus Week]]`, surface the bonus week and focus mode explicitly before any normal planning
 - confirm core habits / virtues for the current mode, including any named mandatory habit, **intentional cadence off-day**, or day-specific weekly ritual from the visible habit roster; ask about it explicitly instead of hiding it behind generic "movement," and do not misclassify a designed off-day as a lapse
 - for a future recovery-aware movement decision, distinguish **not fully recovered now** from **unlikely to be ready at activity time**: when the user is improving and intentionally resting ahead of the activity, preserve a readiness checkpoint at the actual decision time rather than preemptively canceling it or treating ordinary improving soreness as an injury; ask about symptom type/red flags, keep the plan conditional, and contract/substitute only if readiness evidence warrants it
-- respect established combined-ritual semantics: when one habit is intentionally completed inside another named ritual (for example meditation inside Sunday yoga), surface and record the combined ritual rather than demanding a duplicate standalone session; if the combined ritual is deferred, make the shared re-entry point explicit
+- respect established combined-ritual semantics: when one habit is intentionally completed inside another named ritual (for example meditation inside the scheduled yoga session), surface and record the combined ritual rather than demanding a duplicate standalone session; if the combined ritual is deferred, make the shared re-entry point explicit
 - surface the day's resurfacing items explicitly by name
 - distinguish outcome progress from enabling progress; if a new enabler or lane enters today's active set, require its target outcome, blocker evidence, stop/checkpoint condition, owner/capacity, and displaced commitment before locking the plan
 - explicitly name every open task with `due` today or `review_on` today, and route each one (Top 3, Admin Strike, Later, delegation, or drop)
@@ -92,7 +96,7 @@ Use a compact by-date pass:
 - What happened / where did the day actually land?
 - Completed work, errands, relationship events, or notable constraints?
 - Core habits: water, meditation, movement/training, planning/closeout.
-- Named scheduled rituals or recovery-aware habits for that date, especially on-run-week Thursday full rest before the Friday-morning run with Ayhen, an off-week Thursday workout/recovery choice, or a recovery-aware substitute, and Sunday yoga.
+- Named scheduled rituals and recovery-aware habits from the roster that was effective on that date; preserve intentional substitutes and combined-ritual credit.
 - Open loops that should carry forward into tasks, reviews, or future-facing reminders.
 
 For one missed day, ask directly. For multi-day gaps, use a low-friction table or summary prompt and drill only into high-salience or uncertain dates. Create/update actual retroactive daily notes for meaningful day-specific reality.
@@ -103,35 +107,11 @@ Examples include:
 - long-form reading sessions
 - Friday full weekly review + Sunday weekly planning
 - training minimums
-- Full Thursday rest on run weeks + every-other-week Friday-morning run with Ayhen; off-week Thursday uses normal recovery-aware workout planning / intentional substitute when blocked
-- Sunday yoga / creative reset after weekly planning, or an intentional substitute when blocked
+- Named training/rest/combined-ritual anchors from the effective-dated personal habit roster
 
 ## Resurfacing
 
-Use two lanes:
-
-### Planned / cadenced resurfacing
-- `review_on`
-- `due`
-- week/sprint placement
-- explicit plan/review commitments
-
-### Random rediscovery
-- older notes
-- journal entries
-- saved media
-- graph exploration
-- surprising linked notes
-
-If a resurfaced item should matter in the current day or upcoming period, operationalize it into a task, plan line, decision checkpoint, or other future-facing artifact.
-
-### Daily fall-through sweep
-Every day is a fallback for cleanup and organization, even when the weekly review is missed or the day cannot support deep triage.
-- Query exact-today obligations first (`due == today` / `review_on == today`) and route every matching open task by name.
-- Then query older debt (`due < today` / `review_on < today`) before locking the plan.
-- Surface counts plus the high-salience names and next actions: all `[[Extremely important]]` / `[[Very important]]`, imminent external deadlines, relationship/admin commitments, and current sprint/cycle items.
-- If the stale list is too large for chat, do not silently omit it. Say how many remain, name the top items, and create a bounded cleanup block or review artifact to process the rest.
-- Never describe the day as clear merely because no task is exactly due/reviewable today.
+Run `resurfacing.md` for the exact-today, overdue, all-class reminder, and random-rediscovery contract. Report checked surfaces, counts, high-salience names, and explicit routing before locking the plan. Keep the result in the daily startup progress record described in `review-progress.md`.
 
 ## Midday
 - Re-check whether the day is still aligned with its intended mode.

@@ -23,7 +23,7 @@ At the task layer, this is mostly the Decide/Review half of the system: decide w
 - Distinguish **surface hygiene** from **substantive review**: clearing `due` / `review_on` debt in metadata is not the same as walking through meaningful open loops with the user. Do not describe stale debt as "worked through" unless it was actually reviewed or was an obvious mechanical Done/Drop/Someday decision.
 
 ## Core rules
-- Keep at most **20 active tasks** at a time.
+- Keep at most **20 active tasks** at a time. For reporting, active means `[[Todo]]` + `[[Doing]]` (Now maps to Todo); Later, Waiting, Someday, Done, and Closed are separate lanes. Report excess for an explicit capacity decision; never auto-close, demote, or change dates to satisfy the cap.
 - Weekly triage is required for unfinished tasks.
 - Daily fall-through triage is required at a lighter level: every morning, check overdue and stale-review items so missed weekly reviews cannot hide debt.
 - Every unfinished task should be explicitly classified into a current commitment bucket such as:
@@ -56,7 +56,7 @@ At the task layer, this is mostly the Decide/Review half of the system: decide w
 - Close resolved parent / decision tasks once the core outcome is achieved, even if child cleanup tasks remain open elsewhere.
 - Trim active tasks to 20 or fewer.
 - Re-score `importance` for each carried-forward task.
-- Confirm `due` + `next_action` for each carry-forward.
+- Confirm `next_action` and an intentional attention hook for each carry-forward. Preserve a real external `due` date; use `review_on` for discretionary re-entry instead of inventing a deadline.
 - Re-check still-open surfaced overdue / Now items before concluding carry-forwards, especially relationship / admin commitments already surfaced by the system.
 - Move non-current items to Later / `[[Someday]]` with `review_on`.
 - Drop stale items with no clear value.

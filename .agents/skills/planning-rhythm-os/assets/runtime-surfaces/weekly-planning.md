@@ -64,3 +64,8 @@
 - Task metadata propagated:
 - Plan confirmed by Tom:
 - Concise sentence about what changes this week:
+
+## Progress / resumption
+- Current scope and phase:
+- Exact next unfinished step:
+- Progress record: initialize/update the `review-state` block using `references/review-progress.md`; check it before advancing this scope’s status.

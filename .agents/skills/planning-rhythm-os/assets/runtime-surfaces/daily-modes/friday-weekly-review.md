@@ -1,6 +1,6 @@
 ## Friday Weekly Review / Execution Close
 - [ ] Capture the weekly mind dump first, in Tom's own words
-- [ ] Drink morning water; complete meditation and morning movement before the execution lane. On every-other-week run weeks, the movement anchor is the Friday-morning run with Ayhen after Thursday's full pre-run rest; on off weeks, Friday uses normal recovery-aware movement/workout planning
+- [ ] Read the effective-dated habit roster; name today’s scheduled movement/rest and meditation anchors, including combined rituals or an explicit substitute/re-entry point
 - [ ] Protect the main Friday delivery outcome before the review block unless a hard constraint requires otherwise
 - [ ] Read Monday–Friday daily artifacts/message evidence and reconcile missing reality
 - [ ] Audit shipped outcomes, external evidence, enabling work, capacity, and repeated misses
@@ -24,3 +24,8 @@
 - Backlog debt disposition:
 - Sunday planning inputs:
 - Weekend commitments / evidence that may change the plan:
+
+## Progress / resumption
+- Current scope and phase:
+- Exact next unfinished step:
+- Progress record: initialize/update the `review-state` block using `references/review-progress.md`; check it before advancing this scope’s status.

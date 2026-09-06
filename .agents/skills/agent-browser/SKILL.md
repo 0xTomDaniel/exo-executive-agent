@@ -10,6 +10,10 @@ metadata:
 ---
 # Browser Automation with agent-browser
 
+## Availability first
+
+Run `command -v agent-browser` once per machine/session before using this CLI. If unavailable, record that result in the approved local capability note and choose an already available authorized browser interface or manual inspection. Do not repeat a known missing command, silently install tooling, or substitute a cloud service. Recheck when the environment changes. Availability does not grant permission to perform external actions.
+
 ## Quick start
 
 ```bash

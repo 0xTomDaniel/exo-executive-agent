@@ -21,8 +21,8 @@ Use this skill to save video URLs into the vault in a reusable form: media file 
    - Search for the source ID / slug when obvious
    - Search for a likely title fragment if needed
 3. Run the helper script:
-   - `python3 .agents/skills/save-video-content/scripts/save_video.py "<url>"`
-4. Read the generated note and confirm:
+   - `uv run .agents/skills/save-video-content/scripts/save_video.py "<url>"`
+4. The helper checks canonical source URL/provider-qualified ID across existing video notes before downloading. Sequential retries return the existing note without rewriting annotations; serialize concurrent saves. Read the generated/reused note and confirm:
    - source URL
    - creator/title metadata
    - embed path
@@ -48,26 +48,26 @@ The Markdown note should include:
 
 - Do not imply that a summary came from manual watching/transcription unless you actually reviewed the content that way.
 - By default, treat `yt-dlp` metadata/description as the source of the summary.
-- If download or metadata extraction partially fails, say so plainly and still save whatever reliable metadata is available.
+- Metadata extraction failure saves only the supplied URL with `metadata_status: unavailable`, no generated summary, and a visible warning. Download failure preserves available source metadata. Never treat either as a completed media archive. The helper serializes string properties, parses the result before writing, and reads the saved note back.
 
 ## Commands
 
 Basic save:
 
 ```bash
-python3 .agents/skills/save-video-content/scripts/save_video.py "https://youtube.com/shorts/..."
+uv run .agents/skills/save-video-content/scripts/save_video.py "https://youtube.com/shorts/..."
 ```
 
 Metadata-only save (no media download):
 
 ```bash
-python3 .agents/skills/save-video-content/scripts/save_video.py "<url>" --skip-download
+uv run .agents/skills/save-video-content/scripts/save_video.py "<url>" --skip-download
 ```
 
 Test outside the vault:
 
 ```bash
-python3 .agents/skills/save-video-content/scripts/save_video.py "<url>" --vault-root /tmp/video-save-test
+uv run .agents/skills/save-video-content/scripts/save_video.py "<url>" --vault-root /tmp/video-save-test
 ```
 
 ## Notes

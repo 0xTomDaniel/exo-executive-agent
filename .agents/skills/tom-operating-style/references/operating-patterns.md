@@ -27,23 +27,10 @@
 - If approved memory/vault access is unavailable, say that directly and ask for the missing context instead of pretending to remember.
 
 ## Tom Obsidian planning surface
-- When the Tom profile has an approved Obsidian/vault surface, `[[Planning/Weekly Tasks.base|Weekly Tasks Base]]` is the default structured task surface for Daily Fallback Sweep, due-today, resurfacing, overdue, carry-risk, and decision-item review unless a more specific Base/view is called for.
-- Treat that Base as a runtime surface for surfacing and routing work, not as the hidden source of planning procedure; use `planning-rhythm-os` and `planning-task-os` as the canonical procedural sources.
 
-When the Tom profile has an approved Obsidian interface, apply the vault
-coordination policy below. It does not enable an unavailable runtime surface.
+When Tom's profile has an approved Obsidian/vault interface, query `[[Planning/Weekly Tasks.base|Weekly Tasks Base]]` for task debt and [[Planning/Dated Reminders.base]] for all-class dated attention. Neither view replaces the other. Read [[Planning/Habits/Core Habits]] for effective-dated schedule state and [[Planning/Current Periods.base]] for date-derived period navigation.
 
-- Default to Obsidian CLI for note operations:
-  - Read: `obsidian read`, `obsidian daily:read`
-  - Write/update: `obsidian append`, `obsidian daily:append`, `obsidian property:set`, `obsidian create`, `obsidian move`, `obsidian rename`
-- Default to Obsidian CLI for note operations and structured metadata updates, but prefer standard filesystem read/edit tools for precise Markdown content edits when they are safer or more exact.
-- Trust Obsidian CLI canonical formatting for properties (for example, single-value list-typed properties may serialize as quoted scalars in YAML).
-- Follow property/linking modeling conventions defined in `.agents/skills/obsidian/SKILL.md` (wikilink-first categorical properties, machine-typed scalar fields, and Base/filter consistency checks).
-- Before creating new Obsidian notes, run discovery per the skill (targeted `obsidian search` + relationship scripts) to avoid duplicates and place notes in canonical locations.
-- For `.base` files specifically:
-  - Prefer CLI/UI commands first (`obsidian command id=bases:*`, `obsidian base:query`).
-  - Use direct `.base` edits only when needed for schema-level configuration not exposed by CLI.
-  - Validate immediately with `obsidian base:query`.
+These are optional profile runtime surfaces, not a grant of availability. The `obsidian` skill owns note/query operations and validation; `planning-rhythm-os` owns surfacing and review completion; `planning-task-os` owns task fields and lifecycle. If the profile lacks a surface, record the missing capability rather than claiming an empty result.
 
 ## Copy/paste formatting
 - When Tom asks for text to paste into Apple Notes, use clean plain text rather than Markdown-dependent formatting.
@@ -70,7 +57,7 @@ Tom-specific calibration:
 - Vague admin tends to create drag, background tension, and avoidance.
 - Short, bounded, named bursts work better than leaving admin as an ambient cloud.
 - When 1-3 real admin obligations are creating drag, prefer Admin Strike over vague cleanup language.
-- For a dense, consequential, dependency-linked admin cluster, Tom may perform much better when admin is explicitly allowed to become the **main project for a bounded multi-day sprint** with little distraction, rather than being sprinkled indefinitely around a primary technical lane. Evidence from W35: stress crossed the action threshold and TopicFinder was safe enough to background for roughly three days; the coherent Hamilton→bank→contract→payment chain helped secondarily. Use this deliberately before stress must become intolerable: verify the primary delivery lane is safe, name the external finish, suppress unrelated admin, set a stop/re-entry point, and then return to the normal dominant lane. Do not misread this as Tom liking admin; reduced context switching makes it more tolerable while the intrinsic aversion remains.
+- For a dense, consequential, dependency-linked admin cluster, Tom may perform much better when admin is explicitly allowed to become the **main project for a bounded multi-day sprint** with little distraction, rather than being sprinkled indefinitely around a primary technical lane. Consult the dated operating evidence before applying this tactic to a current project. Use this deliberately before stress must become intolerable: verify the primary delivery lane is safe, name the external finish, suppress unrelated admin, set a stop/re-entry point, and then return to the normal dominant lane. Do not misread this as Tom liking admin; reduced context switching makes it more tolerable while the intrinsic aversion remains.
 - When an Admin Strike is selected for the day, schedule it **before the first deep-work block** after non-negotiable morning foundations. Tom has identified that if admin does not happen before deep work, it usually will not happen afterward because dopamine/discipline drops sharply once deep work begins.
 - Watch for avoidance disguised as scheduling flexibility: phrases like “today or early this week” around a short, unblocked, repeatedly deferred, aversive task should trigger an explicit today-vs-later decision. When there is no real constraint and completing it protects trust/attention, default to a bounded same-day strike with a concrete trigger.
 - Treat this as external executive-function support, not proof of laziness or moral failure. Name the avoidance pattern without shame, close the loop, and return to the main lane.
@@ -165,12 +152,12 @@ Tom-specific calibration:
 ## Habit continuity defaults
 - Treat [[Planning/Habits/Core Habits]] as the visible roster/surface, not as the canonical enforcement logic.
 - Never let planning/review disappear two days in a row; if one day is missed, the next morning needs explicit re-entry; if multiple days are missed, use a low-friction interaction-gap recovery pass rather than pretending only yesterday matters.
-- For weekly reset anchors—Friday weekly review, Sunday weekly planning, and Saturday yoga—prefer reduced explicit versions over silent omission when life is chaotic. Continuity matters more than ideal duration. Keep review and planning separate by default because combining them into one long Sunday session degrades Tom's focus on planning.
-- **Current cadence, confirmed September 6:** Saturday yoga includes meditation and replaces Saturday's previous meditation off-day. Protect four recovery-aware workout days Sunday–Wednesday, Thursday rest, and every-other-week Friday run with Ayhen. Do not retroactively score earlier Saturdays against the new cadence or invent a replacement meditation off-day.
-- Sunday remains weekly planning/reset; yoga is no longer its standing anchor. September 6 is the transition exception: already-confirmed post-planning yoga with integrated meditation remains planned today. From the next Saturday, count meditation within yoga, not a duplicate session. Preserve normal meditation on other scheduled days unless Tom intentionally redesigns that cadence.
+- For weekly reset anchors from the effective-dated roster and review cadence,prefer reduced explicit versions over silent omission when life is chaotic. Continuity matters more than ideal duration. Keep review and planning separate by default because combining them into one long Sunday session degrades Tom's focus on planning.
+
+
 - If a habit slips 2+ times in a week, reduce friction and shrink to a minimum viable version rather than treating the whole habit as broken.
 - Keep weekly minimums visible during daily rhythm instead of leaving them as Sunday-only concepts.
-- Tom's run remains **every other week** to save his knees/right hip, but on [[2026-08-23]] he moved it from Saturday to **Friday morning with Ayhen** so they can run together without consuming much of the day. **Run-week Thursday is a full rest day** so Tom has a complete day of recovery before Friday's run; optional easy mobility/walking is fine, but do not schedule a workout. **September 6 cadence update:** Thursday is now a standing rest day, including off-run weeks; do not fill it with makeup workouts by default. Reconstruct the run alternation from recent dated evidence: [[2026-08-22]] was the final on-week Saturday run, so the first on-week Friday under the new cadence is [[2026-09-04]]. A skipped on-week Friday remains an explicitly deferred obligation and does **not** silently reset the alternation unless Tom says it does. Saturday is a lighter day with yoga and integrated meditation, not the default run day. Hydration remains active. If injury-level soreness or joint stress is present, treat rest or low-impact movement as a valid intentional substitute, not avoidance, and preserve the dated re-entry point.
+
 
 ## Software delivery estimation defaults
 - For software/debugging/delivery work, the first estimate is often optimistic; default to roughly 3× the first estimate unless recent evidence suggests otherwise.
@@ -181,8 +168,12 @@ Tom-specific calibration:
 ## Habit-shaping preferences
 - Tom strongly prefers movement before starting work blocks because it reliably improves thinking power and energy across the whole day.
 - Therefore, default to **movement before work blocks**, not later in the day; later placement should be a rare, explicit exception tied to real constraints.
-- Meditation remains the gate before optional work **on scheduled meditation days**; count Saturday's integrated yoga meditation without requiring a duplicate sit.
-- Treat meditation as a chaos antidote: when Tom feels too busy for it on a scheduled day, that is usually evidence that it is more needed, not less. Do not apply this rationale to erase any intentionally confirmed cadence off-day; Saturday's former off-day was explicitly replaced with yoga/meditation.
+- Meditation remains the gate before optional work on days scheduled by the current habit roster; give combined rituals their agreed credit.
+- Treat meditation as a chaos antidote: when Tom feels too busy for it on a scheduled day, that is usually evidence that it is more needed, not less. Do not apply this rationale to erase any intentionally confirmed cadence off-day; use the effective-dated roster to distinguish a current exception from a superseded schedule.
 - Preferred sequencing on scheduled days is: mind dump if needed -> meditation -> movement -> work blocks.
 - If the full movement session is not feasible, use the `planning-rhythm-os` graceful-degradation path (reduced explicit version or minimum viable version) before treating later-in-the-day movement as acceptable.
 - Keep habit recommendations in service of continuity and identity, not arbitrary compliance.
+
+## Current-state lookup
+
+Read the approved personal habit roster for current schedule, effective date, run alternation, and dated exceptions. In Tom’s vault this is [[Planning/Habits/Core Habits]]. Read [[Planning/Operating Evidence]] for dated examples behind tactics. Do not keep one-day exceptions or current project/partner verdicts in this skill; look up current evidence before applying the stable decision questions above.

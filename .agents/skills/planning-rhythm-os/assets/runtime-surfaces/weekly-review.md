@@ -79,3 +79,8 @@
 - Review status:
 - Concise change signal for next week:
 - Link to next-week artifact when created Sunday:
+
+## Progress / resumption
+- Current scope and phase:
+- Exact next unfinished step:
+- Progress record: initialize/update the `review-state` block using `references/review-progress.md`; check it before advancing this scope’s status.

@@ -11,7 +11,7 @@
 - [ ] Create/repair the next week artifact and validate period links
 - [ ] Set Monday Top 3, first deep-work block, movement plan, and any bounded pre-deep-work Admin Strike
 - [ ] Convert all follow-ups into tasks/future-facing artifacts
-- [ ] Complete Sunday yoga with integrated meditation after planning unless a real constraint requires an explicit re-entry point
+- [ ] Read the effective-dated habit roster; name today’s scheduled movement/rest and meditation anchors, including combined rituals or an explicit substitute/re-entry point
 
 ## Planning Navigation
 - Friday weekly review:
@@ -34,3 +34,8 @@
   2.
   3.
 - First Monday deep-work block:
+
+## Progress / resumption
+- Current scope and phase:
+- Exact next unfinished step:
+- Progress record: initialize/update the `review-state` block using `references/review-progress.md`; check it before advancing this scope’s status.

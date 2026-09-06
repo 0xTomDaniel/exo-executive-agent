@@ -272,7 +272,7 @@ Usage:
 scripts/init_skill.py <skill-name> --path <output-directory>
 ```
 
-For this repo, add new skills under `.rulesync/skills/`.
+Use the project’s canonical `.agents/skills/` source directory. Provider discovery folders and packaged `.skill` files are projections, not editable authorities.
 
 The script:
 
@@ -318,7 +318,7 @@ Write the YAML frontmatter with `name` and `description`:
   - Include all "when to use" information here - Not in the body. The body is only loaded after triggering, so "When to Use This Skill" sections in the body are not helpful to Agent.
   - Example description for a `docx` skill: "Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. Use when Agent needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks"
 
-Do not include any other fields in YAML frontmatter.
+Keep `name` and `description` required. Preserve supported optional fields such as `metadata`, `license`, and `allowed-tools` when the target runtime uses them; validate against the bundled validator and actual runtime.
 
 ##### Body
 
@@ -342,11 +342,11 @@ The packaging script will:
 
 1. **Validate** the skill automatically, checking:
    - YAML frontmatter format and required fields
-   - Skill naming conventions and directory structure
-   - Description completeness and quality
-   - File organization and resource references
+   - Name syntax and description length/character constraints
 
-2. **Package** the skill if validation passes, creating a .skill file named after the skill (e.g., `my-skill.skill`) that includes all files and maintains the proper directory structure for distribution. The .skill file is a zip file with a .skill extension.
+   These are structural checks. Separately inspect resource links and judge description quality. For workflow repairs, exercise a small set of historical failure prompts plus a near-miss case; record whether evaluation was inline or independent. Passing packaging does not establish behavioral reliability.
+
+2. **Package** the skill if validation passes, creating a .skill file named after the skill (e.g., `my-skill.skill`) that includes source files and maintains their directory structure. Caches, nested exports, virtual environments, git data and symlinks are excluded; frozen source/evidence assets remain included. The .skill file is a zip file with a .skill extension.
 
 If validation fails, the script will report the errors and exit without creating a package. Fix any validation errors and run the packaging command again.
 

@@ -38,7 +38,7 @@ For onboarding or ambiguous setup, call `meow start` first with `execution_surfa
 
 Follow Meow's agent-led `start` flow even when the business account already exists; it determines whether onboarding remains or an agent credential should be re-issued. For an existing verified account, use `request-verification-code` followed directly by `issue-onboarding-key`; do not incorrectly send that code through the new-email `verify-email` path. Then call `get-next-step`: if it says onboarding is complete and directs use of the customer API, stop onboarding and use customer tools rather than inventing another setup requirement. Do not rely on stale command names from prose documentation; inspect `meow --help`.
 
-On Tom's macOS setup, use `scripts/authenticate-macos.sh` to collect the short-lived code through a hidden local dialog and store the resulting credential in macOS Keychain. `scripts/meow-readonly.sh <read-command> ...` is a convenience/accident guard: it allowlists routine reads and refuses state-changing commands. It is **not a security boundary**, because Exo can edit or bypass a script under its own filesystem/shell authority. Never present it as protection against a compromised agent or prompt injection; it provides friction and an auditable default only.
+On Tom's macOS setup, use `scripts/authenticate-macos.sh` to collect the short-lived code through a hidden local dialog and store the resulting credential in macOS Keychain. `scripts/meow-readonly.sh <read-command> ...` is a convenience/accident guard: it allowlists routine summary commands, removes unapproved fields, and refuses state-changing and sensitive detail commands. Unknown response shapes fail closed; a redacted directive means stop and inspect the approved operation path, not ignore the vendor workflow. It is **not a security boundary**, because Exo can edit or bypass a script under its own filesystem/shell authority. Never present it as protection against a compromised agent or prompt injection; it provides friction and an auditable default only.
 
 ## Access posture
 
@@ -98,3 +98,11 @@ Current Meow tool/docs split billing writes by surface:
 6. For any write, apply the financial-action boundary above.
 7. Record only non-sensitive outcome, status, owner, and next action in the canonical vault notes and daily log.
 8. If an error occurs, preserve the request ID and tool/surface; retry a server error once, otherwise stop and use Meow support rather than guessing.
+
+## Helper output and credential contract
+
+Routine output is limited to recognized numeric amounts/counts, currencies, known statuses, and last-four values inside recognized result containers. It omits free text, names, identifiers, account/routing numbers, card details, signed URLs, and arbitrary provider error bodies. It is deliberately narrower than the full CLI. `get-card-details` and `get-card-pan` are excluded. Missing fields or unsupported schemas are not evidence of a zero balance or a completed action.
+
+The official installed CLI is loaded through `credential_launcher.cjs`; credentials and verification codes enter through a private stdin pipe and are added to the CLI’s arguments in-process, avoiding OS command-line exposure. Interactive authentication uses the macOS Keychain backend via `keyring`, without temporary credential files or secret-bearing Keychain subprocess arguments. Run `authenticate-macos.sh` only during explicitly authorized interactive setup. This is local exposure reduction, not protection against the agent or a compromised process.
+
+September 6 repair validation used synthetic local output-policy tests and the installed CLI’s help command. No provider response recording, live banking call, credential retrieval, or authentication was used as validation. Recheck actual response shapes through an approved operation before claiming provider integration coverage. Historical invoicing caveats remain dated observations, not universal guarantees.

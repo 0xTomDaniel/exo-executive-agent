@@ -1,40 +1,20 @@
 #!/usr/bin/env python3
 import argparse
 import json
-import subprocess
-from collections import deque, defaultdict
+from collections import defaultdict, deque
 
-
-def run_obsidian(args, vault=None):
-    cmd = ["obsidian"]
-    if vault:
-        cmd.append(f"vault={vault}")
-    cmd.extend(args)
-    p = subprocess.run(cmd, text=True, capture_output=True)
-    return p.returncode, p.stdout.strip(), p.stderr.strip()
-
-
-def parse_links_output(text):
-    links = []
-    for line in text.splitlines():
-        line = line.strip()
-        if not line or line == "No links found.":
-            continue
-        unresolved = line.endswith("(unresolved)")
-        name = line.replace(" (unresolved)", "")
-        links.append({"target": name, "unresolved": unresolved})
-    return links
+from obsidian_cli import note_selector, parse_links_output, resolve_note, run_obsidian
 
 
 def get_outgoing(note, vault=None):
-    code, out, err = run_obsidian(["links", f"file={note}"], vault=vault)
+    code, out, err = run_obsidian(["links", note_selector(note)], vault=vault)
     if code != 0:
         return [], err or out
     return parse_links_output(out), None
 
 
 def get_incoming(note, vault=None):
-    code, out, err = run_obsidian(["backlinks", f"file={note}", "format=json"], vault=vault)
+    code, out, err = run_obsidian(["backlinks", note_selector(note), "format=json"], vault=vault)
     if code != 0:
         return [], err or out
     if not out or out.startswith("No backlinks found"):
@@ -52,14 +32,23 @@ def get_incoming(note, vault=None):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Explore Obsidian wikilink neighborhood using obsidian CLI")
-    ap.add_argument("seed", help="Seed note name (wikilink-style, e.g. 'My Note' or 'Path/Note.md')")
+    ap = argparse.ArgumentParser(
+        description="Explore Obsidian wikilink neighborhood using obsidian CLI"
+    )
+    ap.add_argument(
+        "seed", help="Seed note name (wikilink-style, e.g. 'My Note' or 'Path/Note.md')"
+    )
     ap.add_argument("--depth", type=int, default=1, help="Traversal depth (default: 1)")
-    ap.add_argument("--include-backlinks", action="store_true", help="Include incoming links in traversal")
-    ap.add_argument("--include-unresolved", action="store_true", help="Traverse unresolved link names as nodes")
+    ap.add_argument(
+        "--include-backlinks", action="store_true", help="Include incoming links in traversal"
+    )
+    ap.add_argument(
+        "--include-unresolved", action="store_true", help="Traverse unresolved link names as nodes"
+    )
     ap.add_argument("--vault", help="Optional vault name for obsidian CLI")
     ap.add_argument("--json", action="store_true", help="Output JSON")
     args = ap.parse_args()
+    args.seed = resolve_note(args.seed, args.vault)
 
     seen = {args.seed}
     hops = defaultdict(list)

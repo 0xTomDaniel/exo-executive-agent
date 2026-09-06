@@ -62,3 +62,8 @@
 - Next cycle to plan concretely:
 - Carry-forward decisions (Now / Later / Drop):
 - What changes next year so execution improves:
+
+## Progress / resumption
+- Current scope and phase:
+- Exact next unfinished step:
+- Progress record: initialize/update the `review-state` block using `references/review-progress.md`; check it before advancing this scope’s status.

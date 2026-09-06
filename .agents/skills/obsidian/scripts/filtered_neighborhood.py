@@ -1,44 +1,15 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["pyyaml>=6,<7"]
+# ///
 import argparse
 import datetime as dt
 import json
-import re
-import subprocess
 from collections import defaultdict, deque
 
-
-def run_obsidian(args, vault=None):
-    cmd = ["obsidian"]
-    if vault:
-        cmd.append(f"vault={vault}")
-    cmd.extend(args)
-    p = subprocess.run(cmd, text=True, capture_output=True)
-    return p.returncode, p.stdout.strip(), p.stderr.strip()
-
-
-def note_selector(note):
-    if "/" in note or note.endswith(".md"):
-        return f"path={note}"
-    return f"file={note}"
-
-
-def strip_quotes(s):
-    s = s.strip()
-    if (s.startswith('"') and s.endswith('"')) or (s.startswith("'") and s.endswith("'")):
-        return s[1:-1]
-    return s
-
-
-def parse_links_output(text):
-    links = []
-    for line in text.splitlines():
-        line = line.strip()
-        if not line or line == "No links found.":
-            continue
-        unresolved = line.endswith("(unresolved)")
-        name = line.replace(" (unresolved)", "")
-        links.append({"target": name, "unresolved": unresolved})
-    return links
+from note_metadata import parse_frontmatter
+from obsidian_cli import note_selector, parse_links_output, resolve_note, run_obsidian
 
 
 def get_outgoing(note, vault=None):
@@ -51,7 +22,7 @@ def get_outgoing(note, vault=None):
 def get_file_info(note, vault=None):
     code, out, err = run_obsidian(["file", note_selector(note)], vault=vault)
     if code != 0:
-        return None
+        raise RuntimeError(err or out or "File lookup failed")
     info = {}
     for ln in out.splitlines():
         if "\t" not in ln:
@@ -64,59 +35,14 @@ def get_file_info(note, vault=None):
 def read_note_text(note, vault=None):
     code, out, err = run_obsidian(["read", note_selector(note)], vault=vault)
     if code != 0:
-        return None
+        raise RuntimeError(err or out or "Note read failed")
     return out
-
-
-def parse_frontmatter(text):
-    if not text:
-        return {}
-    lines = text.splitlines()
-    if not lines or lines[0].strip() != "---":
-        return {}
-    try:
-        end = lines[1:].index("---") + 1
-    except ValueError:
-        return {}
-
-    fm = lines[1:end]
-    data = {}
-    i = 0
-    key_pat = re.compile(r"^([A-Za-z0-9_.-]+):(?:\s*(.*))?$")
-    list_pat = re.compile(r"^\s*-\s*(.*)$")
-
-    while i < len(fm):
-        line = fm[i]
-        m = key_pat.match(line)
-        if not m:
-            i += 1
-            continue
-        key = m.group(1)
-        val = m.group(2) if m.group(2) is not None else ""
-
-        if val == "":
-            arr = []
-            j = i + 1
-            while j < len(fm):
-                lm = list_pat.match(fm[j])
-                if not lm:
-                    break
-                arr.append(strip_quotes(lm.group(1)))
-                j += 1
-            data[key] = arr if arr else ""
-            i = j
-            continue
-
-        data[key] = strip_quotes(val)
-        i += 1
-
-    return data
 
 
 def parse_date(date_str):
     try:
-        return dt.date.fromisoformat(date_str)
-    except Exception:
+        return dt.date.fromisoformat(str(date_str))
+    except (TypeError, ValueError):
         return None
 
 
@@ -130,7 +56,9 @@ def matches_filters(note, args, cache, vault=None):
         return cache[note]
 
     modified_ms = int(info.get("modified", "0") or 0)
-    modified_date = dt.datetime.fromtimestamp(modified_ms / 1000, dt.UTC).date() if modified_ms else None
+    modified_date = (
+        dt.datetime.fromtimestamp(modified_ms / 1000, dt.UTC).date() if modified_ms else None
+    )
 
     if args.modified_after and modified_date and modified_date < args.modified_after:
         cache[note] = (False, {"reason": "modified-before-window"})
@@ -148,7 +76,7 @@ def matches_filters(note, args, cache, vault=None):
 
     for req in args.tags:
         q = req.lstrip("#")
-        ok = any(t == q or t.startswith(q + "/") for t in tags)
+        ok = any(str(t) == q or str(t).startswith(q + "/") for t in tags)
         if not ok:
             cache[note] = (False, {"reason": f"missing-tag:{req}"})
             return cache[note]
@@ -178,7 +106,10 @@ def matches_filters(note, args, cache, vault=None):
             cache[note] = (False, {"reason": "date-after-window"})
             return cache[note]
 
-    cache[note] = (True, {"frontmatter": fm, "modified": str(modified_date) if modified_date else None})
+    cache[note] = (
+        True,
+        {"frontmatter": fm, "modified": str(modified_date) if modified_date else None},
+    )
     return cache[note]
 
 
@@ -190,21 +121,36 @@ def parse_prop(expr):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Neighborhood traversal with optional tag/property/date filters")
+    ap = argparse.ArgumentParser(
+        description="Neighborhood traversal with optional tag/property/date filters"
+    )
     ap.add_argument("seed", help="Seed note name/path")
     ap.add_argument("--depth", type=int, default=2)
-    ap.add_argument("--tag", action="append", dest="tags", default=[], help="Require tag (repeatable)")
-    ap.add_argument("--prop", action="append", dest="prop_expr", default=[], help="Require property key=value (repeatable)")
+    ap.add_argument(
+        "--tag", action="append", dest="tags", default=[], help="Require tag (repeatable)"
+    )
+    ap.add_argument(
+        "--prop",
+        action="append",
+        dest="prop_expr",
+        default=[],
+        help="Require property key=value (repeatable)",
+    )
     ap.add_argument("--date-property", help="Frontmatter date property for date window filtering")
     ap.add_argument("--date-after", help="Include notes with date_property >= YYYY-MM-DD")
     ap.add_argument("--date-before", help="Include notes with date_property <= YYYY-MM-DD")
     ap.add_argument("--modified-after", help="Include notes modified on/after YYYY-MM-DD")
     ap.add_argument("--modified-before", help="Include notes modified on/before YYYY-MM-DD")
-    ap.add_argument("--strict-filter-traversal", action="store_true", help="Only expand from nodes that match filters")
+    ap.add_argument(
+        "--strict-filter-traversal",
+        action="store_true",
+        help="Only expand from nodes that match filters",
+    )
     ap.add_argument("--include-unresolved", action="store_true")
     ap.add_argument("--vault")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
+    args.seed = resolve_note(args.seed, args.vault)
 
     args.props = [parse_prop(x) for x in args.prop_expr]
     args.date_after = parse_date(args.date_after) if args.date_after else None
