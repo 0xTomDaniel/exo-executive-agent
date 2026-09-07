@@ -27,6 +27,20 @@ The image seeds Codex 0.153.1 with the existing checked installer; retained
 state supplies the installed version, which may be newer. Preserve that state
 and verify the running version instead of claiming a fresh seed matches it.
 
+## Backing-agent model
+
+[config.toml.example](config.toml.example) records the backing-agent defaults:
+`gpt-6-astra` with `model_reasoning_effort = "low"`. Merge these top-level
+settings into the private `state/config.toml`; do not replace the whole file
+and lose its prompts or trusted projects. These settings select the Codex
+backing agent, not the realtime speech model.
+
+After changing an existing deployment's settings, restart its Codex app-server
+daemon and start a fresh voice conversation. Phone/thread overrides or resumed
+threads may retain another model; inspect the actual turn context to confirm.
+The live deployment's model catalog and configuration parsing accepted these
+settings; that alone does not prove the next phone turn uses them.
+
 ## Adoption from the existing sidecar
 
 1. Build the new image and validate rendered Compose configuration before the
@@ -44,7 +58,8 @@ and verify the running version instead of claiming a fresh seed matches it.
    actual vault and its AGENTS.md. Replace
    `experimental_realtime_ws_backend_prompt` with `REALTIME-PROMPT.md`. Preserve
    unrelated settings and history. Trust the canonical vault path. Parse the
-   resulting TOML before startup. Add links under `state/skills` to the vault's
+   resulting TOML before startup, including the backing-agent defaults from
+   `config.toml.example`. Add links under `state/skills` to the vault's
    actual `.agents/skills` packages so discovery works outside the vault too.
 5. Do not copy the old workspace's `bin/exoctl` or persistent Hermes
    instructions into the new workspace. Retain their old versions only in the
