@@ -92,3 +92,12 @@ The installed stale-consumer check still returned superseded after deployment. S
 Restore matching CLI + backing instructions + realtime prompt config together; old and native-v1 caller protocols differ. Preserve live acceptance intents and delivery receipts. Do NOT blindly restore pre-send CLI state or erase knowledge of an already completed Telegram send. New sessions are needed to load session-static instructions. The new native-send launcher/config/skill can be removed independently if required; do not remove the existing bot, mounted secret or gateway configuration.
 
 Phone evidence covers useful summaries, file-backed follow-up retrieval, stop and core recovery. Recheck ownership transfer in phone use and stale-speech ordering before expanding those claims. Do not call exact speech, deterministic preemption, large-report assembly, or universal new-phone-thread permission defaults fixed without direct evidence. Missing-page recovery is deferred with the whole-report delivery requirement, not a blocker for the accepted workflow. Existing sessions may retain old prompts. Canonical Obsidian integration, recreation automation and stronger hostile-worker isolation remain separate work; committing sources does not complete deployment automation.
+
+## Captured sidecar deployment source
+
+The previously host-only Dockerfile, entrypoint, and Runs proxy are now owned by
+[`deploy/voice/sidecar`](../deploy/voice/sidecar/README.md), with an owner-neutral
+Compose template and a fresh-runtime/rebuild/rollback runbook. This captures the
+service recipe; it does not deploy that template onto the existing service or
+complete account provisioning, automated restoration, or fresh-phone acceptance.
+The historical recreation-automation gap above remains distinct from source capture.

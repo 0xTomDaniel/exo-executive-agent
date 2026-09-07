@@ -68,3 +68,18 @@ claim live SSH/Docker/provider integration proof.
 Personal-boundary tests cover source identity recurrence, modular owner-skill
 installation, legacy migration preservation, and missing Meow owner context.
 See `docs/personal-content-boundary.md` for semantic review and history limits.
+
+## Captured Voice sidecar
+
+Validate the portable Compose template and captured implementation without live
+credentials or a running Docker daemon (Compose v2 must be installed):
+
+```bash
+VOICE_INSTANCE=fixture-voice HERMES_CONTAINER=fixture-hermes VOICE_RUNTIME_ROOT=/tmp/fixture-voice docker compose -f deploy/voice/sidecar/compose.yaml config --quiet
+bash -n deploy/voice/sidecar/entrypoint.sh
+uv run python -m py_compile deploy/voice/sidecar/proxy.py
+```
+
+Missing deployment selectors must fail Compose rendering. Image builds require
+Docker and upstream network access; they do not authenticate or test phone Voice.
+See `deploy/voice/sidecar/README.md` for private runtime and acceptance boundaries.
