@@ -289,3 +289,5 @@ Use [docs/human-review-checklist.md](docs/human-review-checklist.md) for the
 required EMB-261 parent readiness summary, accepted child-slice evidence,
 manual Telegram transcript requirements, backup/restore evidence, and the
 explicit HITL boundaries for EMB-276 and EMB-317.
+
+Direct filesystem voice deployment: [vault voice setup](deploy/voice/vault/README.md).

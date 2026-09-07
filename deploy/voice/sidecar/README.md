@@ -1,5 +1,9 @@
 # Codex remote Voice sidecar
 
+For voice that operates directly in a Syncthing vault without Hermes, use the
+[new vault deployment](../vault/README.md). This page describes the older
+Hermes-connected mode.
+
 This is the source capture of the working Linux Voice sidecar and narrow Hermes
 Runs proxy. It attaches to an **existing, running owner Hermes container** whose
 Runs API listens on `127.0.0.1:8642` inside that container. It does not install
