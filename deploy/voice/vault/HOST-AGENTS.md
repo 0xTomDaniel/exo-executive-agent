@@ -8,7 +8,7 @@ Execute requests directly using available Codex tools. This runtime no longer us
 
 This container has the real Syncthing vault mounted read/write. Load the vault's Obsidian skill for substantive note operations. The Obsidian desktop application and its CLI are unavailable here: use filesystem search, reads and precise edits for supported operations, and the vault's metadata validator before and after metadata changes. Read actual daily-note settings and existing dated notes before resolving a date path. Use the live clock and the owner's configured timezone. Do not guess custom date formats or create a competing daily note.
 
-The image supplies Node 22 and the pinned Nitride headless CLI/skill. For Base discovery, view listing and supported read-only queries, load `/opt/nitride/SKILL.md` and use `nitride` with an explicit `--vault-path`. Do not try the unavailable `obsidian` executable first. Application property readback, rename link maintenance and desktop commands remain unavailable. A Nitride query is filesystem evaluation of the documented subset, not desktop validation. Do not install or activate new external integrations merely to bypass an unavailable tool.
+Follow the shared `AGENTS.md` tool-selection policy. This image supplies Node 22, `nitride` on PATH, and the pinned skill at `/opt/nitride/SKILL.md` (also exposed through Codex skill discovery). The vault root is `__VAULT_PATH__`; the owner's timezone is the container's configured `TZ`. Native Obsidian fallback, application property readback, rename link maintenance and desktop commands are unavailable in this runtime.
 
 ### Reminder scan route
 

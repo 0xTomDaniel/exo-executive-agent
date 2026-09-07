@@ -8,6 +8,10 @@ This is independent of the Hermes profile skill installer.
 
 ## Ownership and behavior
 
+Exo's shared `AGENTS.md` owns capability selection across runtimes: prefer
+installed approved Nitride for its supported read-only Base operations, with
+native Obsidian fallback only where that capability is actually available.
+The Obsidian skill routes to Nitride before entering its native CLI workflow.
 Nitride owns interpretation of its documented read-only Base subset. Exo's
 host Adapter owns concrete vault paths, source/view selection and runtime
 invocation. The planning rhythm owns surfacing and coverage reporting. The
@@ -54,6 +58,14 @@ its shell failed because the host disallowed unprivileged namespaces. It
 correctly reported unknown counts and incomplete coverage. The successful test
 used the container's existing isolation with a read-only vault mount instead.
 Production sandbox settings were not changed.
+
+The subsequent routing revision moved tool selection into the shared repository
+`AGENTS.md` and updated the Obsidian skill to select Nitride before its native
+workflow. The deployed vault received only those targeted edits, preserving its
+existing local instructions. The host Adapter now supplies runtime locations and
+capabilities. All 128 repository tests passed again. Inline review covered both
+tools available, Nitride absent with native available, headless-only operation,
+and neither tool available; the earlier model scan predates this ownership move.
 
 ## Remaining acceptance and scope
 

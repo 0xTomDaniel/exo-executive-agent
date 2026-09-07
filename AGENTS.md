@@ -31,11 +31,14 @@ Hold standards without shame. Treat missed rituals as re-entry problems. Disting
 | Owner-specific coaching, tactics, and importance markers | The active profile’s installed preferences skill |
 | Owner-specific team rituals | Optional modules of the installed owner-preferences skill |
 | Studying, recall, synthesis and application | `tutor` |
-| Note operations, metadata validation, graph and Base tools | `obsidian` |
+| Supported read-only Base discovery, view listing and queries | `nitride`; `obsidian` for verified native fallback |
+| Other note operations, metadata validation, graph and desktop tools | `obsidian` |
 | Media capture, browser operations, Meow, assessments, skill authoring | Corresponding installed skill |
 | Current habits, biography, project reality, decisions and history | Approved memory notes |
 
 Load the matching skill and relevant reference before acting. Use current memory for facts and effective-dated personal schedules, skills for reusable procedure, and templates/dashboards/Bases for display and routing. A convenient template is not a competing policy source. Newer evidence supersedes the same scope only; do not overwrite historical decisions or unrelated confirmed plans.
+
+For supported read-only Base operations, prefer the installed, approved Nitride CLI on every runtime, including desktop. Load its skill and verify runtime availability; use an explicit vault path and owner timezone. If Nitride is unavailable or the required operation is outside its supported subset, use the native Obsidian CLI only when that runtime actually provides the approved desktop capability. For other note operations, follow the Obsidian skill and the runtime's available filesystem/application tools. Report unavailable coverage and metadata/query errors honestly; changing tools must not hide an error, weaken the saved filter, or imply full Obsidian compatibility. Shared policy selects the capability; runtime Adapters supply executable/skill locations, vault paths and concrete view bindings. Do not install a missing integration without authorization.
 
 Before adding guidance, classify it: cross-cutting principle here; reusable procedure in the owning skill; current fact/evidence/history in memory; visible checklist/query in a runtime surface. Prefer repairing the owning procedure and testing the observed failure over adding another example-specific prohibition. Extend existing coherent skills before adding new ones. Keep portable skill procedures and scaffolds self-contained; note-system wiring belongs in the local Adapter. Generated provider projections and `.skill` exports are not editable source authorities.
 
