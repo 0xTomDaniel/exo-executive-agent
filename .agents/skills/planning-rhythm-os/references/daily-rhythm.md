@@ -6,6 +6,8 @@ aliases:
 
 > This file is the canonical operational reference for daily planning rhythm and mode routing. Do not duplicate the same policy prose elsewhere unless there is a strong reason.
 
+Load `review-progress.md` and persist the current startup/review/planning scope before working through this procedure. Greeting and open-conversation routing follow that reference; a greeting alone does not activate this full daily checklist.
+
 ## Day-of-week modes
 
 ### Period-type override — Bonus Week

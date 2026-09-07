@@ -44,6 +44,7 @@ def new_state(kind, period, phase):
         "version": 1,
         "scope": f"{kind}:{period}:{phase}",
         "mode": "full",
+        "workflow": {"status": "active", "reason": "", "source": "", "resume_when": ""},
         "coverage": {
             "start": None,
             "end": None,
@@ -57,8 +58,19 @@ def new_state(kind, period, phase):
     }
 
 
+def nonblank_text(value):
+    return isinstance(value, str) and bool(value.strip())
+
+
 def check_state(state):
     errors = []
+    # Older version-1 records remain readable without a workflow extension.
+    workflow = state.get("workflow", {"status": "active"})
+    workflow_status = workflow.get("status") if isinstance(workflow, dict) else None
+    if workflow_status not in {"active", "paused", "deferred", "cancelled"}:
+        errors.append("invalid workflow status")
+    elif workflow_status != "active":
+        errors.append(f"workflow is {workflow_status}, not complete")
     scope = state.get("scope", "")
     parts = scope.split(":") if isinstance(scope, str) else []
     if (
@@ -80,7 +92,7 @@ def check_state(state):
     except (TypeError, ValueError):
         errors.append("coverage dates must be explicit")
     missing = coverage.get("missing_dates")
-    if not isinstance(missing, list) or not coverage.get("missing_dates_resolution"):
+    if not isinstance(missing, list) or not nonblank_text(coverage.get("missing_dates_resolution")):
         errors.append("record missing-date coverage and its resolution, including none")
     elif missing:
         # A missing day is unknown evidence, not permission to invent a habit score.
@@ -103,7 +115,7 @@ def check_state(state):
         if (
             step.get("status") == "omitted"
             and state.get("mode") == "reduced"
-            and step.get("reason")
+            and nonblank_text(step.get("reason"))
         ):
             omissions.append(name)
         elif step.get("status") != "complete":
@@ -114,18 +126,19 @@ def check_state(state):
     if (
         confirmation.get("scope") != scope
         or confirmation.get("mode") != state.get("mode")
-        or not confirmation.get("source")
-        or not confirmation.get("quote")
+        or not nonblank_text(confirmation.get("source"))
+        or not nonblank_text(confirmation.get("quote"))
     ):
         errors.append("exact-scope user confirmation with source, quote, and mode required")
     if omissions and sorted(confirmation.get("accepted_omissions", [])) != sorted(omissions):
         errors.append("reduced omissions require explicit acceptance")
     if not errors and state.get("next_step"):
         errors.append("clear the completed scope next step; keep other scopes separate")
-    if errors and not state.get("next_step"):
+    if errors and not nonblank_text(state.get("next_step")) and workflow_status != "cancelled":
         errors.append("unfinished scope needs an exact next step")
     return {
         "scope": scope,
+        "workflow_status": workflow_status,
         "complete": not errors,
         "errors": errors,
         "next_step": state.get("next_step"),
