@@ -87,6 +87,13 @@ generated, instance-local, ignored by git, and limited to the smallest required
 secret interface. Use native Phase, Vite, or Node env ingestion where relevant;
 do not add `dotenv` by default and do not use `VITE_` prefixes for secrets.
 
+## Remote Voice sidecar
+
+The captured Codex Voice service, Runs proxy, private-state preparation, and
+rebuild/rollback procedure are in [deploy/voice/sidecar](deploy/voice/sidecar/README.md).
+It attaches to an existing owner Hermes service; it does not deploy Hermes or
+commit authentication, conversations, or host configuration.
+
 ## Local Smoke
 
 Run the no-credentials Tom local/dev smoke:
@@ -282,3 +289,5 @@ Use [docs/human-review-checklist.md](docs/human-review-checklist.md) for the
 required EMB-261 parent readiness summary, accepted child-slice evidence,
 manual Telegram transcript requirements, backup/restore evidence, and the
 explicit HITL boundaries for EMB-276 and EMB-317.
+
+Direct filesystem voice deployment: [vault voice setup](deploy/voice/vault/README.md).
