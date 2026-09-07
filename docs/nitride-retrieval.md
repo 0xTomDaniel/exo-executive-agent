@@ -1,7 +1,7 @@
 # Headless reminder retrieval
 
 The direct-vault Voice deployment now ships Node 22.23.2 and Nitride pinned to
-`EmberAGI/nitride-cli` commit `7ffaf4109efde8f3fca75e4840d8860104000c25`.
+`0xTomDaniel/nitride-cli` commit `f3addd283300b37fbed73e65513af9101c921d22`.
 See the [deployment recipe](../deploy/voice/vault/README.md#pinned-nitride-retrieval)
 and [host Adapter](../deploy/voice/vault/HOST-AGENTS.md#reminder-scan-route).
 This is independent of the Hermes profile skill installer.
@@ -25,12 +25,11 @@ A reminder need not be a task. Source errors remain incomplete coverage, never
 empty results or permission to substitute yesterday's scan.
 
 The task/all-note terminal-state exclusions currently differ. Preserve and
-report that difference until the owner resolves it. Linked-week/sprint
-traversal remains unsupported; query explicit supported views instead of the
-Base's default first view, and retain any required unsupported view as open
-coverage. A reminder-only scan does not complete the broader steering workflow.
+report that difference until the owner resolves it. Linked-week/sprint filters are supported by the updated pin; query explicit
+named views for the requested scope, and retain any other required unsupported
+view as open coverage. A reminder-only scan does not complete the broader steering workflow.
 
-## Validation — September 7, 2026
+## Initial integration validation — September 7, 2026
 
 - Before implementation, the prior image failed the public runtime command
   check with `node: not found`.
@@ -71,8 +70,40 @@ and neither tool available; the earlier model scan predates this ownership move.
 
 The model test was a fresh CLI backing turn, not a phone-originated realtime
 audio turn. Resumed phone threads may retain stale instructions or model
-overrides; fresh phone acceptance remains outstanding. Full planning coverage
-still needs the linked-period views and resolution of status policy. Non-Markdown
+overrides; fresh phone acceptance remains outstanding. The linked-period increment has live read-only acceptance below; unresolved
+status policy remains separate from literal saved-query execution. Non-Markdown
 membership and additional Base coercions beyond Nitride's recordings remain
 outside the compatibility claim. No npm publication or full Obsidian CLI
 replacement is required for this deployed reminder route.
+
+## Linked-period pin and review repairs
+
+The new Nitride pin adds list/filter/value/length evaluation, linked scalar
+metadata and file.basename, enabling the saved This Week and Current Sprint
+views without rewriting them. Both actual views executed successfully against
+a read-only mount before deployment. Empty output remains a saved-filter result,
+not proof of plan completion or native desktop parity for private data.
+
+The new image passed all 79 upstream package cases on Debian/Node 22.23.2, with
+its executable verified against the pinned artifact; Nitride's 102 tests and
+Linux/macOS CI passed. Exo's 128 tests and rendered Compose checks passed. The
+Voice container was recreated with the new pin and retained Codex 0.153.4 state.
+
+Both PR review findings were independently rechecked as fixed: the upgrade guide
+now includes targeted shared AGENTS/Obsidian deployment, and counts/overlap use
+exact paths even when presentation groups records describing one commitment.
+
+A fresh final-instruction Astra/low CLI acceptance turn on the deployed image,
+with the actual vault mounted read-only, loaded the shared routing policy and
+ran both daily views plus This Week and Current Sprint successfully with one
+owner-local date. It reproduced exact-path overlap/union counts and explained
+an empty sprint result from direct task assignments and the unchanged saved
+predicate. It did not infer a task's sprint from its linked week or mark planning
+complete. Model/effort were verified in the recorded turn context.
+
+Auxiliary inspection initially attempted unavailable `python` and then a missing
+PyYAML module under `python3`. The agent disclosed these failures and completed
+that inspection with available filesystem reads. These were not Nitride query
+failures; the image does not promise a system PyYAML installation. No additional
+runtime dependency was installed to conceal that limitation. Phone audio remains
+separate from this fresh CLI model acceptance.

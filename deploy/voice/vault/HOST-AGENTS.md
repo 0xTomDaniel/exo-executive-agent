@@ -20,11 +20,11 @@ nitride --vault-path "__VAULT_PATH__" --timezone "$TZ" --date "$scan_date" base:
 nitride --vault-path "__VAULT_PATH__" --timezone "$TZ" --date "$scan_date" base:query 'path=Planning/Dated Reminders.base' 'view=Attention Today' format=json
 ```
 
-Use the saved `Upcoming` view when upcoming reminders are in scope; do not silently impose a horizon absent from its filter. Use named views: `This Week` and `Current Sprint` linked-period traversal are not supported yet. An unavailable required view stays an open coverage item; do not replace it with a weaker filter or claim the enclosing planning sweep complete.
+Use the saved `Upcoming` view when upcoming reminders are in scope; do not silently impose a horizon absent from its filter. Use named views: the pinned Nitride version supports `This Week` and `Current Sprint` linked-period filters; execute these when their planning scope requires them. An unavailable required view stays an open coverage item; do not replace it with a weaker filter or claim the enclosing planning sweep complete.
 
 Preserve the exact saved predicates. The current task view excludes linked Done/Closed, while the all-class view additionally excludes plain forms and Reviewed. Report this unresolved policy difference rather than normalizing it silently. A reminder on a non-task note does not create a task.
 
-Retain source-view membership for each result. Deduplicate overlapping paths for the combined count, preserving distinct paths unless note content establishes the same commitment. Read selected notes for next actions and context. Report date/timezone, queried views, per-source counts, unique count, overlap and errors. Counts describe only successful scans; failed queries are not empty sources. Invalid YAML/property values or unreadable files mean incomplete coverage. Do not substitute yesterday's results, silently skip invalid notes, or auto-edit dates/statuses to clear the queue.
+Retain source-view membership for each result. Compute overlap and the unique combined count using exact vault-relative paths only. Distinct paths remain distinct records even when their content describes one commitment. You may group related records in presentation while preserving every source reference and keeping record counts separate from obligation counts. Read selected notes for next actions and context. Report date/timezone, queried views, per-source counts, unique count, overlap and errors. Counts describe only successful scans; failed queries are not empty sources. Invalid YAML/property values or unreadable files mean incomplete coverage. Do not substitute yesterday's results, silently skip invalid notes, or auto-edit dates/statuses to clear the queue.
 
 ## Voice continuity and presentation
 
