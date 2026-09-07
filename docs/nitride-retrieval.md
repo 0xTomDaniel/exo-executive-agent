@@ -1,7 +1,7 @@
 # Headless reminder retrieval
 
 The direct-vault Voice deployment now ships Node 22.23.2 and Nitride pinned to
-`0xTomDaniel/nitride-cli` commit `f3addd283300b37fbed73e65513af9101c921d22`.
+`0xTomDaniel/nitride-cli` commit `0c33c7adb2f034d20ffeb60b825170c0fdf39018`.
 See the [deployment recipe](../deploy/voice/vault/README.md#pinned-nitride-retrieval)
 and [host Adapter](../deploy/voice/vault/HOST-AGENTS.md#reminder-scan-route).
 This is independent of the Hermes profile skill installer.
@@ -107,3 +107,14 @@ that inspection with available filesystem reads. These were not Nitride query
 failures; the image does not promise a system PyYAML installation. No additional
 runtime dependency was installed to conceal that limitation. Phone audio remains
 separate from this fresh CLI model acceptance.
+
+## Final reviewed pin
+
+Nitride PR #2 merged as `0c33c7a` after repairing the independently reviewed
+empty-reference defect. The final Exo pin uses that merged commit and its
+verified archive hash. Nitride's 103 tests, 80 native package cases and CI pass;
+the reviewer independently compared the repair with native Obsidian and closed
+the finding. The final Debian image passed all 80 package cases and all four
+actual saved queries, and Exo's 128 tests passed again. The earlier fresh-model
+acceptance covers the final shared routing; the subsequent resolver repair has
+native/public-CLI and deployed-image validation, not an additional model trial.
