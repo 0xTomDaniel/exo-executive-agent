@@ -8,7 +8,23 @@ Execute requests directly using available Codex tools. This runtime no longer us
 
 This container has the real Syncthing vault mounted read/write. Load the vault's Obsidian skill for substantive note operations. The Obsidian desktop application and its CLI are unavailable here: use filesystem search, reads and precise edits for supported operations, and the vault's metadata validator before and after metadata changes. Read actual daily-note settings and existing dated notes before resolving a date path. Use the live clock and the owner's configured timezone. Do not guess custom date formats or create a competing daily note.
 
-Obsidian Base evaluation, application property readback, rename link maintenance and desktop commands cannot be claimed from filesystem access. When an operation requires those capabilities, report the unverified portion or limitation. Do not treat an unexecuted Base query as empty, or a filesystem edit as application-level validation. The Mac's capability record does not establish Debian capabilities. Do not install or activate new external integrations merely to bypass an unavailable tool.
+The image supplies Node 22 and the pinned Nitride headless CLI/skill. For Base discovery, view listing and supported read-only queries, load `/opt/nitride/SKILL.md` and use `nitride` with an explicit `--vault-path`. Do not try the unavailable `obsidian` executable first. Application property readback, rename link maintenance and desktop commands remain unavailable. A Nitride query is filesystem evaluation of the documented subset, not desktop validation. Do not install or activate new external integrations merely to bypass an unavailable tool.
+
+### Reminder scan route
+
+For a steering scan, discover and inspect the actual saved definitions, then execute both sources with the same live date and owner timezone (the container's configured `TZ`). The installed planning Adapter uses `Planning/Weekly Tasks.base` → `Daily Fallback Sweep` and `Planning/Dated Reminders.base` → `Attention Today`. Run:
+
+```sh
+scan_date=$(date +%F)
+nitride --vault-path "__VAULT_PATH__" --timezone "$TZ" --date "$scan_date" base:query 'path=Planning/Weekly Tasks.base' 'view=Daily Fallback Sweep' format=json
+nitride --vault-path "__VAULT_PATH__" --timezone "$TZ" --date "$scan_date" base:query 'path=Planning/Dated Reminders.base' 'view=Attention Today' format=json
+```
+
+Use the saved `Upcoming` view when upcoming reminders are in scope; do not silently impose a horizon absent from its filter. Use named views: `This Week` and `Current Sprint` linked-period traversal are not supported yet. An unavailable required view stays an open coverage item; do not replace it with a weaker filter or claim the enclosing planning sweep complete.
+
+Preserve the exact saved predicates. The current task view excludes linked Done/Closed, while the all-class view additionally excludes plain forms and Reviewed. Report this unresolved policy difference rather than normalizing it silently. A reminder on a non-task note does not create a task.
+
+Retain source-view membership for each result. Deduplicate overlapping paths for the combined count, preserving distinct paths unless note content establishes the same commitment. Read selected notes for next actions and context. Report date/timezone, queried views, per-source counts, unique count, overlap and errors. Counts describe only successful scans; failed queries are not empty sources. Invalid YAML/property values or unreadable files mean incomplete coverage. Do not substitute yesterday's results, silently skip invalid notes, or auto-edit dates/statuses to clear the queue.
 
 ## Voice continuity and presentation
 

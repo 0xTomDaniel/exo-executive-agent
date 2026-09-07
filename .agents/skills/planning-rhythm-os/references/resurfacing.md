@@ -38,7 +38,7 @@ Query both open tasks and all dated reminders. `review_on` is an attention hook 
 
 Present a task and a non-task reminder together only when their links and content establish the same underlying commitment. Keep both source references visible and do not suppress a distinct obligation on title similarity alone. Reviewing a non-task note can lead to an action, an explicitly chosen next review date, removal of an exhausted reminder, or no change with a named unresolved decision. Never auto-advance review dates or create duplicate tasks merely to clear the view.
 
-The note-system Adapter must name the task view and the all-class reminder view, query both, and report metadata/query errors. An empty task result does not establish an empty reminder queue. This reference owns surfacing behavior; `planning-task-os` owns task field/lifecycle meanings.
+The note-system Adapter must name the task view and the all-class reminder view, query both, and report metadata/query errors. An empty task result does not establish an empty reminder queue. Preserve each result's source membership and deduplicate identical paths when reporting a combined count. Anchor both queries to the same live date and owner timezone, and name the scan scope and freshness. If a saved Base's exclusions differ from the general terminal-state guidance above, report that unresolved difference and preserve the saved query until the owner resolves it; do not silently normalize or omit returned records. This reference owns surfacing behavior; `planning-task-os` owns task field/lifecycle meanings.
 
 ## Execution-day workflow
 - Query both the task-debt and all-class dated-reminder surfaces described above.

@@ -82,8 +82,9 @@ run IDs, ownership transfer, event paging, API approvals, Telegram sender and
 no-vault-access statements do not apply and must not migrate.
 
 The Debian host adapter explicitly accounts for the absence of the Obsidian
-desktop CLI. Filesystem edits and metadata validation are available; application
-Base queries, automatic link maintenance and UI readback are not established.
+desktop CLI. Filesystem edits, metadata validation and Nitride's supported
+headless Base queries are available; automatic link maintenance and UI readback
+are not established.
 Do not silently weaken the shared vault's Mac workflow or claim those checks
 passed. Existing conversation history is retained, but start a fresh voice
 conversation after switching to avoid reusing stale per-thread instructions.
@@ -105,3 +106,40 @@ native instruction/skill assembly from both vault and alternate workspace,
 metadata validation and bidirectional Syncthing read/write. The temporary sync
 file was removed. Phone audio and a new voice conversation require the final
 interactive acceptance check; server checks do not establish audible delivery.
+
+## Pinned Nitride retrieval
+
+The image now includes Node 22.23.2 and the portable Nitride skill from
+`EmberAGI/nitride-cli` commit `7ffaf4109efde8f3fca75e4840d8860104000c25`.
+The Dockerfile verifies the source archive SHA-256 and installs the bundled
+executable as `nitride`; there is no npm install at runtime. Startup exposes
+`/opt/nitride` through the retained Codex state's `skills/nitride` link, refusing
+an existing conflicting skill rather than overwriting it. This direct-vault
+image integration does not activate the separate Hermes profile installer.
+
+Build the new image before recreating Voice. Preserve its existing Compose
+project, mounts, UID/GID, timezone, login, model settings and sessions. Update
+only the image reference in the rendered private Compose to
+`exo-codex-vault-voice:0.153.1-nitride-7ffaf41`; back up and install the rendered
+`HOST-AGENTS.md` in both documented bootstrap locations. Deploy the updated
+`planning-rhythm-os/references/resurfacing.md` after checking the current copy
+for owner changes. Do not replace the entire vault instruction/skill tree.
+
+The host Adapter owns concrete Nitride invocations and source membership.
+Status-filter differences are preserved pending owner resolution. Saved Bases
+remain authoritative and are not copied into a new task database. Unsupported
+linked-week/sprint views remain incomplete coverage; this deployment does not
+make every planning view executable. Metadata/query errors must be reported,
+not bypassed through stale scans or weakened filters.
+
+Validate the built image without credentials first: `node --version`,
+`nitride --version`, and the upstream isolated package suite against synthetic
+fixtures. Then query the two actual daily reminder views read-only and inspect
+errors/counts without publishing personal note contents. After recreation,
+verify the versions, skill link, daemon/remote-control health and a fresh
+Astra/low backing-agent scan. A CLI/model check does not prove a phone audio
+round trip or that a resumed phone thread has refreshed its instructions.
+
+Rollback to the prior image and backed-up adapter if startup fails. Remove only
+the image-owned Nitride discovery link when rolling back to an image without
+`/opt/nitride`; retain all sessions and saved vault work.
