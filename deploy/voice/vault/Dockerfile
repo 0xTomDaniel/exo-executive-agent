@@ -3,11 +3,24 @@ FROM debian:bookworm-slim
 ARG CODEX_UID=1001
 ARG CODEX_VERSION=0.153.1
 ARG INSTALLER_SHA256=ba92dd27e5c06f0d3bbc58bfa4b9cfb6599cd2742fbb1f92a2765e6c07dedb5a
+ARG NITRIDE_COMMIT=0c33c7adb2f034d20ffeb60b825170c0fdf39018
+ARG NITRIDE_SHA256=6dd6cab741fa9e0f90eee62607d3e51baf5a06d0a0e107472acb733000855dc3
+
+COPY --from=node:22.23.2-bookworm-slim /usr/local/bin/node /usr/local/bin/node
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends bash ca-certificates curl git procps python3 ripgrep tar util-linux \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --create-home --uid ${CODEX_UID} --shell /bin/bash codex
+
+RUN curl -fsSL "https://codeload.github.com/0xTomDaniel/nitride-cli/tar.gz/${NITRIDE_COMMIT}" -o /tmp/nitride.tar.gz \
+    && echo "${NITRIDE_SHA256}  /tmp/nitride.tar.gz" | sha256sum -c - \
+    && mkdir /opt/nitride \
+    && tar -xzf /tmp/nitride.tar.gz -C /opt/nitride --strip-components=3 "nitride-cli-${NITRIDE_COMMIT}/skills/nitride" \
+    && rm /tmp/nitride.tar.gz \
+    && chmod +x /opt/nitride/scripts/nitride.mjs \
+    && ln -s /opt/nitride/scripts/nitride.mjs /usr/local/bin/nitride \
+    && node --version && nitride --version
 
 USER codex
 ENV HOME=/home/codex

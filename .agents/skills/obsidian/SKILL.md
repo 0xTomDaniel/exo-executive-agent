@@ -3,7 +3,7 @@ name: obsidian
 description: >-
   Operate Obsidian for note automation, vault search, link-graph exploration,
   daily-note workflows, task extraction, Bases workflows, and
-  plugin/theme/developer tasks via the Obsidian CLI. Use when a user asks to
+  plugin/theme/developer tasks using approved Nitride, Obsidian CLI, or filesystem capabilities. Use when a user asks to
   run or script Obsidian commands, inspect vault content, analyze note
   relationships, or automate repetitive Obsidian actions.
 metadata:
@@ -13,10 +13,12 @@ metadata:
 
 ## Overview
 
-Use this skill to execute and compose `obsidian` CLI commands safely and quickly.
+Select the available tool before composing commands. For supported read-only Base discovery, view listing and queries, prefer the installed Nitride skill/CLI across runtimes. Load its skill for invocation and compatibility limits. If Nitride is unavailable or the operation is unsupported, native Obsidian is a fallback only when its approved desktop app/CLI is available. Preserve saved filters and report errors; do not turn fallback into a weaker or incomplete successful scan.
+
+Use this skill's native workflow below for operations assigned to the Obsidian CLI. On a filesystem-only runtime, use its Adapter's supported read/edit/validation route and explicitly report unavailable application checks.
 Prefer concise command flows, discover exact command syntax with built-in help, and verify file-impacting changes.
 
-## Workflow
+## Native CLI workflow
 
 1. Confirm prerequisites:
    - Ensure the Obsidian desktop app is installed and running.

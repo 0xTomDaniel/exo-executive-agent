@@ -4,7 +4,7 @@ services:
       context: .
       args:
         CODEX_UID: "${VOICE_UID:?set vault owner UID}"
-    image: exo-codex-vault-voice:0.153.1
+    image: exo-codex-vault-voice:0.153.1-nitride-0c33c7a
     container_name: exo-codex-remote-voice
     user: "${VOICE_UID:?set vault owner UID}:${VOICE_GID:?set vault owner GID}"
     environment:
