@@ -159,3 +159,21 @@ restore. At template level, a restore onto a fresh VM should:
 5. Re-run skill install/sync from the pinned manifest.
 6. Start only the restored profile's Compose service first, then inspect health
    and logs before starting the rest.
+
+Profile-scoped deployment preserves other owners' running containers; start
+commands do not remove Compose orphans. Retire services explicitly when needed.
+Private writable runtime directories are repaired to mode 0700 on each deploy.
+
+Skill sync now records installed-content fingerprints and refuses runtime drift.
+Legacy installs without fingerprints also stop for reconciliation: preserve the
+existing directory, compare/promote needed edits to source, then move the saved
+installation aside before a fresh install. Stop runtime writers during sync.
+Do not fabricate a baseline to bypass this check.
+
+Remote deploy/runtime paths and Compose output paths must use only letters,
+digits, underscores, dots, slashes, and hyphens; plans reject other characters
+before emitting commands across the SSH/rsync shell layers.
+
+Deploy plans stop the selected Compose gateways before skill sync and restart
+them after installation. Keep other runtime writers stopped too. A collision
+stops deployment; reconcile preserved edits before resuming the gateway.

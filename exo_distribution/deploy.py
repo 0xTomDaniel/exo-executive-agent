@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shlex
 import tomllib
 from dataclasses import dataclass
@@ -8,7 +9,6 @@ from pathlib import Path
 from typing import Literal
 
 from exo_distribution.config import ProfileConfig, ValidationError
-
 
 PlanMode = Literal["dry-run", "mock-check"]
 
@@ -151,6 +151,13 @@ def build_deploy_plan(
     compose_output: Path = Path("deploy/compose/generated/hermes-multi-owner.compose.yaml"),
     selected_profile_ids: tuple[str, ...] = (),
 ) -> dict[str, object]:
+    # These paths cross both rsync and remote shell command grammars.
+    for label, value in (("deploy_root", target.deploy_root),
+                         ("runtime_root", target.runtime_root),
+                         ("compose_output", str(compose_output))):
+        if not re.fullmatch(r"[A-Za-z0-9_./-]+", value):
+            raise ValidationError(f"{label} must use only letters, digits, _, ., /, and -")
+
     installable = [
         config
         for config in profiles
@@ -221,7 +228,7 @@ def build_deploy_plan(
             "name": "create-instance-runtime-boundaries",
             "kind": "remote",
             "commands": [
-                _ssh(target, "mkdir -p " + " ".join(_runtime_dirs(target, config)))
+                _ssh(target, _runtime_boundary_command(target, config))
                 for config in installable
             ],
         },
@@ -243,6 +250,17 @@ def build_deploy_plan(
             "notes": [
                 "Plan records only Phase app/environment/path metadata and secret names.",
                 "Raw secrets, Phase service tokens, and generated bridge files stay outside git.",
+            ],
+        },
+        {
+            "name": "stop-profile-writers-before-skill-sync",
+            "kind": "remote",
+            "commands": [
+                _ssh(target, f"cd {target.deploy_root} && {compose} stop"),
+            ],
+            "notes": [
+                "Stop selected gateways before checking and replacing runtime skills.",
+                "Keep other writers stopped until compose start; reconcile collisions before restart.",
             ],
         },
         {
@@ -281,7 +299,7 @@ def build_deploy_plan(
             "kind": "remote",
             "commands": [
                 _ssh(target, f"cd {target.deploy_root} && {compose} pull"),
-                _ssh(target, f"cd {target.deploy_root} && {compose} up -d --remove-orphans"),
+                _ssh(target, f"cd {target.deploy_root} && {compose} up -d"),
             ],
         },
         {
@@ -544,6 +562,19 @@ def _compose_prefix(target: DeployTarget, compose_remote: str) -> str:
     )
 
 
+def _runtime_boundary_command(target: DeployTarget, config: ProfileConfig) -> str:
+    profile_root = f"{target.runtime_root}/{config.profile_id}"
+    private_dirs = [
+        f"{profile_root}/{name}"
+        for name in ("hermes-home", "workspace", "vault", "skills",
+                     "log-boundary", "backup-boundary", "secret-bridge")
+    ]
+    return (
+        "mkdir -p " + " ".join(shlex.quote(path) for path in _runtime_dirs(target, config))
+        + " && sudo chmod 0700 " + " ".join(shlex.quote(path) for path in private_dirs)
+    )
+
+
 def _runtime_dirs(target: DeployTarget, config: ProfileConfig) -> list[str]:
     profile_root = f"{target.runtime_root}/{config.profile_id}"
     return [
@@ -570,7 +601,7 @@ def _ssh_prefix(target: DeployTarget) -> str:
 
 
 def _ssh(target: DeployTarget, command: str) -> str:
-    return f"{_ssh_prefix(target)} -- sh -lc {shlex.quote(command)}"
+    return f"{_ssh_prefix(target)} {shlex.quote(command)}"
 
 
 def _rsync_ssh(target: DeployTarget) -> str:

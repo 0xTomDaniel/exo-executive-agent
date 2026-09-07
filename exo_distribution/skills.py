@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import tomllib
@@ -8,7 +9,6 @@ from pathlib import Path, PurePosixPath
 from typing import Literal
 
 from exo_distribution.config import ValidationError
-
 
 SkillKind = Literal["safe_core", "external_action"]
 SkillCategory = Literal["general", "personal"]
@@ -169,6 +169,13 @@ def install_planned_skills(
         details = ", ".join(f"{plan.source.id}: {plan.reason}" for plan in collisions)
         raise ValidationError(f"skill install collision: {details}")
 
+    # Plans are reviewable snapshots, not permission to overwrite later edits.
+    # Writers must remain stopped throughout this check and installation.
+    for plan in plans:
+        action, reason = _classify_existing_install(plan.source, plan.actual_destination)
+        if action == "collision" or action != plan.action:
+            raise ValidationError(f"skill install changed since planning: {plan.source.id}: {reason}")
+
     installed: list[SkillInstallPlan] = []
     for plan in plans:
         if plan.action == "up-to-date":
@@ -177,7 +184,8 @@ def install_planned_skills(
         if plan.action == "replace" and plan.actual_destination.exists():
             shutil.rmtree(plan.actual_destination)
         plan.actual_destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(plan.source_dir, plan.actual_destination)
+        shutil.copytree(plan.source_dir, plan.actual_destination,
+                        ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
         _write_source_metadata(plan, manifest)
         installed.append(plan)
     return installed
@@ -319,6 +327,8 @@ def _classify_existing_install(
     source: SkillSource,
     actual_destination: Path,
 ) -> tuple[PlanAction, str]:
+    if actual_destination.is_symlink():
+        return "collision", "existing skill destination is a symlink"
     if not actual_destination.exists():
         return "install", "missing from runtime skills directory"
     metadata_path = actual_destination / ".exo-skill-source.json"
@@ -328,6 +338,8 @@ def _classify_existing_install(
         metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
         return "collision", f"existing source metadata is invalid JSON: {exc}"
+    if not isinstance(metadata, dict):
+        return "collision", "existing source metadata must be an object"
     expected_identity = {
         "source_id": source.id,
         "repo": source.repo,
@@ -340,6 +352,11 @@ def _classify_existing_install(
                 f"existing metadata {key}={metadata.get(key)!r} "
                 f"does not match {expected!r}",
             )
+    baseline = metadata.get("installed_files")
+    if not isinstance(baseline, dict):
+        return "collision", "existing install lacks a content baseline; preserve and reconcile it"
+    if baseline != _installed_files(actual_destination):
+        return "collision", "runtime skill content changed; preserve or promote edits before syncing"
     if metadata.get("ref") == source.ref:
         return "up-to-date", "installed ref already matches manifest"
     return (
@@ -348,8 +365,29 @@ def _classify_existing_install(
     )
 
 
+def _installed_files(root: Path) -> dict[str, str]:
+    """Fingerprint installed content, excluding source metadata and Python caches."""
+    files: dict[str, str] = {}
+    for path in sorted(root.rglob("*")):
+        relative = path.relative_to(root)
+        if (relative.as_posix() == ".exo-skill-source.json"
+                or "__pycache__" in relative.parts or path.suffix == ".pyc"):
+            continue
+        if path.is_symlink():
+            files[relative.as_posix()] = "symlink:" + str(path.readlink())
+        elif path.is_file():
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            files[relative.as_posix()] = f"file:{path.stat().st_mode & 0o111}:{digest}"
+        elif path.is_dir():
+            files[relative.as_posix()] = "directory"
+        else:
+            files[relative.as_posix()] = "special"
+    return files
+
+
 def _write_source_metadata(plan: SkillInstallPlan, manifest: SkillsManifest) -> None:
     metadata = {
+        "installed_files": _installed_files(plan.actual_destination),
         "manifest": str(manifest.path),
         "profile": plan.profile_id,
         "source_id": plan.source.id,

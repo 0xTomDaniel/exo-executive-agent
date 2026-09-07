@@ -53,6 +53,24 @@ class VideoNoteTests(unittest.TestCase):
             self.assertIn("My annotation.", second.read_text())
             self.assertEqual(len(list(root.rglob("*.md"))), 1)
 
+    def test_metadata_recovery_reuses_original_url_bookmark(self):
+        import tempfile
+
+        video = script("save-video-content", "save_video.py")
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            original_url = "https://youtu.be/fixture"
+            first = video.save_note(root, {"original_url": original_url,
+                "metadata_status": "unavailable"}, "2026-09-05", None)
+            first.write_text(first.read_text() + "\nKeep my annotation.\n")
+            recovered = {"original_url": original_url,
+                "webpage_url": "https://www.youtube.com/watch?v=fixture",
+                "id": "fixture", "extractor_key": "Youtube", "title": "Recovered"}
+            second = video.save_note(root, recovered, "2026-09-06", None)
+            self.assertEqual(second, first)
+            self.assertIn("Keep my annotation.", second.read_text())
+            self.assertEqual(len(list(root.rglob("*.md"))), 1)
+
     def test_cli_keeps_url_when_metadata_tool_is_unavailable(self):
         import os
         import subprocess

@@ -637,6 +637,7 @@ class TomLocalDistributionTest(unittest.TestCase):
                 "create-instance-runtime-boundaries",
                 "install-or-update-profile-material",
                 "materialize-phase-secret-bridges",
+                "stop-profile-writers-before-skill-sync",
                 "install-or-sync-profile-skills",
                 "normalize-container-runtime-ownership",
                 "compose-start-or-restart",

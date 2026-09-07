@@ -362,9 +362,15 @@ promoted through a git commit.
 
 Collision behavior is fail-closed: duplicate selected names or install
 destinations fail, existing runtime directories without Exo metadata fail, and
-installed metadata from another source fails. Matching source id/repo/path/ref
-is up to date; a changed pinned ref for the same source id/repo/path is replaced
-by the installer.
+installed metadata from another source fails. Matching source id/repo/path/ref is up to date only when installed content
+matches its recorded baseline. A changed pinned ref for the same source is
+replaced only when that baseline still matches. Missing baselines (including
+legacy installs), changed files, and symlink destinations fail closed; preserve
+and reconcile or promote runtime edits before reinstalling. Python bytecode
+caches are excluded from distribution and drift detection. Installation checks
+plans again before writing; runtime writers must be stopped throughout sync.
+This protects against accidental overwrite, not a compromised runtime editing
+both its files and baseline metadata.
 
 ### Storage Interface
 
@@ -535,3 +541,13 @@ the assistant identifies as Exo rather than Hermes.
 - EMB-276: Set up ESXi VM for personal Hermes agents
 - EMB-317: Select privacy-preserving filesystem for personal agents
 - Phase docs: https://docs.phase.dev/
+
+### Deployment regression guarantees
+
+Generated SSH commands preserve the complete expression through the local and
+remote shells. Compose start never implicitly removes orphan services: a subset
+profile deployment must preserve unselected owners in the shared project.
+Removing a retired service is a separate explicit operator action. Runtime
+home, workspace, vault, skills, logs, backups, and secret-bridge directories
+receive explicit 0700 modes before materialization, including on redeploy;
+container-writable paths are subsequently assigned to UID/GID 10000.

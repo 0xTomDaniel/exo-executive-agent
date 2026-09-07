@@ -182,6 +182,7 @@ def build_note(metadata: dict, created_date: str, media_rel: str | None) -> str:
         f"source_creator: {json.dumps(creator)}",
     ]
     for key, value in (
+        ("source_original_url", metadata.get("original_url")),
         ("source_id", metadata.get("id")),
         ("source_provider", metadata.get("extractor_key")),
         ("metadata_status", metadata.get("metadata_status", "available")),
@@ -237,7 +238,7 @@ def build_note(metadata: dict, created_date: str, media_rel: str | None) -> str:
 
 def find_saved_note(vault_root: Path, metadata: dict) -> Path | None:
     """Resolve an existing capture by canonical URL or provider-qualified source ID."""
-    url = metadata.get("webpage_url") or metadata.get("original_url")
+    urls = {metadata.get("webpage_url"), metadata.get("original_url")} - {None, ""}
     source_id, provider = metadata.get("id"), metadata.get("extractor_key")
     for path in sorted((vault_root / "Assets" / "Videos").rglob("*.md")):
         text = path.read_text(encoding="utf-8")
@@ -247,7 +248,8 @@ def find_saved_note(vault_root: Path, metadata: dict) -> Path | None:
         fields = yaml.safe_load(match.group(1))
         if not isinstance(fields, dict):
             raise TypeError(f"Cannot check duplicate identity: invalid metadata in {path}")
-        if (url and fields.get("source_url") == url) or (
+        saved_urls = {fields.get("source_url"), fields.get("source_original_url")} - {None, ""}
+        if urls.intersection(saved_urls) or (
             source_id
             and provider
             and fields.get("source_id") == str(source_id)
@@ -315,7 +317,7 @@ def main():
             "original_url": args.url,
             "metadata_status": "unavailable",
         }
-    metadata.setdefault("original_url", args.url)
+    metadata["original_url"] = args.url
     existing = find_saved_note(vault_root, metadata)
     if existing:
         print(

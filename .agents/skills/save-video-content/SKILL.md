@@ -75,3 +75,5 @@ uv run .agents/skills/save-video-content/scripts/save_video.py "<url>" --vault-r
 - Prefer this skill for `yt-dlp`-supported URLs. Do not promise support for DRM-protected/private content you cannot access.
 - If the user also expresses intent around the saved media (for example, wanting to watch it with someone later), capture that intent in the daily note and/or the most relevant person/task note.
 - If the exact checkout/review/watch date matters later, ask for it and store it in the right task/note rather than leaving it only in chat.
+
+Retry identity checks compare both the supplied URL and canonical provider URL, plus provider-qualified source IDs. Metadata recovery reuses a previously saved URL-only bookmark and preserves its annotations.

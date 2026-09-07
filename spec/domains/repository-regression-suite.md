@@ -59,3 +59,8 @@ Expected coverage:
   access is required.
 - committed files do not include private runtime homes, logs, backups, sessions,
   personal files, Phase exports, or generated secret bridge values.
+
+PR #1 repair regressions exercise generated SSH commands through a local shell,
+selected-profile preservation, explicit private directory modes, runtime skill
+drift rejection, and video retry identity across metadata recovery. They do not
+claim live SSH/Docker/provider integration proof.
