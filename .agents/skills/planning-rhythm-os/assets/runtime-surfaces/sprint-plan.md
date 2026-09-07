@@ -54,5 +54,5 @@
 
 ## Carry-Forward Decisions
 - Now:
-- Later:
+- Scheduled follow-up (preserve commitment):
 - Drop:

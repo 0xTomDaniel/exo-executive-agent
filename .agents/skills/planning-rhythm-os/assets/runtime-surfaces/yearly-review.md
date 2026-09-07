@@ -60,7 +60,7 @@
 - Main bets / themes:
 - Constraints / realities:
 - Next cycle to plan concretely:
-- Carry-forward decisions (Now / Later / Drop):
+- Carry-forward decisions (commit / schedule / close):
 - What changes next year so execution improves:
 
 ## Progress / resumption

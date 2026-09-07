@@ -7,11 +7,11 @@
 - [ ] Surface at least one planned/cadenced resurfacing item and one random rediscovery item when possible
 - [ ] Lock Top 3 outcomes (compare mind dump vs system; map to existing tasks or create new task notes)
 - [ ] Protect at least one deep-work block (target 180m+)
-- [ ] Decide carry-forward using Now / Later / Drop
+- [ ] Decide carry-forward using commit / schedule / close
 
 ## Surface Checks
 - [ ] Review [[Planning/Weekly Tasks.base|Weekly Tasks Base]] → Daily Fallback Sweep / Due Today / Resurface Now
-- [ ] Explicitly name every open task with `due` today or `review_on` today and route it (Top 3, Admin Strike, Later, delegate, or drop)
+- [ ] Explicitly name every open task with `due` today or `review_on` today and route it (Top 3, Admin Strike, schedule with review_on, delegate, or drop)
 - [ ] Review [[Planning/Weekly Tasks.base|Weekly Tasks Base]] → Overdue and stale `review_on < today`; surface counts plus high-salience names/next actions
 - [ ] If overdue/stale list is too large, schedule bounded cleanup or weekly-review catch-up; do not silently omit the remainder
 - [ ] Review [[Planning/Weekly Tasks.base|Weekly Tasks Base]] → At Risk Carry
@@ -47,5 +47,5 @@
 
 ## Carry-Forward Decisions
 - **Now (this week):**
-- **Later (defer + review_on):**
+- **Scheduled follow-up (preserve commitment + review_on):**
 - **Drop:**

@@ -136,7 +136,7 @@ When the user has an explicit higher-level purpose or mission, treat it as a gov
    - Pre-select Monday Top 3, first deep-work block, hard habits/appointments, and any bounded pre-deep-work Admin Strike.
 8. **Close planning**
    - Link Friday review to the next-week artifact.
-   - Propagate Now/Later/Drop and carry-forward decisions into real task metadata.
+   - Propagate commit / schedule / close and carry-forward decisions into real task metadata.
    - Remove provisional markers and mark the plan locked only after the owner confirms it.
    - State what changes next week and resume the remaining Sunday habit anchors from the effective-dated roster.
 
@@ -169,7 +169,7 @@ Canonical procedure lives here. Runtime surfaces can point, prompt, and summariz
 - optional sprint/cycle/quarter/year review and plan artifacts
 
 ## Boundary with planning-task-os
-Use this skill for cadence/review/planning flow. Use `planning-task-os` for task property semantics, carry-forward, Now/Later/Someday/Drop, `importance`, `due`, `review_on`, and `status` updates.
+Use this skill for cadence/review/planning flow. Use `planning-task-os` for task property semantics, carry-forward, commit / schedule / park / close, `importance`, `due`, `review_on`, and `status` updates.
 
 ## Durable completion and interruptions
 

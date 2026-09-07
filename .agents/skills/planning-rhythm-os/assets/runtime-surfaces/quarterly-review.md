@@ -54,7 +54,7 @@
 - Constraints:
 - Balanced-life anchors to protect:
 - Next cycle to plan concretely:
-- Carry-forward decisions (Now / Later / Drop):
+- Carry-forward decisions (commit / schedule / close):
 - What changes next quarter so execution improves:
 
 ## Progress / resumption

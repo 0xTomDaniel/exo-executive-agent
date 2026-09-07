@@ -45,7 +45,7 @@ Prefer concise command flows, discover exact command syntax with built-in help, 
 5. Model notes according to their content:
    - Use the caller's canonical note type and destination after discovery.
    - Entity notes need minimal queryable metadata; add relationships supported by source evidence.
-   - Use linked values for categorical/entity properties and typed scalars for dates, numbers, and checkboxes.
+   - Use linked values for categorical/entity properties and typed scalars for dates, numbers, and checkboxes. Before setting note `status`, read `references/status-canon.md`: each note type has a closed lifecycle family, and descriptive notes need no generic status.
    - Choose body sections appropriate to the note; do not impose a project template on every capture.
    - For true multi-value fields, use lists instead of comma-separated strings.
    - Keep workflow decisions in the invoking skill and historical/current state in the relevant notes.
@@ -69,7 +69,7 @@ Prefer concise command flows, discover exact command syntax with built-in help, 
    - Prefer standard filesystem read/edit tools for surgical Markdown content edits when they are more precise or reliable than CLI append/prepend flows.
 8. Verify outcomes:
    - Read output with `obsidian read`.
-   - Before a direct metadata write, validate the candidate note with `uv run scripts/validate_notes.py <candidate.md>`; after writing, validate the saved path and check `property:read` or the relevant Base. Native property updates still require application readback. Invalid YAML or duplicate keys are errors, never empty/open/done state.
+   - Before a direct metadata write, validate the candidate note with `uv run scripts/validate_notes.py <candidate.md>`; after writing, validate the saved path and check `property:read` or the relevant Base. Native property updates still require application readback. Invalid YAML, duplicate keys, noncanonical status and missing Closed resolution are errors, never empty/open/done state. The validator checks the status canon by default; safe representation repairs require `--fix-status --backup-dir <private-directory-outside-vault>`. Review evidence before semantic migrations.
    - For a maintenance sweep, pass a vault directory to the validator (hidden directories are excluded); pass a hidden skill/reference path explicitly when that is the target.
    - Re-run search/tasks/base queries to confirm state changes.
    - Validate property semantics after updates (`property:read` + note read). Trust Obsidian CLI's canonical serialization: single-value `type=list` properties may render as quoted scalars in YAML and are still valid list-typed properties.
@@ -184,7 +184,7 @@ obsidian tags counts
 ```bash
 python scripts/link_neighborhood.py "Relocation - Denver Decision" --depth 2
 python scripts/link_path.py "Relocation - Denver Decision" "Denver" --max-depth 4
-uv run scripts/filtered_neighborhood.py "Relocation - Denver Decision" --depth 2 --tag relocation --prop status=active
+uv run scripts/filtered_neighborhood.py "Relocation - Denver Decision" --depth 2 --tag relocation --prop status=Doing
 python scripts/bridge_finder.py "Denver" "Jeremy" --depth 2 --include-backlinks
 python scripts/unresolved_triage.py "Relocation - Denver Decision" --depth 2
 ```

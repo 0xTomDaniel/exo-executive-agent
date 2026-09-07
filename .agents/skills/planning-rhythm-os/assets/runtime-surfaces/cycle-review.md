@@ -60,7 +60,7 @@
 - Repeated-miss decision rule:
 - Risks to manage:
 - Balanced-life anchors to protect:
-- Carry-forward decisions (Now / Later / Drop):
+- Carry-forward decisions (commit / schedule / close):
 - What changes next cycle so execution improves:
 
 ## Progress / resumption
