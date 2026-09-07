@@ -94,6 +94,22 @@ rebuild/rollback procedure are in [deploy/voice/sidecar](deploy/voice/sidecar/RE
 It attaches to an existing owner Hermes service; it does not deploy Hermes or
 commit authentication, conversations, or host configuration.
 
+### Voice thread model selection quirk
+
+In iOS remote tests on 2026-09-07 with Codex app-server `0.153.4`, creating a
+thread directly in Voice selected `gpt-5.6-terra` with low reasoning effort,
+despite the server default being `gpt-6-astra` / low. This concerns the backing
+agent model, not the realtime speech model. The cause of the startup selection
+has not been established; the server default alone did not prevent it.
+
+**Workaround:** create a text thread with the model selector set to
+`gpt-6-astra` and low effort, send a text message, then enter Voice in that same
+thread. In the tested text-created thread, the text turn, subsequent Voice
+backing turn, and call-ending handoff all used Astra / low. Creating another
+thread directly in Voice can encounter the quirk again. Verify the actual
+backing model in turn logs when checking whether a client/server update fixes
+this behavior.
+
 ## Local Smoke
 
 Run the no-credentials Tom local/dev smoke:
