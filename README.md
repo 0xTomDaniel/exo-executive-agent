@@ -184,7 +184,7 @@ category folders such as `general/` or `personal/`.
 source repository, source path, pinned ref, general/personal category, target
 profiles, install destination, source-of-truth policy, collision policy, sync
 behavior, and the promotion path for runtime-created skills. Tom/profile-specific
-procedural guidance such as `tom-operating-style` and `ember-weekly-planning`
+procedural guidance is owned solely by `tom-operating-style` (including its team-planning module), which
 stays in the main flat skill tree, but the manifest targets it only to
 `tom-personal-agent`.
 

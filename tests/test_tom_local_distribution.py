@@ -46,8 +46,8 @@ TOM_OPERATING_STYLE = AGENT_SKILLS / "tom-operating-style/SKILL.md"
 TOM_OPERATING_PATTERNS = AGENT_SKILLS / "tom-operating-style/references/operating-patterns.md"
 PLANNING_RHYTHM_DAILY = AGENT_SKILLS / "planning-rhythm-os/references/daily-rhythm.md"
 OBSIDIAN_SKILL = AGENT_SKILLS / "obsidian/SKILL.md"
-EMBER_WEEKLY_SKILL = AGENT_SKILLS / "ember-weekly-planning/SKILL.md"
-EMBER_WEEKLY_ICP = AGENT_SKILLS / "ember-weekly-planning/references/icp-qualification.md"
+EMBER_WEEKLY_SKILL = AGENT_SKILLS / "tom-operating-style/modules/ember-weekly-planning/guide.md"
+EMBER_WEEKLY_ICP = AGENT_SKILLS / "tom-operating-style/modules/ember-weekly-planning/references/icp-qualification.md"
 
 
 class TomLocalDistributionTest(unittest.TestCase):
@@ -121,7 +121,7 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertIn("Named scheduled rituals and recovery-aware habits", daily_rhythm)
         self.assertIn("Prefer Obsidian CLI for note creation", obsidian_skill)
         self.assertIn("Bases for structured tracking", obsidian_skill)
-        self.assertIn("Run Ember's weekly Friday team review/planning session", ember_weekly)
+        self.assertIn("Use this module to run or maintain Ember's Friday team planning ritual", ember_weekly)
         self.assertIn("Recap is input; next-week commitments are the output", ember_weekly)
         self.assertIn("Monday launchpad", ember_weekly)
         self.assertIn("separate economic lane", ember_weekly)
@@ -434,7 +434,6 @@ class TomLocalDistributionTest(unittest.TestCase):
             {
                 "agent-browser",
                 "asset-assessment",
-                "ember-weekly-planning",
                 "exo-daily-brief",
                 "hermes-file-brief",
                 "meow",
@@ -466,11 +465,6 @@ class TomLocalDistributionTest(unittest.TestCase):
         self.assertEqual(sources_by_id["exo.tom_operating_style"].category, "personal")
         self.assertEqual(
             sources_by_id["exo.tom_operating_style"].profile_targets,
-            ("tom-personal-agent",),
-        )
-        self.assertEqual(sources_by_id["exo.ember_weekly_planning"].category, "personal")
-        self.assertEqual(
-            sources_by_id["exo.ember_weekly_planning"].profile_targets,
             ("tom-personal-agent",),
         )
         for source_id in ("exo.meow", "exo.asset_assessment"):
@@ -515,7 +509,6 @@ class TomLocalDistributionTest(unittest.TestCase):
                 "exo.planning_capture_os",
                 "exo.planning_rhythm_os",
                 "exo.planning_task_os",
-                "exo.ember_weekly_planning",
                 "exo.tutor",
                 "exo.tom_operating_style",
             ],

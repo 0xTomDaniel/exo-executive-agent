@@ -11,7 +11,7 @@ Locate the client and config under `$HERMES_HOME/herdr-fabric`; if the environme
 ```sh
 python3 "$HERMES_HOME/herdr-fabric/herdr_fabric.py" hosts --config "$HERMES_HOME/herdr-fabric/config.json"
 python3 "$HERMES_HOME/herdr-fabric/herdr_fabric.py" agents --host exo-local --config "$HERMES_HOME/herdr-fabric/config.json"
-python3 "$HERMES_HOME/herdr-fabric/herdr_fabric.py" workspaces --host tom-mac --config "$HERMES_HOME/herdr-fabric/config.json"
+python3 "$HERMES_HOME/herdr-fabric/herdr_fabric.py" workspaces --host "<registered-host>" --config "$HERMES_HOME/herdr-fabric/config.json"
 python3 "$HERMES_HOME/herdr-fabric/herdr_fabric.py" review --host exo-local --request-id review-unique-id --input "Inspect the approved review source for concrete bugs; do not edit." --config "$HERMES_HOME/herdr-fabric/config.json"
 python3 "$HERMES_HOME/herdr-fabric/herdr_fabric.py" result --host exo-local --request-id review-unique-id --config "$HERMES_HOME/herdr-fabric/config.json"
 ```

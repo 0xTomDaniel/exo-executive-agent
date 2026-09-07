@@ -80,3 +80,7 @@ Use this skill for routine task creation, triage, completion/closure, carry-forw
 - `references/task-model.md` — canonical semantics, importance scale, Eisenhower interpretation, and anti-inflation rules.
 - `references/backlog-hygiene.md` — active-task-cap rules, carry-forward hygiene, and backlog defaults.
 - `references/migration.md` — workflow for renaming task properties and updating dependent artifacts safely.
+
+## Defaults and owner settings
+
+The schedules, habit examples, durations, planning horizons, capacity limits, and escalation thresholds in this package are general defaults. Explicit owner settings and current approved commitments override them. Do not treat these defaults as evidence about an owner’s actual habits, biography, projects, or preferences. Owner-specific preferences belong in the designated owner skill; current facts belong in approved memory.

@@ -138,6 +138,15 @@ def invoke(arguments):
     )
 
 
+def owner_context():
+    """Require explicit approved account selection; never infer another owner."""
+    email = os.environ.get("MEOW_EXO_EMAIL", "").strip()
+    service = os.environ.get("MEOW_EXO_KEYCHAIN_SERVICE", "").strip()
+    if not email or not service:
+        raise ValueError("owner_context_required")
+    return email, service
+
+
 def main():
     args = sys.argv[1:]
     if not args or args[0] not in COMMANDS:
@@ -154,14 +163,19 @@ def main():
         print("Blocked: credential/raw/output overrides are not allowed.", file=sys.stderr)
         return 3
     try:
+        email, service = owner_context()
+    except ValueError:
+        print("owner_context_required: configure MEOW_EXO_EMAIL and MEOW_EXO_KEYCHAIN_SERVICE privately", file=sys.stderr)
+        return 3
+    try:
         credential = subprocess.run(
             [
                 "security",
                 "find-generic-password",
                 "-a",
-                os.environ.get("MEOW_EXO_EMAIL", "tom@hamiltonspice.com"),
+                email,
                 "-s",
-                "com.exocortex.meow.hamilton",
+                service,
                 "-w",
             ],
             capture_output=True,

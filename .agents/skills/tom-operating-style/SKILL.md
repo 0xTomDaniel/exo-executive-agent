@@ -2,7 +2,8 @@
 name: tom-operating-style
 description: >-
   User-specific operating guidance for working effectively with Tom Daniel,
-  including structure-vs-brittleness calibration, accountability stance,
+  including Ember Friday team planning with Sebastian Varela,
+  ICP/customer experiments and Sunday handoff, plus structure-vs-brittleness calibration, accountability stance,
   Tom-specific application of graceful degradation, Tom's [[💎]] highest-importance marker, and tactics/framing that reliably help him act. Use
   when planning or coaching with Tom, deciding how hard to push on rituals,
   adapting general planning skills to Tom's working style, or choosing whether
@@ -51,3 +52,8 @@ Use this skill when the question is not only **what should happen**, but **how E
 
 ## Reference map
 - `references/operating-patterns.md` — structured-but-elastic defaults, Tom-fit graceful-degradation application, Tom-fit accountability stance, and tactic preferences.
+
+## Optional modules
+
+- For Ember weekly recap, Friday team planning, ICP/customer experiments, or the Sunday handoff, load `modules/ember-weekly-planning/guide.md`. Its adjacent references, scaffold, and evals are part of this skill; it is not a separately discoverable or installed skill.
+- For personal financial constraints, load `references/financial-preferences.md`; account bindings remain private configuration.

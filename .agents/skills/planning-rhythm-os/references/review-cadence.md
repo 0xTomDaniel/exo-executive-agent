@@ -9,7 +9,7 @@ aliases:
 
 ## Core cadence rule
 
-Tom's default weekly split is:
+The configurable default weekly split is:
 - **Friday: weekly review / execution closeout.** Review the week while work evidence is fresh; run retrospective synthesis, outcome conversion, balance/habits, resurfacing, and backlog hygiene.
 - **Sunday: weekly planning / reset.** Reconcile only material Saturday/Sunday evidence, consume Friday's review outputs, choose the next Weekly MIT and Top 3, establish capacity/tradeoffs, and set Monday's launchpad.
 
@@ -64,7 +64,7 @@ Every cadence review and next-period plan explicitly considers:
 
 The goal is not fake equal weighting. Startup-founder periods may be intentionally asymmetric; record what is protected, consciously deferred, and why.
 
-Preserve intrinsically motivated play separately from externally evidenced expression. Private creative nourishment can count without publication unless the selected outcome is inherently communicative or Tom explicitly chose a sharing contract.
+Preserve intrinsically motivated play separately from externally evidenced expression. Private creative nourishment can count without publication unless the selected outcome is inherently communicative or the owner explicitly chose a sharing contract.
 
 ## Governing-purpose alignment
 When the user has an explicit higher-level purpose or mission, treat it as a governing layer over the portfolio rather than automatically creating another equal lane.
@@ -82,7 +82,7 @@ When the user has an explicit higher-level purpose or mission, treat it as a gov
 
 ## Friday weekly review process
 1. **Mind dump first**
-   - Capture Tom's raw thoughts in his own words before opening structured task views.
+   - Capture the owner's raw thoughts in their own words before opening structured task views.
    - Do not pre-fill the mind dump from system summaries.
 2. **Read the week back**
    - Read available daily artifacts/message logs from Monday through Friday.
@@ -137,7 +137,7 @@ When the user has an explicit higher-level purpose or mission, treat it as a gov
 8. **Close planning**
    - Link Friday review to the next-week artifact.
    - Propagate Now/Later/Drop and carry-forward decisions into real task metadata.
-   - Remove provisional markers and mark the plan locked only after Tom confirms it.
+   - Remove provisional markers and mark the plan locked only after the owner confirms it.
    - State what changes next week and resume the remaining Sunday habit anchors from the effective-dated roster.
 
 ## Required outputs

@@ -134,6 +134,12 @@ def plan_skill_install(
     _reject_selected_manifest_collisions(selected)
 
     actual_root = install_root if install_root is not None else Path(manifest.default_install_root)
+    if profile_id == "tom-personal-agent" and (actual_root / "ember-weekly-planning").exists():
+        raise ValidationError(
+            "retired standalone ember-weekly-planning remains installed; preserve and reconcile "
+            "its edits into tom-operating-style/modules/ember-weekly-planning, then move the "
+            "old directory outside skill discovery before syncing"
+        )
     plans: list[SkillInstallPlan] = []
     for source in selected:
         runtime_destination = PurePosixPath(source.install_destination)

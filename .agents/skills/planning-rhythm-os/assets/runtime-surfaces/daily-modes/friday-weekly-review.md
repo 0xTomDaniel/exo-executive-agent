@@ -1,5 +1,5 @@
 ## Friday Weekly Review / Execution Close
-- [ ] Capture the weekly mind dump first, in Tom's own words
+- [ ] Capture the weekly mind dump first, in the owner's own words
 - [ ] Read the effective-dated habit roster; name today’s scheduled movement/rest and meditation anchors, including combined rituals or an explicit substitute/re-entry point
 - [ ] Protect the main Friday delivery outcome before the review block unless a hard constraint requires otherwise
 - [ ] Read Monday–Friday daily artifacts/message evidence and reconcile missing reality

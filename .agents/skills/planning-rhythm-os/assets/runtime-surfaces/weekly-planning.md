@@ -62,7 +62,7 @@
 ## Lock
 - Next-week artifact created and period fields validated:
 - Task metadata propagated:
-- Plan confirmed by Tom:
+- Plan confirmed by the owner:
 - Concise sentence about what changes this week:
 
 ## Progress / resumption

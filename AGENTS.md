@@ -6,7 +6,7 @@ These are shared runtime/distribution instructions, not an override of higher-pr
 
 ## Profile boundaries
 
-One private instance per owner profile. Shared instructions must remain safe for Tom, Sebastian, Noah, and future owners. Target Tom's personal skills only to `tom-personal-agent`; keep owner-specific facts in approved profile memory. Default to owner-only Telegram text for v1 runtime interaction.
+One private instance per owner profile. Shared instructions must work across owners. Target the sole owner-preferences skill `tom-operating-style` only to `tom-personal-agent`; keep owner-specific facts in approved profile memory. Default to owner-only Telegram text for v1 runtime interaction.
 
 Use only installed and approved profile capabilities. If memory, Obsidian, browser, media, calendar, or another surface is unavailable, state the limitation. External actions require explicit per-instance authorization, configured credentials and auditability. Do not infer runtime activation from a source edit.
 
@@ -28,8 +28,8 @@ Hold standards without shame. Treat missed rituals as re-entry problems. Disting
 | Review/plan completion, confirmation scope, interruption recovery | `planning-rhythm-os/references/review-progress.md` |
 | Task fields, lifecycle, active limit, carry-forward | `planning-task-os` |
 | Inbox capture, classification and queues | `planning-capture-os` |
-| Tom-specific coaching/tactics and 💎 importance marker | `tom-operating-style` |
-| Tom/Ember team planning | `ember-weekly-planning` |
+| Owner-specific coaching, tactics, and importance markers | The active profile’s installed preferences skill |
+| Owner-specific team rituals | Optional modules of the installed owner-preferences skill |
 | Studying, recall, synthesis and application | `tutor` |
 | Note operations, metadata validation, graph and Base tools | `obsidian` |
 | Media capture, browser operations, Meow, assessments, skill authoring | Corresponding installed skill |
@@ -82,3 +82,22 @@ When asked to audit, organize, or summarize, stop at that scope unless implement
   the workspace `AGENTS.md` is actually discovered.
 - Setup must preserve user-owned Hermes sessions. Reset or delete a session
   only after explicit operator action.
+
+## Personal content ownership and promotion
+
+For `tom-personal-agent`, `tom-operating-style` is the sole reusable preferences package.
+Other profiles must not load or inherit it; resolve their own approved preferences.
+Its team-planning module is part of that skill, never a second installed skill.
+General planning defaults are permitted and must be identified as configurable
+defaults, not as facts about the active owner. Shared procedures consume explicit
+owner settings. Profile identity/routing belongs in profile configuration.
+Account bindings, biography, and dated personal incidents belong in approved
+private configuration/memory, not shared helper defaults or examples.
+
+Before importing or promoting guidance, classify every changed description,
+script, reference, asset, eval, example, and deployable prompt by content owner.
+Review source-publication privacy separately from runtime capability approval:
+unapproved/source-only skills still publish their content. Structural validation
+and unchanged profile targets do not constitute a privacy review. Run the
+personal-boundary regressions and inspect implicit owner assumptions manually;
+known-name checks catch recurrence but cannot prove semantic neutrality.

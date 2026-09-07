@@ -112,7 +112,7 @@ Before execution, state:
 6. **Expansion criteria** — evidence required before adding sophistication or widening rollout.
 
 ### One-working-day enabler checkpoint
-If Tom spends one full working day of manual effort on an enabler without moving the release/evidence gate:
+If the owner spends one full working day of manual effort on an enabler without moving the release/evidence gate:
 1. Stop before silently beginning another day.
 2. Name what changed and whether the enabler is still truly blocking.
 3. Choose explicitly: continue deliberately, bypass, reduce, delegate/parallelize, or park.
@@ -132,7 +132,7 @@ If the same key outcome misses two consecutive weekly gates or one sprint gate, 
 - Do not label enabling progress as shipped outcome progress.
 - Do not dismiss legitimate product discovery; translate it into defaults, configuration, staged safeguards, or explicit non-goals.
 - Do not require a finished product for every external test; use mockups, specs, manual service, or structured interviews where valid.
-- Do not let parallel agentic/tooling work consume Tom's attention merely because it can continue autonomously; measure it by whether it advances the release contract.
+- Do not let parallel agentic/tooling work consume the owner's attention merely because it can continue autonomously; measure it by whether it advances the release contract.
 
 ## Final rule
 These tactics are defaults, not brittle laws. When reality breaks them, choose the smallest explicit degradation path and re-enter cleanly.

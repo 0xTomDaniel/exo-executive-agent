@@ -360,3 +360,19 @@ After testing the skill, users may request improvements. Often this happens righ
 2. Notice struggles or inefficiencies
 3. Identify how SKILL.md or bundled resources should be updated
 4. Implement changes and test again
+
+## Owner-content classification before promotion
+
+Before importing or updating a distributable package, inspect its description,
+scripts, references, assets, evals, and examples for personal content. General
+procedural defaults may remain if labeled as configurable. Reusable personal
+preferences belong in the designated owner-preferences skill (with optional
+modules), not in a second skill. Private identities, account bindings, biography,
+and dated incidents belong in private configuration/memory. Check deployable
+prompts separately; they may bypass skill installation.
+
+An unapproved package still exposes source content. Unchanged profile targets
+and successful structural validation do not establish privacy. Run repository
+personal-boundary regressions and review implicit assumptions manually before
+promotion. Never copy a private vault package wholesale solely because it is
+the newest version. Preserve useful procedure while classifying each change.

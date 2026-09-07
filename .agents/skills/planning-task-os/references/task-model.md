@@ -49,7 +49,7 @@ Use verbal anchors tied to planning horizons so they stay less fuzzy.
 - Top leverage / top consequence.
 - Usually only a tiny number of active tasks should have this level.
 - Think: **current week / current crunch lane**.
-- Example: a must-ship deadline path like [[Projects/Arbitrum Milestone 3]] during the final days.
+- Example: a must-ship deadline path like [[Projects/Example Release]] during the final days.
 
 ### Very important
 - Clearly matters this week or sprint.

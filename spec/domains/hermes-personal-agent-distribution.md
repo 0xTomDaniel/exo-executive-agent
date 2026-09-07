@@ -348,8 +348,8 @@ can prove multi-repo parsing and install/update behavior.
 
 Profile-specific skills such as `tom-operating-style` may live in the shared
 flat source tree, but they must be selected through `profile_targets` rather
-than by nesting them in a separate personal directory. Tom's operating-style
-skill and Tom/Ember weekly-planning skill target `tom-personal-agent` only.
+than by nesting them in a separate personal directory. `tom-operating-style` is the sole Tom-specific preferences skill and targets
+`tom-personal-agent` only. Ember planning is an optional module within it.
 
 `scripts/install_skills.py` is the first installer/package-manager path. It
 loads the manifest, selects approved entries for a target profile, maps
@@ -551,3 +551,26 @@ Removing a retired service is a separate explicit operator action. Runtime
 home, workspace, vault, skills, logs, backups, and secret-bridge directories
 receive explicit 0700 modes before materialization, including on redeploy;
 container-writable paths are subsequently assigned to UID/GID 10000.
+
+### Personal content ownership
+
+General planning defaults are permitted, including schedules, capacity limits,
+and habit examples, provided owner settings override them. They are not evidence
+of the owner's actual state. Exactly one skill, `tom-operating-style`, owns Tom's
+reusable preferences; Ember planning is a module under it with adjacent assets,
+references, and evals. No independently discoverable nested SKILL.md is created.
+Private account bindings and historical financial incidents belong in private
+configuration/memory. Shared Voice prompts resolve active owner context instead
+of hardcoding a person or memory backend.
+
+Source publication is a separate gate from runtime approval. Review descriptions,
+code, references, templates, evals, examples, and deployable prompts even for
+unapproved/source-only packages. Structural validation and installation filters
+are insufficient. Known-identity recurrence tests supplement, not replace,
+semantic review of implicit owner instructions.
+
+When migrating existing runtimes, preserve and reconcile the retired standalone
+team skill, move it outside skill discovery, then sync the consolidated package.
+The installer fails closed while the retired directory remains; it never deletes
+local edits automatically. Missing content baselines retain their existing
+preservation requirement.

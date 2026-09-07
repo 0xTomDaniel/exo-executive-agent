@@ -1,11 +1,6 @@
----
-name: ember-weekly-planning
-description: >-
-  Run Ember's weekly Friday team review/planning session with Tom and Sebastian Varela, including recap-as-input, next-week planning, ICP refinement, customer/revenue experiments, sales-call commitments, separate economic-lane routing, and Monday launchpad creation. Use this skill whenever the user mentions Ember weekly recap, Friday review, Friday planning, Varela planning, Ember team planning, weekly sales experiment, ICP/customer-fit questions for Ember, or turning Friday recap into next-week execution—even if they do not explicitly say "skill" or "procedure".
----
 # Ember Weekly Planning
 
-Use this skill to run or maintain Ember's Friday team planning ritual. The session is not a generic weekly review: it is a startup operating meeting that uses the week's facts to create next week's customer/revenue plan.
+Use this module to run or maintain Ember's Friday team planning ritual. The session is not a generic weekly review: it is a startup operating meeting that uses the week's facts to create next week's customer/revenue plan.
 
 ## Core model
 
@@ -16,7 +11,7 @@ Use this skill to run or maintain Ember's Friday team planning ritual. The sessi
 - The external-evidence floor does not disappear when the product is unfinished. Use a mockup, flow, specification, backtest output, concierge/manual service, structured interview, pricing test, or commitment test when valid.
 - Separate distinct economic lanes such as customer revenue, client/partner work, grants/funding, and salary/runway implications rather than blending them into one vague "cash" bucket.
 - Preserve momentum: the team has learned that quick tangible artifacts create morale and feedback; stuckness drains both founders.
-- Do not hide mutable weekly state inside this skill. Store actual plans, commitments, ICP changes, call lists, and outcomes in the user's note/task system.
+- Do not hide mutable weekly state inside this module. Store actual plans, commitments, ICP changes, call lists, and outcomes in the user's note/task system.
 
 ## Default workflow
 
@@ -68,7 +63,7 @@ Use this skill to run or maintain Ember's Friday team planning ritual. The sessi
 
 6. **Refine ICP / qualification when relevant**
    - Use the qualification procedure in `references/icp-qualification.md`.
-   - Read the current company/project note or weekly planning artifact for the live ICP; do not treat this skill as the source of current customer/persona state.
+   - Read the current company/project note or weekly planning artifact for the live ICP; do not treat this module as the source of current customer/persona state.
    - Convert vague audiences into testable qualification questions.
    - Distinguish:
      - prime sales target
@@ -132,4 +127,4 @@ A completed Friday planning session should produce:
 
 - `assets/runtime-surfaces/friday-team-planning-session.md` — portable meeting scaffold.
 - `references/icp-qualification.md` — procedure for turning live ICP state into sales-call qualification.
-- Keep temporary deal-specific details in vault notes/tasks, not in this skill.
+- Keep temporary deal-specific details in vault notes/tasks, not in this module.

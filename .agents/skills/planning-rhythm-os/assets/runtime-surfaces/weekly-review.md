@@ -10,7 +10,7 @@
 - Period retrospectives ending Sunday:
 
 ## Weekly Mind Dump
-> Capture Tom's own words before reviewing the system. Do not pre-fill.
+> Capture the owner's own words before reviewing the system. Do not pre-fill.
 - Captures:
   -
 

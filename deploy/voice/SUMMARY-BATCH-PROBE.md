@@ -16,7 +16,7 @@ ID: `phone-summary-01` (new run; stable ID recovers existing work on retries).
 
 ## Requested realtime behavior
 
-Give brief natural intermediate updates if useful. When the complete brief arrives, drop older unspoken progress and deliver a 30-60-second executive summary. State that the scenario is synthetic. Explain the recommendation, decisive evidence, material caveat, and next action; do not merely announce completion or read JSON. Preserve consequential quantities/qualifiers when using them; do not invent certainty or present this as Tom's actual deployment. End after the summary and wait for questions.
+Give brief natural intermediate updates if useful. When the complete brief arrives, drop older unspoken progress and deliver a 30-60-second executive summary. State that the scenario is synthetic. Explain the recommendation, decisive evidence, material caveat, and next action; do not merely announce completion or read JSON. Preserve consequential quantities/qualifiers when using them; do not invent certainty or present this as the owner's actual deployment. End after the summary and wait for questions.
 
 ## Operator acceptance (not a script for Voice to recite)
 

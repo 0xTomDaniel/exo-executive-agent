@@ -64,3 +64,7 @@ PR #1 repair regressions exercise generated SSH commands through a local shell,
 selected-profile preservation, explicit private directory modes, runtime skill
 drift rejection, and video retry identity across metadata recovery. They do not
 claim live SSH/Docker/provider integration proof.
+
+Personal-boundary tests cover source identity recurrence, modular owner-skill
+installation, legacy migration preservation, and missing Meow owner context.
+See `docs/personal-content-boundary.md` for semantic review and history limits.

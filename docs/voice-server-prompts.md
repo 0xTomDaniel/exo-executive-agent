@@ -42,3 +42,8 @@ At that initial identity-only checkpoint, timed/category delivery was still depl
 ## Rollback
 
 Restore the three backed-up files to state/config.toml, state/AGENTS.md and workspace/AGENTS.md in the host sidecar directory, preserving inode/ownership. If config changed after this deployment, selectively restore/remove only the two identity prompt keys rather than overwriting later unrelated settings. New sessions are needed to establish rollback of session-static prompts; verify effective config and actual behavior. No credential copies or mount/network expansion are part of either deployment or rollback.
+
+Shared Voice prompt sources are owner-neutral. Identity and available memory
+surfaces come from the active profile; preferences come from its installed owner
+skill. Missing owner context must not fall back to a named person or assumed
+vault. Updating repository prompts alone does not update a live Voice server.

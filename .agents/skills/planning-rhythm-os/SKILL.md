@@ -34,3 +34,7 @@ Before locking a cycle, work through all sprint checkpoints; before locking a sp
 ## Verification
 
 Validate changed notes through the persistence layer, confirm real query coverage, and check review progress before advancing status. Exercise historical failure cases after workflow changes. Do not claim that structural checks or an inline rehearsal prove another model will always follow the procedure.
+
+## Defaults and owner settings
+
+The schedules, habit examples, durations, planning horizons, capacity limits, and escalation thresholds in this package are general defaults. Explicit owner settings and current approved commitments override them. Do not treat these defaults as evidence about an owner’s actual habits, biography, projects, or preferences. Owner-specific preferences belong in the designated owner skill; current facts belong in approved memory.

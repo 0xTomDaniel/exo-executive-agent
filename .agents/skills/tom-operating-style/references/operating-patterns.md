@@ -70,7 +70,7 @@ Tom-specific calibration:
 
 ## Work-lane shaping
 - Tom directly reports being naturally poor at managing more than one major thing at a time and identifies **hyperfocus as one of his greatest strengths and greatest weaknesses**. Default to one dominant execution lane rather than several equal priorities.
-- Do not misread this as requiring one-project exclusivity across his whole life. That 2015 correction helped Tom become persistent but also crowded out public media/art for years. Prefer one primary hyperfocus lane plus a very small number of bounded subordinate life/creative lanes.
+- Do not misread this as requiring one-project exclusivity across his whole life. Prefer one primary hyperfocus lane plus a very small number of bounded subordinate life/creative lanes.
 - When public documentation is tied to an existing project, nest it as lightweight project exhaust rather than presenting “run a channel” as a separate simultaneous project. If production develops its own roadmap, equipment/setup lane, or recurring capacity burden, require explicit admission/displacement.
 - On fragment-prone days, explicitly name the main work lane instead of letting multiple half-priorities compete.
 - This is especially important on lighter days that still contain one real responsibility.
