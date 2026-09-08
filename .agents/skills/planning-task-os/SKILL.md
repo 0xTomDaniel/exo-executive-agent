@@ -2,7 +2,7 @@
 name: planning-task-os
 description: >-
   Task/backlog operating-system design, including routine task creation and completion/closure, task schema design,
-  importance-vs-urgency modeling, Now/Later/Someday/Drop triage,
+  importance-vs-urgency modeling, commit / schedule / park / close triage,
   carry-forward hygiene, task-calibration rules, and task-schema migrations
   (for example renaming `priority` to `importance` and updating trackers,
   runtime surfaces, and policies). Use when the user wants to redesign or
@@ -23,8 +23,8 @@ Use this skill for routine task creation, triage, completion/closure, carry-forw
 - Treat `priority` as a blended human decision concept, not the preferred stored source field.
 - Let urgency come mainly from `due`, overdue state, and nearby deadlines.
 - Let `review_on` handle intentional resurfacing for things that are not urgent now. The daily surfacing procedure is owned by `planning-rhythm-os/references/resurfacing.md`.
-- Treat `due < today()` and `review_on < today()` as active debt signals: they must be visible in the daily fall-through sweep and resolved through Now / Later / Drop / Someday or a bounded cleanup pass.
-- Let `status` express commitment/lifecycle state (`[[Todo]]`, `[[Doing]]`, `[[Someday]]`, `[[Done]]`, `[[Closed]]`, etc.). Use `[[Done]]` only when the intended outcome was completed; use `[[Closed]]` plus an explicit `resolution` when unfinished work is cancelled, duplicated, or superseded.
+- Treat `due < today()` and `review_on < today()` as active debt signals: they must be visible in the daily fall-through sweep and resolved through commit / schedule / park / close or a bounded cleanup pass.
+- Let `status` express commitment/lifecycle state (`[[Todo]]`, `[[Doing]]`, `[[Waiting]]`, `[[Someday]]`, `[[Done]]`, `[[Closed]]`). Use `[[Done]]` only when the intended outcome was completed; use `[[Closed]]` plus an explicit `resolution` when unfinished work is cancelled, duplicated, or superseded.
 - Use Eisenhower as a **thinking lens / Base view**, not necessarily as stored metadata on every task.
 - Treat this skill and its references as the **canonical operational source** for the planning/task operating system unless explicitly superseded.
 - At the task layer, this skill mainly owns the Decide/Review parts of the Detect → Decide → Act → Review loop: classify commitments clearly before work and carry them forward intentionally after work.

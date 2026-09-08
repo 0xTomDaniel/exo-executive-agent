@@ -75,7 +75,7 @@ Before advancing to execution:
 - respect established combined-ritual semantics: when one habit is intentionally completed inside another named ritual (for example meditation inside the scheduled yoga session), surface and record the combined ritual rather than demanding a duplicate standalone session; if the combined ritual is deferred, make the shared re-entry point explicit
 - surface the day's resurfacing items explicitly by name
 - distinguish outcome progress from enabling progress; if a new enabler or lane enters today's active set, require its target outcome, blocker evidence, stop/checkpoint condition, owner/capacity, and displaced commitment before locking the plan
-- explicitly name every open task with `due` today or `review_on` today, and route each one (Top 3, Admin Strike, Later, delegation, or drop)
+- explicitly name every open task with `due` today or `review_on` today, and route each one (Top 3, Admin Strike, schedule with review_on, delegation, or drop)
 - run the fall-through sweep for `due < today` and `review_on < today`: name counts plus high-salience items/next actions, then decide whether to clear, defer, or schedule cleanup
 - surface active weekly minimums as a radar check
 - confirm non-negotiables / hard constraints

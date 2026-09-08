@@ -24,8 +24,11 @@ Different paths remain separate records even when content shows one obligation.
 A reminder need not be a task. Source errors remain incomplete coverage, never
 empty results or permission to substitute yesterday's scan.
 
-The task/all-note terminal-state exclusions currently differ. Preserve and
-report that difference until the owner resolves it. Linked-week/sprint filters are supported by the updated pin; query explicit
+The owner resolved the task/all-note terminal policy: exclude only Done and
+Closed in linked and plain form; Reviewed and Ended remain eligible when due.
+The shared Obsidian skill owns the closed note-type status canon, validation and
+repair tooling. Saved Base filters express it explicitly; Nitride does not
+normalize Exo lifecycle values internally. Linked-week/sprint filters are supported by the updated pin; query explicit
 named views for the requested scope, and retain any other required unsupported
 view as open coverage. A reminder-only scan does not complete the broader steering workflow.
 

@@ -1,6 +1,6 @@
 ---
 type: "[[Team Planning Session]]"
-status: "[[Draft]]"
+status: "[[Todo]]"
 area: "[[Work]]"
 project: "[[Ember]]"
 people:

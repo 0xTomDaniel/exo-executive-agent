@@ -17,20 +17,16 @@ At the task layer, this is mostly the Decide/Review half of the system: decide w
 - Use **next-action discipline**: if a task cannot name the next visible action, it is not ready for the active lane.
 - Separate **hard landscape** from discretionary work: true deadlines, appointments, and external commitments get `due`; optional resurfacing and incubation get `review_on`.
 - Keep **Waiting / delegated / blocked** items explicit instead of letting them remain as stale todos.
-- Use **Someday/Maybe / incubate** aggressively for worthwhile-but-not-current items so the active list stays trustworthy.
+- Use **Someday** aggressively for worthwhile-but-not-current items so the active list stays trustworthy.
 - Apply the **two-minute / obvious-completion rule** during reviews: mark obvious Done/Drop/Someday immediately instead of preserving clutter for a later cleanup pass.
 - Weekly review is the keystone, but daily mini-review prevents the Sunday review from becoming archeology.
 - Distinguish **surface hygiene** from **substantive review**: clearing `due` / `review_on` debt in metadata is not the same as walking through meaningful open loops with the user. Do not describe stale debt as "worked through" unless it was actually reviewed or was an obvious mechanical Done/Drop/Someday decision.
 
 ## Core rules
-- Keep at most **20 active tasks** at a time. For reporting, active means `[[Todo]]` + `[[Doing]]` (Now maps to Todo); Later, Waiting, Someday, Done, and Closed are separate lanes. Report excess for an explicit capacity decision; never auto-close, demote, or change dates to satisfy the cap.
+- Keep at most **20 active tasks** at a time. For reporting, active means `[[Todo]]` + `[[Doing]]` (Now maps to Todo); Waiting, Someday, Done, and Closed are separate lanes. Report excess for an explicit capacity decision; never auto-close, demote, or change dates to satisfy the cap.
 - Weekly triage is required for unfinished tasks.
 - Daily fall-through triage is required at a lighter level: every morning, check overdue and stale-review items so missed weekly reviews cannot hide debt.
-- Every unfinished task should be explicitly classified into a current commitment bucket such as:
-  - **Now**
-  - **Later**
-  - **Drop**
-  - or `[[Someday]]` when it should stay preserved but out of the active lane
+- Every unfinished task should be explicitly classified into a current commitment bucket from the closed task canon in `task-model.md`. Scheduling later preserves Todo/Doing if the commitment remains; Waiting names a dependency, Someday releases current commitment, and dropping uses Closed with a resolution
 - Carry-forward is allowed only when the task has:
   - a new `due` date when real urgency exists
   - a clear `importance` judgment
@@ -58,7 +54,7 @@ At the task layer, this is mostly the Decide/Review half of the system: decide w
 - Re-score `importance` for each carried-forward task.
 - Confirm `next_action` and an intentional attention hook for each carry-forward. Preserve a real external `due` date; use `review_on` for discretionary re-entry instead of inventing a deadline.
 - Re-check still-open surfaced overdue / Now items before concluding carry-forwards, especially relationship / admin commitments already surfaced by the system.
-- Move non-current items to Later / `[[Someday]]` with `review_on`.
+- Move non-current items to `[[Someday]]` with `review_on`.
 - Drop stale items with no clear value.
 - Close superseded formulations without destroying history: preserve unchecked outcomes, add the closure rationale and successor link, and trust the new task rather than retaining both as active emotional insurance.
 

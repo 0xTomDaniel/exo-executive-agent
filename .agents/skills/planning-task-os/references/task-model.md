@@ -16,7 +16,7 @@ Preferred property meanings:
 - `importance` — canonical importance field
 - `due` — urgency anchor / external time pressure; if the task is open and `due == today()`, it must be explicitly surfaced during morning review; if `due < today()`, it is overdue debt for the daily fall-through sweep
 - `review_on` — resurfacing date for future reconsideration; if the task is open and `review_on == today()`, it must be explicitly surfaced during morning review; if `review_on < today()`, it is stale resurfacing debt for the daily fall-through sweep
-- `status` — commitment/lifecycle state (`[[Todo]]`, `[[Doing]]`, `[[Someday]]`, `[[Done]]`, `[[Closed]]`, etc.)
+- `status` — one of `[[Todo]]`, `[[Doing]]`, `[[Waiting]]`, `[[Someday]]`, `[[Done]]`, `[[Closed]]`; follow the Obsidian skill’s `references/status-canon.md` for the shared note-type canon and normalization rules
 - `resolution` — why a terminal task ended when status alone is not enough (for example `[[Superseded]]`, cancelled, duplicate, or no longer relevant)
 - `next_action` — one concrete visible next step
 - `est_minutes`, `energy`, `work_type`, optional `context` — execution support metadata
@@ -31,7 +31,7 @@ If the vault still contains legacy importance values such as `[[High]]` / `[[Med
 - A closed unfinished task must preserve an auditable explanation: add `resolution`, `closed`, a dated closure note, and `superseded_by` when another task now owns the value.
 - `[[Superseded]]` does not mean the old work was worthless or completed. It means the old task formulation no longer governs action because a newer task, experiment, release contract, or decision now owns the relevant outcome.
 - Closing is reversible: if the old outcome later becomes relevant as a distinct commitment, reopen it with current metadata or create a newly scoped task and link back. Do not keep obsolete task shells active as emotional insurance.
-- Runtime surfaces must exclude both `[[Done]]` and `[[Closed]]` from active-work views while preserving the notes as history.
+- Runtime surfaces must exclude both `[[Done]]` and `[[Closed]]` (including equivalent plain-text forms) from active-work views while preserving the notes as history.
 
 ## Hard surfacing semantics
 
@@ -63,7 +63,7 @@ Use verbal anchors tied to planning horizons so they stay less fuzzy.
 
 ### Somewhat important
 - Worth preserving, but easy to defer.
-- Usually better as Later / scheduled resurfacing material than as a daily competitor.
+- Usually better as Someday / scheduled resurfacing material than as a daily competitor.
 - Think: **background but real**.
 
 ### Not important

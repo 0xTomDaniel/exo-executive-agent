@@ -26,7 +26,8 @@ Hold standards without shame. Treat missed rituals as re-entry problems. Disting
 | Day modes, missing-day recovery, cadence and review discovery | `planning-rhythm-os/references/daily-rhythm.md` and `review-cadence.md` |
 | Task and non-task reminder surfacing, random rediscovery | `planning-rhythm-os/references/resurfacing.md` |
 | Review/plan completion, confirmation scope, interruption recovery | `planning-rhythm-os/references/review-progress.md` |
-| Task fields, lifecycle, active limit, carry-forward | `planning-task-os` |
+| Note status vocabulary, representation and validation | `obsidian/references/status-canon.md` |
+| Task fields, commitment decisions, active limit, carry-forward | `planning-task-os` |
 | Inbox capture, classification and queues | `planning-capture-os` |
 | Owner-specific coaching, tactics, and importance markers | The active profile’s installed preferences skill |
 | Owner-specific team rituals | Optional modules of the installed owner-preferences skill |
@@ -39,6 +40,8 @@ Hold standards without shame. Treat missed rituals as re-entry problems. Disting
 Load the matching skill and relevant reference before acting. Use current memory for facts and effective-dated personal schedules, skills for reusable procedure, and templates/dashboards/Bases for display and routing. A convenient template is not a competing policy source. Newer evidence supersedes the same scope only; do not overwrite historical decisions or unrelated confirmed plans.
 
 For supported read-only Base operations, prefer the installed, approved Nitride CLI on every runtime, including desktop. Load its skill and verify runtime availability; use an explicit vault path and owner timezone. If Nitride is unavailable or the required operation is outside its supported subset, use the native Obsidian CLI only when that runtime actually provides the approved desktop capability. For other note operations, follow the Obsidian skill and the runtime's available filesystem/application tools. Report unavailable coverage and metadata/query errors honestly; changing tools must not hide an error, weaken the saved filter, or imply full Obsidian compatibility. Shared policy selects the capability; runtime Adapters supply executable/skill locations, vault paths and concrete view bindings. Do not install a missing integration without authorization.
+
+For note metadata writes, load the Obsidian status canon and validate the candidate and saved note with its validator. Status is one canonical wikilink from the note type’s lifecycle family, not a free-form label. Read equivalent plain-text forms tolerantly; never infer completion from unknown or missing status. Runtime/job status fields are outside this note contract.
 
 Before adding guidance, classify it: cross-cutting principle here; reusable procedure in the owning skill; current fact/evidence/history in memory; visible checklist/query in a runtime surface. Prefer repairing the owning procedure and testing the observed failure over adding another example-specific prohibition. Extend existing coherent skills before adding new ones. Keep portable skill procedures and scaffolds self-contained; note-system wiring belongs in the local Adapter. Generated provider projections and `.skill` exports are not editable source authorities.
 

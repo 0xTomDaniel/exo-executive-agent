@@ -9,6 +9,7 @@ import json
 from collections import defaultdict, deque
 
 from note_metadata import parse_frontmatter
+from status_policy import status_equal
 from obsidian_cli import note_selector, parse_links_output, resolve_note, run_obsidian
 
 
@@ -83,7 +84,9 @@ def matches_filters(note, args, cache, vault=None):
 
     for key, val in args.props:
         actual = fm.get(key)
-        if isinstance(actual, list):
+        if key == 'status':
+            ok = status_equal(actual, val)
+        elif isinstance(actual, list):
             ok = val in actual
         else:
             ok = str(actual) == val
