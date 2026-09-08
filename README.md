@@ -10,6 +10,10 @@ mocked owner-only Telegram text loop without live Telegram, model credentials,
 Phase access, ESXi access, or private storage. The distribution also includes
 installable template profiles for Tom Daniel, Sebastian Varela, and Noah Ranch.
 
+For Pi, Codex or Claude working directly in a synced vault, follow the
+[local vault setup](deploy/local-vault/README.md). It keeps `.agents/skills`
+canonical and configures pinned Nitride retrieval without native Obsidian CLI.
+
 ## Repository Boundary
 
 Distribution-owned paths in git:

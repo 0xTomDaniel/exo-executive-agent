@@ -19,6 +19,8 @@ Use this skill's native workflow below for operations assigned to the Obsidian C
 Before attention or linked-period Base scans, run `uv run scripts/validate_notes.py --attention-dates-only <vault-path>` and check its exit status. This read-only preflight rejects invalid YAML and unsupported attention/period dates while leaving status debt visible. Full pre/post-write validation checks both dates and status. Canonical `due`, `review_on`, `week_start` and `week_end` values are valid ISO calendar dates or absent/null; remove a date property to clear it rather than writing an empty string.
 Prefer concise command flows, discover exact command syntax with built-in help, and verify file-impacting changes.
 
+Respect the active vault Adapter’s capability policy before following any native workflow below. If the owner has disabled native Obsidian CLI use, skip native setup and invocation entirely, including absolute app paths; use Nitride for its supported queries and filesystem tools plus metadata validation for other supported note operations. Do not reinstall or enable a forbidden fallback.
+
 ## Native CLI workflow
 
 1. Confirm prerequisites:
