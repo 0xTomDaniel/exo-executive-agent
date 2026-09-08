@@ -64,8 +64,10 @@ views returned identical desktop/Debian JSON. Model defaults remain Astra/low an
 the process owner timezone remains America/Denver. This verifies runtime queries,
 not a new phone-originated agent turn.
 
-The image pins Nitride commit `d20fb504a08c2792e106f79df6c3301c35167cbf` and its
-verified source archive SHA. Deployment retained sessions, model settings,
+The source image now pins merged Nitride commit `101629fbade8bf2d71fe2074e1c0803b996f562c` and its
+verified source archive SHA. The merged skill files are byte-identical to the
+reviewed `d20fb50` skill used in the live validation above; that deployed image
+retains its pre-merge tag until rebuilt. Deployment retained sessions, model settings,
 timezone and mounts and installed the targeted shared skill/adapter changes with
 backups. Fresh preflight and named-query comparisons passed. Closing these compatibility
 checks does not establish phone-originated Voice acceptance, which remains separate.

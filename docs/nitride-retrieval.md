@@ -1,7 +1,7 @@
 # Headless reminder retrieval
 
 The direct-vault Voice deployment now ships Node 22.23.2 and Nitride pinned to
-`0xTomDaniel/nitride-cli` commit `d20fb504a08c2792e106f79df6c3301c35167cbf`.
+`0xTomDaniel/nitride-cli` commit `101629fbade8bf2d71fe2074e1c0803b996f562c`.
 See the [deployment recipe](../deploy/voice/vault/README.md#pinned-nitride-retrieval)
 and [host Adapter](../deploy/voice/vault/HOST-AGENTS.md#reminder-scan-route).
 This is independent of the Hermes profile skill installer.

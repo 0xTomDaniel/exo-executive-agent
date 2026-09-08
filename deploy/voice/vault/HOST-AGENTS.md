@@ -15,9 +15,9 @@ Follow the shared `AGENTS.md` tool-selection policy. This image supplies Node 22
 For a steering scan, discover and inspect the actual saved definitions, then execute both sources with the same live date and owner timezone (the container's configured `TZ`). The installed planning Adapter uses `Planning/Weekly Tasks.base` → `Daily Fallback Sweep` and `Planning/Dated Reminders.base` → `Attention Today`. Run:
 
 ```sh
-scan_date=$(date +%F)
-uv run "__VAULT_PATH__/.agents/skills/obsidian/scripts/validate_notes.py" --attention-dates-only "__VAULT_PATH__"
-nitride --vault-path "__VAULT_PATH__" --timezone "$TZ" --date "$scan_date" base:query 'path=Planning/Weekly Tasks.base' 'view=Daily Fallback Sweep' format=json
+scan_date=$(date +%F) &&
+uv run "__VAULT_PATH__/.agents/skills/obsidian/scripts/validate_notes.py" --attention-dates-only "__VAULT_PATH__" &&
+nitride --vault-path "__VAULT_PATH__" --timezone "$TZ" --date "$scan_date" base:query 'path=Planning/Weekly Tasks.base' 'view=Daily Fallback Sweep' format=json &&
 nitride --vault-path "__VAULT_PATH__" --timezone "$TZ" --date "$scan_date" base:query 'path=Planning/Dated Reminders.base' 'view=Attention Today' format=json
 ```
 

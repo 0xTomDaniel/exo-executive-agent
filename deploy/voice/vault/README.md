@@ -110,7 +110,7 @@ interactive acceptance check; server checks do not establish audible delivery.
 ## Pinned Nitride retrieval
 
 The image now includes Node 22.23.2 and the portable Nitride skill from
-`0xTomDaniel/nitride-cli` commit `0c33c7adb2f034d20ffeb60b825170c0fdf39018`.
+`0xTomDaniel/nitride-cli` commit `101629fbade8bf2d71fe2074e1c0803b996f562c`.
 The Dockerfile verifies the source archive SHA-256 and installs the bundled
 executable as `nitride`; there is no npm install at runtime. Startup exposes
 `/opt/nitride` through the retained Codex state's `skills/nitride` link, refusing
@@ -120,8 +120,9 @@ image integration does not activate the separate Hermes profile installer.
 Build the new image before recreating Voice. Preserve its existing Compose
 project, mounts, UID/GID, timezone, login, model settings and sessions. Update
 only the image reference in the rendered private Compose to
-`exo-codex-vault-voice:0.153.1-nitride-d20fb50`; back up and install the rendered
-`HOST-AGENTS.md` in both documented bootstrap locations. Deploy the updated
+`exo-codex-vault-voice:0.153.1-nitride-101629f`; back up and stage the rendered
+`HOST-AGENTS.md` for both documented bootstrap locations, activating it only after
+the validator deployment and preflight below pass. Deploy the updated
 `planning-rhythm-os/references/resurfacing.md` after checking the current copy
 for owner changes. Also reconcile the shared repository `AGENTS.md` tool-selection row/policy and
 the Obsidian skill overview/native-workflow routing into the corresponding vault
@@ -130,8 +131,38 @@ preserve owner additions; neither the image build nor entrypoint installs those
 shared instructions. Verify all four deployed instruction surfaces against the
 intended targeted changes. Do not replace the entire vault instruction/skill tree.
 
+Before activating the new host instructions, deploy both changed Python files
+from the same Exo checkout into the mounted vault:
+
+- `.agents/skills/obsidian/scripts/note_metadata.py`
+- `.agents/skills/obsidian/scripts/validate_notes.py`
+
+Back up both existing files outside the vault, compare them against their previous
+deployed source, and reconcile any owner changes. Install both as a coordinated
+update, preserving vault ownership and permissions; do not run the validator
+between the two writes. Confirm `status_policy.py` from the preceding status-canon
+upgrade is present as the validator's existing dependency. Neither the image nor
+the entrypoint installs these vault scripts. Verify deployed hashes against the
+intended files after Syncthing settles, and repeat readback if synchronization
+changes either file.
+
+Before installing the new bootstrap instructions or running attention queries,
+run this read-only check inside the running container, replacing `__VAULT_PATH__`
+with the configured absolute vault path:
+
+```sh
+docker exec exo-codex-remote-voice uv run "__VAULT_PATH__/.agents/skills/obsidian/scripts/validate_notes.py" --attention-dates-only "__VAULT_PATH__"
+```
+
+Require exit zero and an empty `invalid` list. A missing option, import failure,
+or metadata error blocks upgrade acceptance and complete scan claims; do not
+interpret it as an empty queue. Then activate the reconciled host instructions.
+For rollback, restore the coordinated script pair and instruction backups if
+needed; retain subsequent note edits and sessions.
+
 The host Adapter owns concrete Nitride invocations and source membership.
-Status-filter differences are preserved pending owner resolution. Saved Bases
+Saved attention views exclude Done/Closed in plain or linked form, while due
+Reviewed/Ended reminders remain eligible under the resolved terminal policy. Saved Bases
 remain authoritative and are not copied into a new task database. The pinned version supports the linked-week/sprint views. Other unsupported
 views remain incomplete coverage; this deployment does not make every planning
 view executable. Metadata/query errors must be reported,
