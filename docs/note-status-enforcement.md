@@ -23,7 +23,9 @@ commitment and review responsibilities. Machine/job status fields are unaffected
 - `repair_status_filters.py <base...>` audits standalone status predicates;
   `--attention` removes Reviewed exclusions. Applying requires `--apply` and a
   private backup directory. Compound/custom predicates require explicit inspection.
-  Repeated application is idempotent. Queries must verify the result.
+  Only targeted scalar spans are rewritten, preserving unrelated YAML values,
+  comments and line endings. Anchored/aliased Bases are rejected for explicit
+  inspection. Repeated application is idempotent. Queries must verify the result.
 
 These existing metadata and saved-query Interfaces are the test Seams authorized
 by the enforcement/cleanup request. The status-policy Module owns vocabulary and

@@ -14,49 +14,89 @@ import re
 
 import yaml
 
-from note_metadata import MetadataError, UniqueLoader
+from note_metadata import MetadataError
 from status_policy import ALIASES, label, normalize_status
 from validate_notes import save_repair
 
 
 def rewrite(text: str, attention: bool = False) -> str:
-    base = yaml.load(text, Loader=UniqueLoader)
-    if not isinstance(base, dict):
+    # Compose syntax nodes without YAML 1.1 scalar coercion. Edit only filter
+    # spans: the rest of the document, including comments and CRLF, stays intact.
+    base = yaml.compose(text, Loader=yaml.BaseLoader)
+    if not isinstance(base, yaml.MappingNode):
         raise MetadataError('Base must be a mapping')
-    changed = False
+    events = list(yaml.parse(text))
+    if any(isinstance(event, yaml.AliasEvent) or getattr(event, 'anchor', None) for event in events):
+        raise MetadataError('anchored/aliased Bases require explicit inspection; no automatic repair')
+    edits = []
 
-    def filters(value):
-        nonlocal changed
-        if isinstance(value, dict):
-            return {key: filters(child) for key, child in value.items()}
-        if isinstance(value, list):
-            return [filters(child) for child in value]
-        if not isinstance(value, str):
-            return value
-        match = re.fullmatch(r'status\s*(==|!=)\s*("[^"\n]*"|\'[^\'\n]*\')', value)
+    def mapping(node):
+        if not isinstance(node, yaml.MappingNode):
+            raise MetadataError('expected Base mapping')
+        result = {}
+        for key, child in node.value:
+            if not isinstance(key, yaml.ScalarNode) or key.value in result:
+                raise MetadataError('non-scalar or duplicate Base key')
+            result[key.value] = child
+        return result
+
+    def validate(node):
+        if isinstance(node, yaml.MappingNode):
+            for child in mapping(node).values():
+                validate(child)
+        elif isinstance(node, yaml.SequenceNode):
+            for child in node.value:
+                validate(child)
+
+    def filters(node):
+        if isinstance(node, yaml.MappingNode):
+            for child in mapping(node).values():
+                filters(child)
+            return
+        if isinstance(node, yaml.SequenceNode):
+            for child in node.value:
+                filters(child)
+            return
+        value = node.value.strip()
+        match = re.fullmatch(r"status\s*(==|!=)\s*(\"[^\"\n]*\"|'[^'\n]*')", value)
         if not match:
-            return value
+            return
         operator, raw = match.groups()
         old = raw[1:-1]
         if attention and operator == '!=' and label(old) == 'Reviewed':
-            changed = True
-            return 'true'
-        name = normalize_status(old)
-        if name is None:
-            return value
-        names = [name] + [alias for alias, target in ALIASES.items() if target == name]
-        variants = [variant for n in names for variant in (f'[[{n}]]', n)]
-        joiner = ' && ' if operator == '!=' else ' || '
-        result = '(' + joiner.join(f'status {operator} {json.dumps(v)}' for v in variants) + ')'
-        changed = changed or result != value
-        return result
+            result = 'true'
+        else:
+            name = normalize_status(old)
+            if name is None:
+                return
+            names = [name] + [alias for alias, target in ALIASES.items() if target == name]
+            variants = [variant for n in names for variant in (f'[[{n}]]', n)]
+            joiner = ' && ' if operator == '!=' else ' || '
+            result = '(' + joiner.join(f'status {operator} {json.dumps(v)}' for v in variants) + ')'
+        replacement = json.dumps(result)
+        # Block scalar spans include the final line ending. Retain that separator
+        # so the next YAML key cannot become part of the replacement line.
+        original = text[node.start_mark.index:node.end_mark.index]
+        if original.endswith('\r\n'):
+            replacement += '\r\n'
+        elif original.endswith('\n'):
+            replacement += '\n'
+        edits.append((node.start_mark.index, node.end_mark.index, replacement))
 
-    if 'filters' in base:
-        base['filters'] = filters(base['filters'])
-    for view in base.get('views', []):
-        if 'filters' in view:
-            view['filters'] = filters(view['filters'])
-    return yaml.safe_dump(base, sort_keys=False, allow_unicode=True) if changed else text
+    validate(base)
+    fields = mapping(base)
+    if 'filters' in fields:
+        filters(fields['filters'])
+    if 'views' in fields:
+        if not isinstance(fields['views'], yaml.SequenceNode):
+            raise MetadataError('Base views must be a list')
+        for view in fields['views'].value:
+            fields_view = mapping(view)
+            if 'filters' in fields_view:
+                filters(fields_view['filters'])
+    for start, end, replacement in sorted(edits, reverse=True):
+        text = text[:start] + replacement + text[end:]
+    return text
 
 
 def main() -> int:

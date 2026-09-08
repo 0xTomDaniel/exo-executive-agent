@@ -70,6 +70,48 @@ class NoteStatusTests(unittest.TestCase):
                 self.assertEqual(note.read_bytes(), before)
 
     @unittest.skipUnless(os.environ.get('NITRIDE_CLI'), 'set NITRIDE_CLI for actual Base query proof')
+    def test_base_repair_preserves_unrelated_yaml_and_view_identity(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            vault = Path(tmp) / 'vault'
+            vault.mkdir()
+            (vault / 'Open.md').write_text('---\nstatus: "[[Todo]]"\n---\n')
+            base = vault / 'Case.base'
+            original = b'# preserve this comment\r\nfilters:\r\n  and:\r\n    - status != "[[Done]]" # terminal\r\nviews:\r\n  - type: table\r\n    name: No\r\n'
+            base.write_bytes(original)
+            query = ['node', os.environ['NITRIDE_CLI'], '--vault-path', str(vault),
+                     'base:query', 'path=Case.base', 'view=No', 'format=paths']
+            before = subprocess.run(query, text=True, capture_output=True)
+            self.assertEqual(before.returncode, 0, before.stderr)
+            repair = subprocess.run([sys.executable, str(VALIDATOR.parent / 'repair_status_filters.py'),
+                                     str(base), '--apply', '--backup-dir', str(Path(tmp) / 'backup')],
+                                    text=True, capture_output=True)
+            self.assertEqual(repair.returncode, 0, repair.stderr)
+            after = subprocess.run(query, text=True, capture_output=True)
+            self.assertEqual(after.returncode, 0, after.stderr)
+            self.assertEqual(after.stdout, before.stdout)
+            self.assertEqual(base.read_bytes().split(b'views:', 1)[1], original.split(b'views:', 1)[1])
+            self.assertTrue(base.read_bytes().startswith(b'# preserve this comment\r\n'))
+            self.assertIn(b'# terminal\r\n', base.read_bytes())
+
+    def test_base_repair_preserves_block_separator_and_rejects_shared_aliases(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp) / 'Case.base'
+            command = [sys.executable, str(VALIDATOR.parent / 'repair_status_filters.py'),
+                       str(base), '--apply', '--backup-dir', str(Path(tmp) / 'backup')]
+            base.write_text('filters: >\n  status != "[[Done]]"\nviews:\n  - type: table\n    name: Yes\n')
+            result = subprocess.run(command, text=True, capture_output=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn('\nviews:\n  - type: table\n    name: Yes\n', base.read_text())
+            import yaml
+            self.assertIn('status != "Done"', yaml.safe_load(base.read_text())['filters'])
+            original = 'description: &shared status != "[[Done]]"\nfilters: *shared\nviews: []\n'
+            base.write_text(original)
+            result = subprocess.run(command, text=True, capture_output=True)
+            self.assertEqual(result.returncode, 1, result.stdout)
+            self.assertIn('anchored/aliased', result.stdout)
+            self.assertEqual(base.read_text(), original)
+
+    @unittest.skipUnless(os.environ.get('NITRIDE_CLI'), 'set NITRIDE_CLI for actual Base query proof')
     def test_repaired_saved_filters_match_plain_linked_and_missing_statuses(self):
         with tempfile.TemporaryDirectory() as tmp:
             vault = Path(tmp) / 'vault'

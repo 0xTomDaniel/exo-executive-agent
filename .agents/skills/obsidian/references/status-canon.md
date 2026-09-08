@@ -82,7 +82,9 @@ Audit saved standalone comparisons with
 an attention surface whose Reviewed exclusion must be removed. To apply, add
 `--apply --backup-dir <private-directory-outside-vault>`, then execute the affected
 views. The helper leaves compound/custom predicates unchanged for explicit
-inspection; it is not a general Base optimizer or a commitment decision maker.
+inspection and rejects anchored/aliased Bases without writing. It edits only
+targeted scalar spans, preserving unrelated YAML values, comments and line endings;
+it is not a general Base optimizer or a commitment decision maker.
 
 This contract covers note frontmatter `status` only, not machine/runtime job
 fields or private workflow-progress JSON.
