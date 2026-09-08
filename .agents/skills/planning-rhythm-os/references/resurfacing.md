@@ -36,6 +36,16 @@ Regularly re-surface older notes, journal entries, saved media, and adjacent ide
 
 Query both open tasks and all dated reminders. `review_on` is an attention hook on any supported note class, including projects, people, health, works, and companies; it does not turn that record into a task. Include exact-today and past dates. Exclude terminal states Done and Closed (linked or plain representation); retain Reviewed, Someday, Waiting, and legacy Later/Incubating when their review date arrives.
 
+Before an attention/linked-period scan, run the Obsidian metadata validator with
+`--attention-dates-only` over the vault using its available runtime. This checks
+strict YAML and valid `YYYY-MM-DD` values for `due`, `review_on`, `week_start` and
+`week_end` (absent/null is allowed). Report failures as incomplete coverage;
+do not silently coerce timestamps, empty strings, numbers or lists into dates.
+The preflight deliberately does not reject status debt; unknown/missing statuses
+remain eligible under the saved date filters. Full write validation still checks
+the status canon as well as dates. Do not change a timestamp into a day without
+establishing the intended owner date.
+
 Present a task and a non-task reminder together only when their links and content establish the same underlying commitment. Keep both source references visible and do not suppress a distinct obligation on title similarity alone. Reviewing a non-task note can lead to an action, an explicitly chosen next review date, removal of an exhausted reminder, or no change with a named unresolved decision. Never auto-advance review dates or create duplicate tasks merely to clear the view.
 
 The note-system Adapter must name the task view and the all-class reminder view, query both, and report metadata/query errors. An empty task result does not establish an empty reminder queue. Preserve each result's source membership and deduplicate identical paths when reporting a combined count. Anchor both queries to the same live date and owner timezone, and name the scan scope and freshness. The owner has resolved the terminal policy: saved attention views exclude only Done and Closed, in linked and plain form; Reviewed and Ended do not hide due reminders. Repair contradictory filters with backup and query verification, rather than silently dropping returned records. This reference owns surfacing behavior; `planning-task-os` owns task field/lifecycle meanings.

@@ -1,7 +1,7 @@
 # Headless reminder retrieval
 
 The direct-vault Voice deployment now ships Node 22.23.2 and Nitride pinned to
-`0xTomDaniel/nitride-cli` commit `0c33c7adb2f034d20ffeb60b825170c0fdf39018`.
+`0xTomDaniel/nitride-cli` commit `101629fbade8bf2d71fe2074e1c0803b996f562c`.
 See the [deployment recipe](../deploy/voice/vault/README.md#pinned-nitride-retrieval)
 and [host Adapter](../deploy/voice/vault/HOST-AGENTS.md#reminder-scan-route).
 This is independent of the Hermes profile skill installer.
@@ -73,11 +73,14 @@ and neither tool available; the earlier model scan predates this ownership move.
 
 The model test was a fresh CLI backing turn, not a phone-originated realtime
 audio turn. Resumed phone threads may retain stale instructions or model
-overrides; fresh phone acceptance remains outstanding. The linked-period increment has live read-only acceptance below; unresolved
-status policy remains separate from literal saved-query execution. Non-Markdown
-membership and additional Base coercions beyond Nitride's recordings remain
-outside the compatibility claim. No npm publication or full Obsidian CLI
-replacement is required for this deployed reminder route.
+overrides; fresh phone acceptance remains outstanding.
+
+The bounded compatibility audit is now implemented: the corrected pin matches
+native Markdown-only Base candidate membership, and Exo validates calendar-day
+attention/period metadata before scanning. Native timestamp normalization,
+malformed-date rollover and mixed-type date coercions are explicitly outside
+Exo's date contract. See [the audit and preflight](retrieval-compatibility-audit.md).
+No npm publication or full Obsidian CLI replacement is required for this route.
 
 ## Linked-period pin and review repairs
 

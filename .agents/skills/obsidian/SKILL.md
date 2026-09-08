@@ -16,6 +16,7 @@ metadata:
 Select the available tool before composing commands. For supported read-only Base discovery, view listing and queries, prefer the installed Nitride skill/CLI across runtimes. Load its skill for invocation and compatibility limits. If Nitride is unavailable or the operation is unsupported, native Obsidian is a fallback only when its approved desktop app/CLI is available. Preserve saved filters and report errors; do not turn fallback into a weaker or incomplete successful scan.
 
 Use this skill's native workflow below for operations assigned to the Obsidian CLI. On a filesystem-only runtime, use its Adapter's supported read/edit/validation route and explicitly report unavailable application checks.
+Before attention or linked-period Base scans, run `uv run scripts/validate_notes.py --attention-dates-only <vault-path>` and check its exit status. This read-only preflight rejects invalid YAML and unsupported attention/period dates while leaving status debt visible. Full pre/post-write validation checks both dates and status. Canonical `due`, `review_on`, `week_start` and `week_end` values are valid ISO calendar dates or absent/null; remove a date property to clear it rather than writing an empty string.
 Prefer concise command flows, discover exact command syntax with built-in help, and verify file-impacting changes.
 
 ## Native CLI workflow

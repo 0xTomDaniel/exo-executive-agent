@@ -15,10 +15,18 @@ Follow the shared `AGENTS.md` tool-selection policy. This image supplies Node 22
 For a steering scan, discover and inspect the actual saved definitions, then execute both sources with the same live date and owner timezone (the container's configured `TZ`). The installed planning Adapter uses `Planning/Weekly Tasks.base` → `Daily Fallback Sweep` and `Planning/Dated Reminders.base` → `Attention Today`. Run:
 
 ```sh
-scan_date=$(date +%F)
-nitride --vault-path "__VAULT_PATH__" --timezone "$TZ" --date "$scan_date" base:query 'path=Planning/Weekly Tasks.base' 'view=Daily Fallback Sweep' format=json
+scan_date=$(date +%F) &&
+uv run "__VAULT_PATH__/.agents/skills/obsidian/scripts/validate_notes.py" --attention-dates-only "__VAULT_PATH__" &&
+nitride --vault-path "__VAULT_PATH__" --timezone "$TZ" --date "$scan_date" base:query 'path=Planning/Weekly Tasks.base' 'view=Daily Fallback Sweep' format=json &&
 nitride --vault-path "__VAULT_PATH__" --timezone "$TZ" --date "$scan_date" base:query 'path=Planning/Dated Reminders.base' 'view=Attention Today' format=json
 ```
+
+Check the preflight exit status before querying. Invalid YAML or unsupported
+`due`, `review_on`, `week_start` or `week_end` values mean incomplete coverage;
+report the affected paths instead of trusting implicit date coercion. These
+fields are valid ISO calendar dates or absent/null, not timestamps, empty strings,
+numbers, booleans or lists. Preflight intentionally permits missing/unknown status
+so status cleanup debt cannot silently suppress otherwise eligible reminders.
 
 Use the saved `Upcoming` view when upcoming reminders are in scope; do not silently impose a horizon absent from its filter. Use named views: the pinned Nitride version supports `This Week` and `Current Sprint` linked-period filters; execute these when their planning scope requires them. An unavailable required view stays an open coverage item; do not replace it with a weaker filter or claim the enclosing planning sweep complete.
 
