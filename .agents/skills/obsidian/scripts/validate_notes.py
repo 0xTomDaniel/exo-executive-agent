@@ -11,7 +11,7 @@ import os
 import tempfile
 from pathlib import Path
 
-from note_metadata import MetadataError, parse_frontmatter
+from note_metadata import MetadataError, parse_frontmatter, validate_attention_dates
 from status_policy import repair_status, validate_status
 
 
@@ -47,8 +47,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("paths", nargs="+", type=Path)
     parser.add_argument('--fix-status', action='store_true', help='repair unambiguous status forms only')
+    parser.add_argument('--attention-dates-only', action='store_true', help='read-only scan preflight: check YAML and attention/period dates without rejecting status debt')
     parser.add_argument('--backup-dir', type=Path, help='required with --fix-status; outside scanned paths')
     args = parser.parse_args()
+    if args.attention_dates_only and args.fix_status:
+        parser.error('--attention-dates-only is read-only and cannot be combined with --fix-status')
     if args.fix_status and not args.backup_dir:
         parser.error('--fix-status requires --backup-dir')
     if args.fix_status and any(args.backup_dir.resolve().is_relative_to(p.resolve()) for p in args.paths):
@@ -70,7 +73,10 @@ def main():
                 original = path.read_bytes()
                 text = original.decode('utf-8')
                 candidate = repair_status(text) if args.fix_status else text
-                validate_status(parse_frontmatter(candidate))
+                metadata = parse_frontmatter(candidate)
+                validate_attention_dates(metadata)
+                if not args.attention_dates_only:
+                    validate_status(metadata)
                 if candidate != text:
                     save_repair(path, original, candidate.encode('utf-8'), args.backup_dir)
                     repaired.append(str(path))

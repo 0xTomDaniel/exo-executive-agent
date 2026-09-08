@@ -120,7 +120,7 @@ image integration does not activate the separate Hermes profile installer.
 Build the new image before recreating Voice. Preserve its existing Compose
 project, mounts, UID/GID, timezone, login, model settings and sessions. Update
 only the image reference in the rendered private Compose to
-`exo-codex-vault-voice:0.153.1-nitride-0c33c7a`; back up and install the rendered
+`exo-codex-vault-voice:0.153.1-nitride-d20fb50`; back up and install the rendered
 `HOST-AGENTS.md` in both documented bootstrap locations. Deploy the updated
 `planning-rhythm-os/references/resurfacing.md` after checking the current copy
 for owner changes. Also reconcile the shared repository `AGENTS.md` tool-selection row/policy and
